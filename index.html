@@ -3,98 +3,129 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            border-radius: 5px;
-        }
-
-
-
-        .img-container {
-            width: min(350px, 60%);
-            display: flex;
-            gap: 30px;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: auto;
-        }
-
-        .b-white {
-            background-color: #fff;
-            color: #000;
-            padding: 15px;
-            border: none;
-            font-weight: 500;
-
-            font-family: "Euclid", sans-serif;
-            cursor: pointer;
-            margin: 20px 0;
-            transition: all 0.3s ease;
-        }
-
-        .b-white:hover {
-            /* background-color: #e6e6e6; */
-            color: #656565;
-            box-shadow: 0px 0px 50px rgba(255, 255, 255, 0.466);
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        .b-black {
-            background-color: #000;
-            padding: 15px;
-            border: none;
-            font-weight: 500;
-
-            font-family: "Euclid", sans-serif;
-            color: #fff;
-            cursor: pointer;
-            margin: 20px 10px 20px 0px;
-            transition: all 0.5s ease;
-        }
-
-        .b-black img {
-            width: 17px;
-        }
-
-        .b-black:hover {
-            background-color: #262626;
-            box-shadow: 0px 0px 50px rgba(0, 0, 0, 0.406);
-        }
-
-        img {
-            width: 100%;
-            object-fit: cover;
-            pointer-events: none;
-        }
-
-        .background {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100vh;
-            background-color: #fffd63;
-        }
-    </style>
-    <title>handheldt onlineshop</title>
+    <title>Handheldt – Druck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <div class="background">
-        <div class="img-container">
-            <img src="logo.png" alt="">
-            <a href="https://www.philippjenny.de" class="b-white">by Philipp Jenny</a>
-        </div>
+    <div class="nav-wrapper">
+
+        <nav>
+            <div></div>
+            <div></div>
+            <div></div>
+            <a class="button-hover" href="">Über uns</a>
+            <a class="image-hover" href=""><img class="wave" src="img/logo.png" alt=""></a>
+            <a class="button-hover" href="">Kontakt</a>
+            <div></div>
+            <div></div>
+            <a class="image-hover" href=""><img class="cart" src="img/shop.png" alt=""></a>
+        </nav>
     </div>
+
+    <section class="top-distance"></section>
+
+    <section class="white">
+        <div class="content-wrapper">
+            <header class="two-column screen-hight">
+                <div class="title-text">
+                    <img src="img/logo-line-yellow.png" class="background-image" alt="">
+                    <h1 class="yellow-box">hand </h1>
+                    <h1>gedruckt</h1>
+                    <p class="slanted indented">handgedruckt von <br> philipp & elisa</p>
+                </div>
+                <div class="title-gallery">
+                    <img src="img/print.png" class="image-large" alt="">
+                    <img src="img/reboot.png" class="image-small" alt="">
+                </div>
+                <img class="bottom-section-image" src="img/tshirt.png" alt="">
+                <img class="middle-section-image" src="img/jute.png" alt="">
+            </header>
+
+        </div>
+    </section>
+
+    <section>
+        <img class="coverimage" src="img/screenprint.png" alt="">
+    </section>
+
+    <section class="yellow">
+        <div class="content-wrapper">
+            <header class="two-column screen-hight">
+                <div class="title-text">
+                    <h2 class="white-box">dein </h2>
+                    <h2>camp-shirt</h2>
+                    <p>Wir drucken selbst kleine auflagen für dich zu einem fairen preis, weil wir Christliche
+                        Jugendarbeiten unterstützen wollen</p>
+                </div>
+                <div class="title-gallery">
+                    <img src="img/screen.png" class="image-large" alt="">
+
+                </div>
+
+                <!-- <img class="top-section-image" src="img/bucket.png" alt=""> -->
+                <div class="image-row">
+                    <img src="img/1.png" alt="">
+                    <img src="img/1.png" alt="">
+                    <img src="img/1.png" alt="">
+                    <img src="img/1.png" alt="">
+                </div>
+            </header>
+
+        </div>
+    </section>
+
+    <section class="white">
+        <div class="content-wrapper">
+            <header class="one-column screen-hight">
+                <div class="title-text">
+                    <h2 class="yellow-box">Kontakt </h2>
+                    <p>Schrieibe uns und wir machen dir ein individuelles Preisangebot</p><br><br>
+                    <form action="">
+                        <label for="text">Name</label>
+                        <input type="text" placeholder="Lotte Heldt">
+                        <label for="email">Email</label>
+                        <input type="email" placeholder="lotte@handheldt.de">
+                        <label for="message">Nachricht</label>
+                        <textarea name="message" id="message" cols="30" rows="10"
+                            placeholder="Was ich euch schon immer mal sagen wollte..."></textarea>
+                        <button>Senden</button>
+                    </form>
+                </div>
+
+                <img class="bottom-section-image-right" src="img/tshirt-yellow.png" alt="">
+
+            </header>
+
+        </div>
+    </section>
+
+    <section class="black">
+        <footer class="content-wrapper">
+            <div class="two-column-3rds">
+                <div class="kontaktdaten">
+                    <h3>handheldt</h3>
+                    <p>Elisa & Philipp Heldt <br>
+                        Im Steigert 3 <br>
+                        67459 Böhl-Igglelheim
+                    </p>
+                </div>
+
+                <div class="buttons-footer">
+                    <button>Impressum</button>
+                    <button>Philipp Heldt Design</button>
+                </div>
+
+            </div>
+        </footer>
+    </section>
+
 </body>
 
 </html>
