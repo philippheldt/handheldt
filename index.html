@@ -117,7 +117,8 @@
                 <div class="title-text">
                     <h2 class="yellow-box">Kontakt </h2>
                     <p>Schrieibe uns und wir machen dir ein individuelles Preisangebot</p><br><br>
-                    <form name="Kontaktformular" action="sucess.html" method="POST" netlify>
+                    <form name="Kontaktformular" action="sucess.html" method="POST" netlify-honeypot="bot-field"
+                        netlify>
                         <label for="text">Name</label>
                         <input name="Name" type="text" placeholder="Hand Heldt">
                         <label for="email">Email</label>
@@ -125,6 +126,7 @@
                         <label for="message">Nachricht</label>
                         <textarea name="Nachricht" id="message" cols="30" rows="10"
                             placeholder="Hier Nachricht eingeben"></textarea>
+                        <div data-netlify-recaptcha="true"></div>
                         <button type="submit">Senden</button>
                     </form>
                 </div>
