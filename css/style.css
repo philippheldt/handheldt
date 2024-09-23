@@ -376,6 +376,8 @@ textarea {
   margin-bottom: 10px;
 }
 
+/* Yellow button */
+
 button {
   padding: 0.5rem 1rem;
   border-radius: var(--standard-radius);
@@ -389,6 +391,13 @@ button {
   transition: all 0.3s;
   width: fit-content;
   margin-bottom: 10px;
+}
+
+/* black Button */
+
+button.black {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 footer {
