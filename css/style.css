@@ -6,7 +6,7 @@ html {
   --primary-color: #0c0b21;
   --secondary-color: #f8f7f4;
   --accent-color: #fce8b9;
-  --standard-radius: 0.5rem;
+  --standard-radius: 0.3rem;
 }
 
 @font-face {
@@ -111,7 +111,7 @@ body {
 }
 
 .content-wrapper {
-  max-width: 900px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
@@ -224,6 +224,7 @@ nav a {
   transform: scale(1.05);
   /* blend in the color with an animation */
   transition: all 0.3s;
+  border: #0c0b21 1px solid;
 }
 
 .screen-hight {
@@ -417,4 +418,45 @@ footer {
 .image-row img {
   border-radius: var(--standard-radius);
   width: 23%;
+}
+
+.ec-cart-widget {
+  width: 10px;
+}
+
+.ec-cart-widget {
+  transition: all 0.3s;
+  transform: scale(0.8);
+}
+
+.ec-cart-widget:hover {
+  transform: scale(0.85);
+  transform-origin: right;
+
+  filter: hue-rotate(-10deg) brightness(0.9);
+
+  transition: all 0.3s;
+}
+
+/* Media queires to reorder content after window size is smaller than 820px */
+
+@media (max-width: 1020px) {
+  nav {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 820px) {
+  .content-wrapper {
+    padding: 0 40px;
+  }
+  nav img {
+    width: 20px;
+  }
+  nav a {
+    padding: 1rem 1rem;
+  }
+  .ec-cart-widget {
+    transform: scale(0.8) translateX(-50px);
+  }
 }
