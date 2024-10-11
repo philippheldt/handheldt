@@ -192,7 +192,7 @@ nav {
   align-items: center;
   background-color: var(--secondary-color);
   border-radius: 200px;
-  box-shadow: 0 0 250px rgba(0, 0, 0, 1);
+  box-shadow: 0 0 300px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
 }
 
@@ -477,5 +477,6 @@ footer {
   }
   nav {
     padding: 10px 0;
+    box-shadow: 0 0 300px rgba(0, 0, 0, 0.5);
   }
 }
