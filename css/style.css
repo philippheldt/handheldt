@@ -532,4 +532,7 @@ footer div :nth-child(3) {
     width: 30px;
     content: url(../img/logo_white.png);
   }
+  footer {
+    padding-bottom: 150px;
+  }
 }
