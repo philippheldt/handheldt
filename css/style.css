@@ -460,3 +460,18 @@ footer {
     transform: scale(0.85) translateX(-50px);
   }
 }
+
+@media (max-width: 500px) {
+  nav a {
+    padding: 0.4rem 0.5rem;
+  }
+  nav img {
+    width: 30px;
+  }
+  .nav-wrapper {
+    top: 30px;
+  }
+  nav {
+    padding: 10px 0;
+  }
+}
