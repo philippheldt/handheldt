@@ -456,4 +456,7 @@ footer {
   .ec-cart-widget {
     transform: scale(0.8) translateX(-50px);
   }
+  .ec-cart-widget:hover {
+    transform: scale(0.85) translateX(-50px);
+  }
 }
