@@ -192,8 +192,9 @@ nav {
   align-items: center;
   background-color: var(--secondary-color);
   border-radius: 200px;
-  box-shadow: 0 0 450px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 0 250px rgba(0, 0, 0, 0.15); */
   transition: all 0.3s;
+  filter: drop-shadow(0 0 250px rgba(0, 0, 0, 0.5));
 }
 
 nav:hover {
