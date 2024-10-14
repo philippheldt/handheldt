@@ -104,11 +104,13 @@ body {
 .yellow-box {
   background-color: var(--accent-color);
   border-radius: var(--standard-radius);
+  color: var(--primary-color);
 }
 
 .white-box {
   background-color: var(--secondary-color);
   border-radius: var(--standard-radius);
+  color: var(--primary-color);
 }
 
 .content-wrapper {
@@ -399,6 +401,11 @@ header {
   filter: drop-shadow(0 0 30px rgb(0, 0, 0, 0.25));
 }
 
+.vertical-distance {
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -526,10 +533,24 @@ footer div :nth-child(3) {
   transition: all 0.3s;
 }
 
-.yellow-frame {
+.blue-frame {
   background-color: var(--accent-color-blue);
   border-radius: var(--standard-radius);
   padding: 50px 40px;
+}
+
+.dark-blue-frame {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border-radius: var(--standard-radius);
+  padding: 50px 40px;
+}
+
+.overlay-frame {
+  box-sizing: border-box;
+  transform: translateY(-50px);
+  width: 90%;
+  margin: -50px auto;
 }
 
 /* .yellow-frame h2 {
