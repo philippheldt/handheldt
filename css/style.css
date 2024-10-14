@@ -563,6 +563,13 @@ footer div :nth-child(3) {
   left: 0;
 }
 
+.full-width {
+  width: 100%; /* Set width to fill the container */
+  height: 150px; /* Set your desired height */
+  resize: none; /* Disable resizing */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
 /* Media queires to reorder content after window size is smaller than 820px */
 
 @media (max-width: 1020px) {
