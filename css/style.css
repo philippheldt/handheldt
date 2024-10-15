@@ -685,3 +685,13 @@ footer div :nth-child(3) {
     padding-bottom: 150px;
   }
 }
+
+/* Media query checking if the device has touch */
+@media (hover: none) {
+  .image-hover:after {
+    display: none;
+  }
+  .image-hover:hover {
+    transform: translateY(0px) scale(1);
+  }
+}
