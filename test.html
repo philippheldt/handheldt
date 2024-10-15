@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <title>WordPress API Posts</title>
+</head>
+
+<body>
+    <h1>Latest Posts</h1>
+    <div id="posts-container"></div>
+
+    <script>
+
+        // Function to fetch and display posts
+        function fetchPosts() {
+            const container = document.getElementById("posts-container");
+
+            // Make an API call to WordPress
+            fetch("https://public-api.wordpress.com/rest/v1.1/sites/handheldt.wordpress.com/posts/")
+                .then(response => response.json()) // Parse the JSON from the response
+                .then(data => {
+                    data.posts.forEach(post => {
+                        // Create a div for each post
+                        const postDiv = document.createElement("div");
+                        postDiv.classList.add("post");
+
+                        // Create and append the post title
+                        const postTitle = document.createElement("h2");
+                        postTitle.innerHTML = post.title; // This is the post title
+                        postDiv.appendChild(postTitle);
+
+                        // Create and append the post content
+                        const postContent = document.createElement("div");
+                        postContent.innerHTML = post.content; // This is the post content (HTML)
+                        postDiv.appendChild(postContent);
+
+                        // Add the post div to the container
+                        container.appendChild(postDiv);
+                    });
+                })
+                .catch(error => console.error('Error fetching posts:', error));
+        }
+
+        // Call the function to fetch and display posts when the page loads
+        window.onload = fetchPosts;
+
+    </script>
+</body>
+
+</html>

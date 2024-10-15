@@ -221,6 +221,8 @@ nav {
   box-shadow: 0 0 300px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
   border: #ededed 0px solid;
+
+  overflow: hidden;
 }
 
 nav:hover {
@@ -395,10 +397,25 @@ header {
   transition: all 0.3s;
 }
 
+.image-hover:after {
+  content: "Home";
+  position: absolute;
+  bottom: -20px;
+  transform: translateX(-45%) scale(0.7);
+  /* center horizontally */
+  left: 50%;
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+
+.image-hover:hover:after {
+  transform: translateY(-15px) translateX(-45%) scale(0.9);
+  opacity: 1;
+}
+
 .image-hover:hover {
-  transform: scale(1.1);
+  transform: translateY(-10px) scale(0.9);
   transition: all 0.3s;
-  filter: drop-shadow(0 0 30px rgb(0, 0, 0, 0.25));
 }
 
 .vertical-distance {
