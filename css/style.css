@@ -577,7 +577,9 @@ footer div :nth-child(3) {
 .title-split h2 {
   display: inline-block;
 }
-
+.header-text .title-split {
+  margin: 0 10px;
+}
 .video-teaser-frame {
   display: grid;
   width: 100%;
