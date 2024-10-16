@@ -616,6 +616,19 @@ footer div :nth-child(3) {
   box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
+.payment-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 20px;
+}
+
+.payment-icons svg {
+  width: 25px;
+  /* color */
+  fill: var(--primary-color);
+}
+
 /* Media queires to reorder content after window size is smaller than 820px */
 
 @media (max-width: 1020px) {
