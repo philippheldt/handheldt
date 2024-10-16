@@ -10,12 +10,7 @@ const navBar = `
             <div></div>
             <div></div>
             <div class="ec-cart-widget"></div>
-            <div>
-                <script data-cfasync="false" type="text/javascript"
-                    src="https://app.ecwid.com/script.js?109124372&data_platform=code&data_date=2024-10-11"
-                    charset="utf-8"></script>
-                <script type="text/javascript">Ecwid.init();</script>
-            </div>
+            <div></div>
         </nav>
     </div>
 `;
