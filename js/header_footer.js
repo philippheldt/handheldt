@@ -9,7 +9,9 @@ const navBar = `
             <a class="button-hover" href="shop.html">Shop</a>
             <div></div>
             <div></div>
+            <a href="shop.html#!/~/cart">
             <div class="ec-cart-widget"></div>
+            </a>
             <div></div>
         </nav>
     </div>

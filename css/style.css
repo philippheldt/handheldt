@@ -560,6 +560,9 @@ footer div :nth-child(3) {
 .ec-cart-widget {
   width: 10px;
 }
+.ec-cart-widget div {
+  pointer-events: none;
+}
 
 .ec-cart-widget {
   transition: all 0.3s;
