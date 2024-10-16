@@ -4,8 +4,10 @@ const navBar = `
             <div></div>
             <div></div>
             <div></div>
+            <a class="button-hover" href="shop.html">Blog</a>
             <a class="button-hover" href="index.html#about">Über uns</a>
             <a class="image-hover" href="index.html"><img class="wave" src="img/logo.png" alt=""></a>
+            <a class="button-hover" href="index.html#kontakt">Kontakt</a>
             <a class="button-hover" href="shop.html">Shop</a>
             <div></div>
             <div></div>
