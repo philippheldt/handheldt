@@ -1,14 +1,34 @@
 const navBar = `
+    
     <div class="nav-wrapper">
+    <div class="nav-mobile-wrapper nav-small-remove">
+    
+    <div class="nav-mobile closed" id="nav-mobile">
+        
+            <a class="button-hover nav-mobile-item" href="index.html">Blog</a>
+              <a class="button-hover nav-mobile-item" href="index.html#about">Über uns</a>
+                <a class="button-hover nav-mobile-item" href="index.html#kontakt">Kontakt</a>
+                  <a class="button-hover nav-mobile-item" href="shop.html">Shop</a>
+                  </div>
+                  </div>
         <nav>
             <div></div>
+            <div class="hamburger nav-small">
+          <div class="menu-icon">
+            <input class="menu-icon__cheeckbox" id="hamburger-menu" type="checkbox">
+            <div>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
             <div></div>
             <div></div>
-            <a class="button-hover" href="shop.html">Blog</a>
-            <a class="button-hover" href="index.html#about">Über uns</a>
+            <a class="button-hover nav-wide" href="shop.html">Blog</a>
+            <a class="button-hover nav-wide" href="index.html#about">Über uns</a>
             <a class="image-hover" href="index.html"><img class="wave" src="img/logo.png" alt=""></a>
-            <a class="button-hover" href="index.html#kontakt">Kontakt</a>
-            <a class="button-hover" href="shop.html">Shop</a>
+            <a class="button-hover nav-wide" href="index.html#kontakt">Kontakt</a>
+            <a class="button-hover nav-wide" href="shop.html">Shop</a>
             <div></div>
             <div></div>
             <a href="shop.html#!/~/cart">
@@ -84,3 +104,10 @@ const footer = `
 document.body.insertAdjacentHTML("afterbegin", navBar);
 // add footer to the body
 document.body.insertAdjacentHTML("beforeend", footer);
+
+document.getElementById("hamburger-menu").addEventListener("click", function () {
+  console.log("fired");
+
+  var navMobile = document.getElementById("nav-mobile");
+  navMobile.classList.toggle("closed");
+});
