@@ -284,10 +284,6 @@ a:hover {
   opacity: 0;
 }
 
-div:has(.closed) {
-  pointer-events: none;
-}
-
 .nav-mobile-item {
   display: flex;
   flex-direction: column;
