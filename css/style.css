@@ -283,6 +283,10 @@ a:hover {
   opacity: 0;
 }
 
+.nav-mobile-wrapper:has(.nav-mobile.closed) {
+  display: none;
+}
+
 .nav-mobile-item {
   display: flex;
   flex-direction: column;
