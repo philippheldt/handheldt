@@ -784,6 +784,7 @@ footer div :nth-child(3) {
 
 .nav-small-remove {
   display: none;
+   pointer-events: none;
 }
 
 @media (min-width: 1024px) {
