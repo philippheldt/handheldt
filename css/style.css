@@ -213,7 +213,6 @@ body {
   left: 0px;
   right: 0px;
   z-index: 1000;
-  pointer-events: none;
 }
 
 nav {
@@ -779,11 +778,13 @@ footer div :nth-child(3) {
 }
 
 .nav-small {
+  pointer-events: none;
   opacity: 0;
 }
 
 .nav-small-remove {
   display: none;
+   pointer-events: none;
 }
 
 @media (min-width: 1024px) {
@@ -861,7 +862,6 @@ footer div :nth-child(3) {
     width: 30px;
   }
   .nav-wrapper {
-        pointer-events: all;
     top: auto;
     bottom: 40px;
   }
