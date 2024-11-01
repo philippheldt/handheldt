@@ -1,6 +1,6 @@
 const navBar = `
     
-    <div class="nav-wrapper">
+    <header class="nav-wrapper">
     <div class="nav-mobile-wrapper nav-small-remove">
     
     <div class="nav-mobile closed" id="nav-mobile">
@@ -36,7 +36,7 @@ const navBar = `
             </a>
             <div></div>
         </nav>
-    </div>
+    </header>
 `;
 const footer = `
     <section class="full-white">
