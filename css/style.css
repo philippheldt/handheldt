@@ -325,6 +325,9 @@ a:hover {
   padding: 50px 0;
   min-height: 65vh;
 }
+.height-margin {
+  padding: 40px 0;
+}
 
 .top-distance {
   margin-top: 150px;
