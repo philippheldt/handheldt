@@ -1,4 +1,9 @@
 const navBar = `
+    <div class="sticky-banner">
+        <div class="content-wrapper">
+            Ab <b>65€ Bestellwert </b> kostenloser Versand
+        </div>
+    </div>
     
     <div class="nav-wrapper">
     <div class="nav-mobile-wrapper nav-small-remove">

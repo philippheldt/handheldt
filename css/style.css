@@ -213,7 +213,7 @@ body {
 
 .nav-wrapper {
   position: fixed;
-  top: 20px;
+  top: 53px;
   left: 0px;
   right: 0px;
   z-index: 1000;
@@ -462,6 +462,18 @@ header {
   animation-duration: 5s;
   animation-iteration-count: infinite;
   transform-origin: 70% 70%;
+}
+
+.sticky-banner{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  text-align: center;
+  padding: 10px 0;
 }
 
 .image-hover {
@@ -874,7 +886,10 @@ footer div :nth-child(3) {
     bottom: 40px;
   }
   .top-distance {
-    margin-top: 30px;
+    margin-top: 60px;
+  }
+  .sticky-banner{
+    font-size: small;
   }
   nav {
     padding: 10px 0;
