@@ -93,7 +93,7 @@ const footer = `
             <div class="">
                 <a href="impressum.html">Impressum</a>
                 <img src="img/logotype.png" alt="">
-                <a href="">Datenschutz</a>
+                <a href="datenschutz.html">Datenschutz</a>
             </div>
 
         </footer>
