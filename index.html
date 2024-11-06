@@ -19,6 +19,7 @@
         src="https://app.ecwid.com/script.js?109124372&data_platform=code&data_date=2024-10-11"
         charset="utf-8"></script>
     <script type="text/javascript">Ecwid.init();</script>
+
 </head>
 
 <body>
@@ -175,6 +176,14 @@
         </div>
     </section>
 
+    <script>
+        const video = document.querySelector('video');
+        video.onerror = () => {
+            video.style.display = 'none';
+            document.querySelector('.video-teaser-frame').style.backgroundImage = 'url("img/fallback_image.jpg")';
+        };
+
+    </script>
 </body>
 
 </html>
