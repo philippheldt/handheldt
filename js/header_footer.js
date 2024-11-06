@@ -10,7 +10,7 @@ const navBar = `
     
     <div class="nav-mobile closed" id="nav-mobile">
         
-            <a class="button-hover nav-mobile-item" href="index.html">Blog</a>
+            <a class="button-hover nav-mobile-item" href="blog.html">Blog</a>
               <a class="button-hover nav-mobile-item" href="index.html#about">Über uns</a>
                 <a class="button-hover nav-mobile-item" href="index.html#kontakt">Kontakt</a>
                   <a class="button-hover nav-mobile-item" href="shop.html">Shop</a>
@@ -29,7 +29,7 @@ const navBar = `
         </div>
             <div></div>
             <div></div>
-            <a class="button-hover nav-wide" href="shop.html">Blog</a>
+            <a class="button-hover nav-wide" href="blog.html">Blog</a>
             <a class="button-hover nav-wide" href="index.html#about">Über uns</a>
             <a class="image-hover" href="index.html"><img class="wave" src="img/logo.png" alt=""></a>
             <a class="button-hover nav-wide" href="index.html#kontakt">Kontakt</a>
