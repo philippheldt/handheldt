@@ -35,7 +35,7 @@ body {
   margin: 0;
   padding: 0;
 }
-i{
+i {
   font-family: "Source Serif 4", serif;
   font-style: italic;
 }
@@ -467,7 +467,7 @@ header {
   transform-origin: 70% 70%;
 }
 
-.sticky-banner{
+.sticky-banner {
   position: fixed;
   left: 0;
   right: 0;
@@ -648,6 +648,13 @@ footer div :nth-child(3) {
 .dark-blue-frame {
   background-color: var(--primary-color);
   color: var(--secondary-color);
+  border-radius: var(--standard-radius);
+  padding: 50px 40px;
+}
+
+.yellow-frame {
+  background-color: var(--accent-color);
+  color: var(--primary-color);
   border-radius: var(--standard-radius);
   padding: 50px 40px;
 }
@@ -891,7 +898,7 @@ footer div :nth-child(3) {
   .top-distance {
     margin-top: 60px;
   }
-  .sticky-banner{
+  .sticky-banner {
     font-size: small;
   }
   nav {
