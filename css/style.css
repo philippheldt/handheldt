@@ -915,7 +915,8 @@ footer div :nth-child(3) {
   }
 
   .blue-frame,
-  .dark-blue-frame {
+  .dark-blue-frame,
+  .yellow-frame {
     padding: 20px 20px;
   }
   .content-wrapper,
