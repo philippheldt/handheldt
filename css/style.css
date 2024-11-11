@@ -390,6 +390,7 @@ header {
   top: 0;
   right: 0;
   width: 100%;
+  z-index: 1;
   background: linear-gradient(rgba(255, 255, 255, 0), var(--secondary-color));
 }
 .overlay {
@@ -397,6 +398,7 @@ header {
   bottom: 50px;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 2;
 }
 .no-pointer {
   pointer-events: none;
@@ -819,19 +821,18 @@ footer div :nth-child(3) {
 
 .vorteile {
   padding: 80px 0;
-  display: grid ;
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   gap: 2rem;
 }
 
-.vorteil-item img{
+.vorteil-item img {
   width: 100%;
 }
 
-.vorteil-item div{
+.vorteil-item div {
   margin-top: 10px;
   text-align: center;
-
 }
 
 @media (min-width: 1024px) {
@@ -895,7 +896,7 @@ footer div :nth-child(3) {
 }
 
 @media (max-width: 550px) {
-  .vorteile div{
+  .vorteile div {
     font-size: small;
   }
   .nav-wide {
@@ -948,8 +949,6 @@ footer div :nth-child(3) {
     padding-right: 25px;
   }
 }
-
-
 
 /* Media query checking if the device has touch */
 @media (hover: none) {
