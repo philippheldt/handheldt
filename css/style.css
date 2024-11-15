@@ -597,6 +597,31 @@ button.black:hover {
   border: var(--primary-color) 1px solid;
 }
 
+/* General button styles */
+.black-button {
+  display: inline-block; /* Ensure the anchor behaves like a button */
+  padding: 1rem 3rem;
+  border-radius: var(--standard-radius);
+  border: var(--primary-color) 1px solid;
+  font-family: "euclid", sans-serif;
+  font-weight: 500;
+  font-size: medium;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  text-decoration: none !important; /* Remove underline from link */
+  text-align: center; /* Center text */
+  cursor: pointer;
+  transition: all 0.3s;
+  width: fit-content;
+  margin-bottom: 10px;
+}
+
+.black-button:hover {
+  background-color: #e9e9e9;
+  color: var(--primary-color);
+  border: var(--primary-color) 1px solid;
+}
+
 footer {
   padding: 40px 0;
   max-width: 800px;
