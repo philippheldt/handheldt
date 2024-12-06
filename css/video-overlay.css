@@ -1,0 +1,55 @@
+.material-symbols-rounded {
+    font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+  }
+.video-teaser-frame {
+    display: grid;
+    width: 100%;
+    height: 75vh;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .video-overlay {
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  
+  .video-teaser-frame:hover .video-overlay {
+    background: rgba(0, 0, 0, 0.8);
+    transition: all 0.3s ease-in-out;
+    transform: scale(1.1);
+  }
+  
+  .loudspeaker-icon {
+    font-size: 24px; /* Adjust the size of the icon */
+    color: white;
+  }
+  
+  .video-teaser-frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+  }
+
+  .muted {
+    display: block; /* Show muted icon by default */
+  }
+  
+  .unmuted {
+    display: none; /* Hide unmuted icon by default */
+  }
+
+
+  
