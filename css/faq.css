@@ -1,0 +1,72 @@
+.faq {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .faq-item {
+    margin-bottom: 15px; /* Space between cards */
+    border-radius: 8px; /* Rounded corners */
+    background: #fff; /* Card background */
+    box-shadow: 0 4px 200px rgba(0, 0, 0, 0.1); /* Subtle shadow for card effect */
+    overflow: hidden; /* Ensures content stays within rounded corners */
+  }
+  
+  .faq-question {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 15px 20px; /* Inner padding for the question */
+    background: #f9f9f9; /* Slightly different background for the header */
+    border-bottom: 1px solid #eee; /* Subtle divider between question and answer */
+  }
+  
+  .faq-question:hover {
+    background: #f3f3f3; /* Slight hover effect */
+  }
+  
+  .faq-question .icon {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 24px;
+    transform: rotate(0deg);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .faq-question h3 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0 20px; /* Match the padding of the header */
+    background: #fff; /* Same as card background */
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
+  }
+  
+  .faq-answer video {
+    width: 100%;
+  }
+  
+  .faq-answer p {
+    margin: 20px 0;
+  }
+  
+  /* Input and toggle styles */
+  .faq-toggle {
+    display: none;
+  }
+  
+  /* Active state when checkbox is checked */
+  .faq-toggle:checked + .faq-question .icon {
+    transform: rotate(45deg);
+  }
+  
+  .faq-toggle:checked ~ .faq-answer {
+    max-height: 1000px; /* Adjust based on content length */
+    opacity: 1;
+    padding: 15px 20px; /* Add padding when visible */
+  }
+  
