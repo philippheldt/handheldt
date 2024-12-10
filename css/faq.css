@@ -70,3 +70,6 @@
     padding: 15px 20px; /* Add padding when visible */
   }
   
+  .faq-question h3 {
+  font-weight: 100;
+  }

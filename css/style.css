@@ -5,8 +5,9 @@ html {
 :root {
   --primary-color: #0c0b21;
   --secondary-color: #f8f7f4;
-  --accent-color: #fce8b9;
-  --accent-color-blue: #dce7e4;
+  --accent-color: #FFECD0;
+  --darker-accent-color: #ffe2bf;
+  --accent-color-blue: #dddddd;
   --standard-radius: 0.3rem;
 }
 
@@ -46,9 +47,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Source Serif 4", serif;
-  font-style: italic;
-  font-weight: 1000;
+  font-family: "Euclid", sans-serif;
+  font-style: normal;
+
+  font-optical-sizing: auto;
 }
 
 h1 {
@@ -109,11 +111,45 @@ body {
   color: var(--primary-color);
 }
 
+.yellow-underline {
+  position: relative;
+  display: inline-block; /* Ensures the underline width matches the text */
+}
+
+.yellow-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 0.1rem;
+  width: 100%; /* Covers the entire text */
+  height: 0.3em; /* Adjust thickness of the underline */
+  background-color: var(--darker-accent-color); /* Change color if needed */
+ z-index: -1;
+}
+
 .white-box {
   padding: 0.4rem;
   background-color: var(--secondary-color);
   border-radius: var(--standard-radius);
   color: var(--primary-color);
+}
+
+.white-underline {
+  position: relative;
+  display: inline-block; /* Ensures the underline width matches the text */
+}
+
+.white-underline::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-radius: 0.1rem;
+  width: 100%; /* Covers the entire text */
+  height: 0.3em; /* Adjust thickness of the underline */
+  background-color: #fff; /* Change color if needed */
+  z-index: -1;
 }
 
 .content-wrapper {
@@ -177,7 +213,7 @@ body {
 }
 
 .image-large {
-  width: 60%;
+  width: 95%;
   border-radius: var(--standard-radius);
 }
 .image-small {
@@ -336,13 +372,22 @@ a:hover {
   width: 20px;
 }
 
+section {
+  position: relative; /* Establishes stacking context for the section */
+  z-index: 0; 
+}
+
+
 section.white {
+
   background-color: var(--secondary-color);
   color: var(--primary-color);
   margin: -5px 0;
 }
 
 .white-frame {
+  position: relative; /* Establishes stacking context for the section */
+  z-index: 0; 
   background-color: #fff;
   color: var(--primary-color);
   padding: 40px;
@@ -396,7 +441,7 @@ header {
 }
 
 .height-maximizer {
-  max-height: 650px;
+  max-height: 600px;
   overflow: hidden;
   margin-bottom: 100px;
 
@@ -687,12 +732,16 @@ footer div :nth-child(3) {
 }
 
 .blue-frame {
+  position: relative;
+  z-index: 0;
   background-color: var(--accent-color-blue);
   border-radius: var(--standard-radius);
   padding: 50px 40px;
 }
 
 .dark-blue-frame {
+  position: relative; /* Establishes stacking context for the section */
+  z-index: 0; 
   background-color: var(--primary-color);
   color: var(--secondary-color);
   border-radius: var(--standard-radius);
@@ -726,8 +775,7 @@ footer div :nth-child(3) {
 .video-teaser-frame {
   display: grid;
   width: 100%;
-  height: 75vh;
-  border-radius: var(--standard-radius);
+  height: 95vh;
   position: relative;
   overflow: hidden;
 }
@@ -742,15 +790,7 @@ footer div :nth-child(3) {
   left: 0;
 }
 
-.video-teaser-frame img {
-  grid-area: 1/1;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
+
 
 .full-width {
   width: 100%; /* Set width to fill the container */
