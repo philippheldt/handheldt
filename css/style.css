@@ -1056,12 +1056,13 @@ text-decoration: none;
 }
 
 @media (max-width: 550px) {
+  .vorteile {
+    grid-template-columns: 1fr;
+  }
   .header-logo{
     max-width: 350px;
   }
-  .vorteile div {
-    font-size: small;
-  }
+
   .nav-wide {
     display: none;
   }
