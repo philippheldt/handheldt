@@ -6,16 +6,15 @@ const navBar = `
     </div>
     
     <div class="nav-wrapper">
-    <div class="nav-mobile-wrapper nav-small-remove">
+        <div class="nav-mobile-wrapper nav-small-remove">
     
-    <div class="nav-mobile closed" id="nav-mobile">
-        
-            <a class="button-hover nav-mobile-item" href="blog.html">Blog</a>
-              <a class="button-hover nav-mobile-item" href="index.html#about">Über uns</a>
+            <div class="nav-mobile closed" id="nav-mobile">
+                <a class="button-hover nav-mobile-item" href="blog.html">Blog</a>
+                <a class="button-hover nav-mobile-item" href="index.html#about">Über uns</a>
                 <a class="button-hover nav-mobile-item" href="index.html#kontakt">Kontakt</a>
-                  <a class="button-hover nav-mobile-item" href="shop.html">Shop</a>
-                  </div>
-                  </div>
+                <a class="button-hover nav-mobile-item" href="shop.html">Shop</a>
+            </div>
+        </div>
         <nav>
             <div></div>
             <div class="hamburger nav-small">
@@ -27,7 +26,8 @@ const navBar = `
             </div>
           </div>
         </div>
-            <div></div>
+           
+           <div ></div>
             <div></div>
             <a class="button-hover nav-wide" href="blog.html">Blog</a>
             <a class="button-hover nav-wide" href="index.html#about">Über uns</a>
@@ -47,7 +47,7 @@ const footer = `
     <section class="full-white">
         <div class="content-wrapper two-column-force">
             <div class="author">
-                © Webseite ✋🏼-gemacht von <a href="https://www.philippjenny.de" target="_blank" > Philipp Heldt</a>
+                © Webseite 🤚-gemacht von <a href="https://www.philippjenny.de" target="_blank" > Philipp Heldt</a>
             </div>
             <div class="payment-icons">
                 <svg xmlns="http://www.w3.org/2000/svg"

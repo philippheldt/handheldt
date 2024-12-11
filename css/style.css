@@ -63,7 +63,7 @@ h1 {
 h2 {
   font-size: 2.5rem;
   line-height: 1;
-  margin: 0;
+  margin: 0 5px 0 0;
   width: fit-content;
   font-weight: 600;
 }
@@ -190,12 +190,19 @@ body {
   flex-direction: column;
   text-align: center;
   height: 100%;
+  grid-area: 1/1;
 }
 
-.header-text h1,
+.header-logo {
+  max-width: 500px;
+  margin: 0 auto;
+  z-index: 1;
+  pointer-events: none;
+}
 .header-text p {
   color: #fff;
-  filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0 30px rgba(0, 0, 0, 1));
+  transform: translateY(-50px);
 }
 .title-text h1 {
   display: inline-block;
@@ -790,6 +797,15 @@ footer div :nth-child(3) {
   left: 0;
 }
 
+.black-video-overlay{
+  grid-area: 1/1;
+  background-color: #000;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0.3;
+}
+
 
 
 .full-width {
@@ -933,6 +949,7 @@ footer div :nth-child(3) {
   border: #212529 0px solid;
   transform: scale(1);
   transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .insta-button:hover{
@@ -946,9 +963,12 @@ text-decoration: none;
 .insta-button img{
   width: 20px;
   height: 20px;
-  margin-right: 10px;
+
 }
 
+.insta-button span{
+  margin-left: 10px;
+}
 
 
 
@@ -1014,6 +1034,9 @@ text-decoration: none;
 }
 
 @media (max-width: 550px) {
+  .header-logo{
+    max-width: 350px;
+  }
   .vorteile div {
     font-size: small;
   }
