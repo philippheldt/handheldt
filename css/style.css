@@ -920,6 +920,39 @@ footer div :nth-child(3) {
   text-align: center;
 }
 
+.insta-button{
+  display: flex;
+  margin: 40px auto;
+  width: fit-content;
+  background-color: #fff;
+  color: #0c0b21;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 500;
+  text-decoration: none;
+  border: #212529 0px solid;
+  transform: scale(1);
+  transition: all 0.3s ease;
+}
+
+.insta-button:hover{
+  background-color: #ededed;
+  transform: scale(1.04);
+  /* blend in the color with an animation */
+text-decoration: none;
+  border: var(--primary-color) 0.9px solid;
+}
+
+.insta-button img{
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+
+
+
+
 @media (min-width: 1024px) {
   .menu-icon:hover span:first-of-type {
     width: 26px;
