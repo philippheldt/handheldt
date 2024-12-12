@@ -47,7 +47,7 @@ const footer = `
     <section class="full-white">
         <div class="content-wrapper two-column-force">
             <div class="author">
-                © Webseite 🤚-gemacht von <a href="https://www.philippjenny.de" target="_blank" > Philipp Heldt</a>
+                © Webseite 🤚🏼-gemacht von <a href="https://www.philippjenny.de" target="_blank" > Philipp Heldt</a>
             </div>
             <div class="payment-icons">
                 <svg xmlns="http://www.w3.org/2000/svg"
