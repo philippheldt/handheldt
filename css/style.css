@@ -69,8 +69,8 @@ h2 {
 }
 
 h3 {
-  font-size: 3rem;
-
+  display: inline;
+  font-size: 2rem;
   margin: 0;
   width: fit-content;
   font-weight: 600;
@@ -666,6 +666,11 @@ button.black:hover {
   transition: all 0.3s;
   width: fit-content;
   margin-bottom: 10px;
+}
+
+.center {
+  margin-left: 50%;
+  transform: translateX(-50%);  
 }
 
 .black-button:hover {
