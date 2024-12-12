@@ -72,6 +72,7 @@ h3 {
   display: inline;
   font-size: 2rem;
   margin: 0;
+  line-height: 1;
   width: fit-content;
   font-weight: 600;
 }
@@ -652,7 +653,7 @@ button.black:hover {
 /* General button styles */
 .black-button {
   display: inline-block; /* Ensure the anchor behaves like a button */
-  padding: 1rem 3rem;
+  padding: 1rem 2.5rem;
   border-radius: var(--standard-radius);
   border: var(--primary-color) 1px solid;
   font-family: "euclid", sans-serif;
