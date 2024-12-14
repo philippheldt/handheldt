@@ -276,7 +276,7 @@ nav {
   border: #ededed 0px solid;
   position: relative;
   overflow: hidden;
-  z-index: 100;
+  z-index: 1;
 }
 
 nav:hover {
