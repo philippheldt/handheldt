@@ -1000,7 +1000,7 @@ text-decoration: none;
 
 .image-section {
   position: relative;
-  width: 100vw;
+  width: 100%;
   overflow: hidden;
   margin: 100px 0;
 }
