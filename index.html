@@ -28,8 +28,8 @@
         src="https://app.ecwid.com/script.js?109124372&data_platform=code&data_date=2024-10-11"
         charset="utf-8"></script>
     <script type="text/javascript">Ecwid.init();</script>
-
-    <script src="js/cookie_consent.js" defer></script>
+    <script src="js/cookie_consent.js" defer></script>#
+    <script src="js/video_replay.js" defer></script>
 </head>
 
 <body>
@@ -360,7 +360,7 @@
 
             <br><br>
             <div class="video-content-frame">
-                <video preload="none" class="blog-video" muted autoplay playsinline loop poster="img/nepal.jpg"
+                <video preload="none" class="blog-video" id="nepal-video" muted autoplay playsinline loop poster="img/nepal.jpg"
                     src="img/videos/nepal_no_text.mp4"></video>
                 <div class="video-overlay">
                     <span class="loudspeaker-icon muted material-symbols-rounded">
@@ -433,36 +433,6 @@
 
         </div>
     </section>
-
-    <script>
-
-
-        document.querySelector('.video-overlay').addEventListener('click', function () {
-            const video = document.querySelector('.blog-video');
-            const mutedIcon = document.querySelector('.loudspeaker-icon.muted');
-            const unmutedIcon = document.querySelector('.loudspeaker-icon.unmuted');
-
-            if (video.muted) {
-                // If the video is muted, unmute it and play from the beginning
-                video.muted = false;
-                video.currentTime = 0;
-                video.play();
-
-                // Toggle icons
-                mutedIcon.style.display = 'none';
-                unmutedIcon.style.display = 'block';
-            } else {
-                // If the video is unmuted, mute it
-                video.muted = true;
-
-                // Toggle icons
-                mutedIcon.style.display = 'block';
-                unmutedIcon.style.display = 'none';
-            }
-        });
-
-
-    </script>
 </body>
 
 </html>
