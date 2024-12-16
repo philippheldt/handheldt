@@ -129,9 +129,7 @@ const footer = `
     </section>
 `
 
-//add navBar to the body
 document.body.insertAdjacentHTML('afterbegin', navBar)
-// add footer to the body
 document.body.insertAdjacentHTML('beforeend', footer)
 
 document

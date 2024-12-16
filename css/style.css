@@ -118,9 +118,7 @@ body {
 
 .yellow-underline {
   position: relative;
-  display: inline-block;
-  /* Ensures the underline width matches the text */
-}
+  display: inline-block;}
 
 .yellow-underline::after {
   content: "";
@@ -129,11 +127,8 @@ body {
   left: 0;
   border-radius: 0.1rem;
   width: 100%;
-  /* Covers the entire text */
   height: 0.3em;
-  /* Adjust thickness of the underline */
   background-color: var(--darker-accent-color);
-  /* Change color if needed */
   z-index: -1;
 }
 
@@ -147,7 +142,6 @@ body {
 .white-underline {
   position: relative;
   display: inline-block;
-  /* Ensures the underline width matches the text */
 }
 
 .white-underline::after {
@@ -157,11 +151,8 @@ body {
   left: 0;
   border-radius: 0.1rem;
   width: 100%;
-  /* Covers the entire text */
   height: 0.3em;
-  /* Adjust thickness of the underline */
   background-color: #fff;
-  /* Change color if needed */
   z-index: -1;
 }
 
@@ -257,9 +248,7 @@ body {
 .two-column-force {
   display: grid;
   grid-template-columns: 1fr 1fr;
-
   gap: 1rem;
-  /* center grid items vertically */
   align-items: center;
 }
 
@@ -267,7 +256,6 @@ body {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 1rem;
-  /* center grid items vertically */
   align-items: center;
 }
 
@@ -377,7 +365,6 @@ a:hover {
 .button-hover:hover {
   background-color: #ededed;
   transform: scale(1.04);
-  /* blend in the color with an animation */
   transition: all 0.3s;
   border: var(--primary-color) 0.9px solid;
 }
@@ -401,7 +388,6 @@ a:hover {
 
 section {
   position: relative;
-  /* Establishes stacking context for the section */
   z-index: 0;
 }
 
@@ -415,7 +401,6 @@ section.white {
 
 .white-frame {
   position: relative;
-  /* Establishes stacking context for the section */
   z-index: 0;
   background-color: #fff;
   color: var(--primary-color);
@@ -424,7 +409,6 @@ section.white {
 }
 
 .post-data {
-  /* capitalize with light gray and bold and small text */
   font-size: small;
   color: #a0a0a0;
   font-weight: 500;
@@ -593,7 +577,6 @@ header {
   position: absolute;
   bottom: -20px;
   transform: translateX(-45%) scale(0.7);
-  /* center horizontally */
   left: 50%;
   transition: all 0.3s ease;
   opacity: 0;
@@ -634,7 +617,6 @@ input[type="email"] {
   border-radius: var(--standard-radius);
   border: 1px solid var(--primary-color);
   font-family: "euclid", sans-serif;
-  /* remove border */
   outline: none;
   border: none;
   margin-bottom: 25px;
@@ -646,13 +628,11 @@ textarea {
   border-radius: var(--standard-radius);
   border: 1px solid var(--primary-color);
   font-family: "euclid", sans-serif;
-  /* remove border */
   outline: none;
   border: none;
   margin-bottom: 10px;
 }
 
-/* Yellow button */
 
 button {
   padding: 1rem 3rem;
@@ -669,8 +649,6 @@ button {
   margin-bottom: 10px;
 }
 
-/* black Button */
-
 button.black {
   background-color: var(--primary-color);
   color: var(--secondary-color);
@@ -683,10 +661,8 @@ button.black:hover {
   border: var(--primary-color) 1px solid;
 }
 
-/* General button styles */
 .black-button {
   display: inline-block;
-  /* Ensure the anchor behaves like a button */
   padding: 1rem 2.5rem;
   border-radius: var(--standard-radius);
   border: var(--primary-color) 1px solid;
@@ -696,9 +672,7 @@ button.black:hover {
   background-color: var(--primary-color);
   color: var(--secondary-color);
   text-decoration: none !important;
-  /* Remove underline from link */
   text-align: center;
-  /* Center text */
   cursor: pointer;
   transition: all 0.3s;
   width: fit-content;
@@ -792,7 +766,6 @@ footer div :nth-child(3) {
 
 .dark-blue-frame {
   position: relative;
-  /* Establishes stacking context for the section */
   z-index: 0;
   background-color: var(--primary-color);
   color: var(--secondary-color);
@@ -857,13 +830,9 @@ footer div :nth-child(3) {
 
 .full-width {
   width: 100%;
-  /* Set width to fill the container */
   height: 150px;
-  /* Set your desired height */
   resize: none;
-  /* Disable resizing */
   box-sizing: border-box;
-  /* Include padding and border in the element's total width and height */
 }
 
 .payment-icons {
@@ -872,9 +841,7 @@ footer div :nth-child(3) {
   margin-top: 20px;
   margin-bottom: 20px;
   gap: 1rem;
-  /* wrap to next row */
   flex-wrap: wrap;
-  /* align right */
   justify-content: flex-end;
 }
 
@@ -1036,7 +1003,6 @@ footer div :nth-child(3) {
 .insta-button:hover {
   background-color: #ededed;
   transform: scale(1.04);
-  /* blend in the color with an animation */
   text-decoration: none;
   border: var(--primary-color) 0.9px solid;
 }
