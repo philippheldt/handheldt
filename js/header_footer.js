@@ -4,6 +4,30 @@ const navBar = `
             Ab <b>65€ Bestellwert </b> kostenloser Versand
         </div>
     </div>
+
+        <div id="cookie-banner">
+        <div>
+            <h4>Hinweis zum Datenschutz</h4>
+            <p>Wir nutzen Cookies und ähnliche Technologien, um deine Präferenzen zu speichern, den Erfolg unserer
+                Kampagnen zu messen und anonyme Daten zu analysieren, damit unsere Website noch besser wird. Wenn du auf
+                „Akzeptieren“ klickst, stimmst du der Verwendung aller Cookies zu.</p>
+            <a href="https://handheldt.de/datenschutz.html">Zur Datenschutzerklärung</a> <br>
+            <div class="cookie-buttons">
+                <button class="black" id="decline">Ablehnen</button>
+                <button class="black" id="accept">Akzeptieren</button>
+            </div>
+        </div>
+    </div>
+
+
+    <noscript>
+        <nav>
+            <a href="blog.html">Blog</a>
+            <a href="index.html#about">Über uns</a>
+            <a href="index.html#kontakt">Kontakt</a>
+            <a href="shop.html">Shop</a>
+        </nav>
+    </noscript>
     
     <div class="nav-wrapper">
         <div class="nav-mobile-wrapper nav-small-remove">
@@ -42,7 +66,7 @@ const navBar = `
             <div></div>
         </nav>
     </div>
-`;
+`
 const footer = `
     <section class="full-white">
         <div class="content-wrapper two-column-force">
@@ -103,16 +127,18 @@ const footer = `
 
         </footer>
     </section>
-`;
+`
 
 //add navBar to the body
-document.body.insertAdjacentHTML("afterbegin", navBar);
+document.body.insertAdjacentHTML('afterbegin', navBar)
 // add footer to the body
-document.body.insertAdjacentHTML("beforeend", footer);
+document.body.insertAdjacentHTML('beforeend', footer)
 
-document.getElementById("hamburger-menu").addEventListener("click", function () {
-  console.log("fired");
+document
+    .getElementById('hamburger-menu')
+    .addEventListener('click', function () {
+        console.log('fired')
 
-  var navMobile = document.getElementById("nav-mobile");
-  navMobile.classList.toggle("closed");
-});
+        var navMobile = document.getElementById('nav-mobile')
+        navMobile.classList.toggle('closed')
+    })

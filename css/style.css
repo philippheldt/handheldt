@@ -16,16 +16,19 @@ html {
   src: url(../fonts/EuclidCircularSemiRegular.ttf);
   font-weight: 400;
 }
+
 @font-face {
   font-family: Euclid;
   src: url(../fonts/EuclidCircularSemiMedium.ttf);
   font-weight: 500;
 }
+
 @font-face {
   font-family: Euclid;
   src: url(../fonts/EuclidCircularBold.ttf);
   font-weight: 700;
 }
+
 @font-face {
   font-family: RobotoMono;
   src: url(../fonts/RobotoMono-Regular.ttf);
@@ -36,6 +39,7 @@ body {
   margin: 0;
   padding: 0;
 }
+
 i {
   font-family: "Source Serif 4", serif;
   font-style: italic;
@@ -114,7 +118,8 @@ body {
 
 .yellow-underline {
   position: relative;
-  display: inline-block; /* Ensures the underline width matches the text */
+  display: inline-block;
+  /* Ensures the underline width matches the text */
 }
 
 .yellow-underline::after {
@@ -123,10 +128,13 @@ body {
   bottom: 0;
   left: 0;
   border-radius: 0.1rem;
-  width: 100%; /* Covers the entire text */
-  height: 0.3em; /* Adjust thickness of the underline */
-  background-color: var(--darker-accent-color); /* Change color if needed */
- z-index: -1;
+  width: 100%;
+  /* Covers the entire text */
+  height: 0.3em;
+  /* Adjust thickness of the underline */
+  background-color: var(--darker-accent-color);
+  /* Change color if needed */
+  z-index: -1;
 }
 
 .white-box {
@@ -138,7 +146,8 @@ body {
 
 .white-underline {
   position: relative;
-  display: inline-block; /* Ensures the underline width matches the text */
+  display: inline-block;
+  /* Ensures the underline width matches the text */
 }
 
 .white-underline::after {
@@ -147,9 +156,12 @@ body {
   bottom: 0;
   left: 0;
   border-radius: 0.1rem;
-  width: 100%; /* Covers the entire text */
-  height: 0.3em; /* Adjust thickness of the underline */
-  background-color: #fff; /* Change color if needed */
+  width: 100%;
+  /* Covers the entire text */
+  height: 0.3em;
+  /* Adjust thickness of the underline */
+  background-color: #fff;
+  /* Change color if needed */
   z-index: -1;
 }
 
@@ -200,18 +212,22 @@ body {
   z-index: 1;
   pointer-events: none;
 }
+
 .header-text p {
   color: #fff;
   filter: drop-shadow(0 0 30px rgba(0, 0, 0, 1));
   transform: translateY(-50px);
 }
+
 .title-text h1 {
   display: inline-block;
   font-size: 3rem;
 }
+
 .title-text h1.yellow-box {
   color: var(--primary-color);
 }
+
 .background-image {
   position: absolute;
   top: -50px;
@@ -224,6 +240,7 @@ body {
   width: 95%;
   border-radius: var(--standard-radius);
 }
+
 .image-small {
   width: 30%;
   border-radius: var(--standard-radius);
@@ -305,6 +322,7 @@ a {
   font-weight: 500;
   text-decoration: none;
 }
+
 a:hover {
   text-decoration: underline;
 }
@@ -368,6 +386,7 @@ a:hover {
   padding: 50px 0;
   min-height: 65vh;
 }
+
 .height-margin {
   padding: 40px 0;
 }
@@ -381,8 +400,9 @@ a:hover {
 }
 
 section {
-  position: relative; /* Establishes stacking context for the section */
-  z-index: 0; 
+  position: relative;
+  /* Establishes stacking context for the section */
+  z-index: 0;
 }
 
 
@@ -394,8 +414,9 @@ section.white {
 }
 
 .white-frame {
-  position: relative; /* Establishes stacking context for the section */
-  z-index: 0; 
+  position: relative;
+  /* Establishes stacking context for the section */
+  z-index: 0;
   background-color: #fff;
   color: var(--primary-color);
   padding: 40px;
@@ -466,6 +487,7 @@ header {
   z-index: 1;
   background: linear-gradient(rgba(255, 255, 255, 0), var(--secondary-color));
 }
+
 .overlay {
   position: absolute;
   bottom: 50px;
@@ -473,6 +495,7 @@ header {
   transform: translateX(-50%);
   z-index: 2;
 }
+
 .no-pointer {
   pointer-events: none;
 }
@@ -511,24 +534,31 @@ header {
   0% {
     transform: rotate(0deg);
   }
+
   5% {
     transform: rotate(14deg);
   }
+
   10% {
     transform: rotate(-8deg);
   }
+
   15% {
     transform: rotate(14deg);
   }
+
   20% {
     transform: rotate(-4deg);
   }
+
   25% {
     transform: rotate(10deg);
   }
+
   30% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
@@ -588,6 +618,7 @@ form {
   display: flex;
   flex-direction: column;
 }
+
 label {
   font-family: "Euclid", sans-serif;
   font-weight: 500;
@@ -596,6 +627,7 @@ label {
   color: var(--primary-color);
   margin-bottom: 10px;
 }
+
 input[type="text"],
 input[type="email"] {
   padding: 1rem;
@@ -642,6 +674,7 @@ button {
 button.black {
   background-color: var(--primary-color);
   color: var(--secondary-color);
+  border: var(--primary-color) 1px solid;
 }
 
 button.black:hover {
@@ -652,7 +685,8 @@ button.black:hover {
 
 /* General button styles */
 .black-button {
-  display: inline-block; /* Ensure the anchor behaves like a button */
+  display: inline-block;
+  /* Ensure the anchor behaves like a button */
   padding: 1rem 2.5rem;
   border-radius: var(--standard-radius);
   border: var(--primary-color) 1px solid;
@@ -661,8 +695,10 @@ button.black:hover {
   font-size: medium;
   background-color: var(--primary-color);
   color: var(--secondary-color);
-  text-decoration: none !important; /* Remove underline from link */
-  text-align: center; /* Center text */
+  text-decoration: none !important;
+  /* Remove underline from link */
+  text-align: center;
+  /* Center text */
   cursor: pointer;
   transition: all 0.3s;
   width: fit-content;
@@ -671,7 +707,7 @@ button.black:hover {
 
 .center {
   margin-left: 50%;
-  transform: translateX(-50%);  
+  transform: translateX(-50%);
 }
 
 .black-button:hover {
@@ -700,6 +736,7 @@ footer div a {
   color: #ededed;
   text-decoration: none;
 }
+
 footer div :nth-child(1),
 footer div :nth-child(3) {
   flex-basis: 50%;
@@ -726,6 +763,7 @@ footer div :nth-child(3) {
 .ec-cart-widget {
   width: 10px;
 }
+
 .ec-cart-widget div {
   pointer-events: none;
 }
@@ -753,8 +791,9 @@ footer div :nth-child(3) {
 }
 
 .dark-blue-frame {
-  position: relative; /* Establishes stacking context for the section */
-  z-index: 0; 
+  position: relative;
+  /* Establishes stacking context for the section */
+  z-index: 0;
   background-color: var(--primary-color);
   color: var(--secondary-color);
   border-radius: var(--standard-radius);
@@ -782,9 +821,11 @@ footer div :nth-child(3) {
 .title-split h2 {
   display: inline-block;
 }
+
 .header-text .title-split {
   margin: 0 10px;
 }
+
 .video-teaser-frame {
   display: grid;
   width: 100%;
@@ -803,7 +844,7 @@ footer div :nth-child(3) {
   left: 0;
 }
 
-.black-video-overlay{
+.black-video-overlay {
   grid-area: 1/1;
   background-color: #000;
   width: 100%;
@@ -815,10 +856,14 @@ footer div :nth-child(3) {
 
 
 .full-width {
-  width: 100%; /* Set width to fill the container */
-  height: 150px; /* Set your desired height */
-  resize: none; /* Disable resizing */
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  width: 100%;
+  /* Set width to fill the container */
+  height: 150px;
+  /* Set your desired height */
+  resize: none;
+  /* Disable resizing */
+  box-sizing: border-box;
+  /* Include padding and border in the element's total width and height */
 }
 
 .payment-icons {
@@ -865,6 +910,7 @@ footer div :nth-child(3) {
   height: 50px;
   cursor: pointer;
 }
+
 .menu-icon .menu-icon__cheeckbox {
   display: block;
   width: 100%;
@@ -876,6 +922,7 @@ footer div :nth-child(3) {
   position: absolute;
   opacity: 0;
 }
+
 .menu-icon div {
   margin: auto;
   position: absolute;
@@ -886,6 +933,7 @@ footer div :nth-child(3) {
   width: 22px;
   height: 12px;
 }
+
 .menu-icon span {
   position: absolute;
   display: block;
@@ -894,26 +942,31 @@ footer div :nth-child(3) {
   background-color: var(--bar-bg, #000);
   transition: all 0.2s cubic-bezier(0.1, 0.82, 0.76, 0.965);
 }
+
 .menu-icon span:first-of-type {
   top: 0;
 }
+
 .menu-icon span:last-of-type {
   bottom: 0;
 }
+
 .menu-icon.active span:first-of-type,
-.menu-icon .menu-icon__cheeckbox:checked + div span:first-of-type {
+.menu-icon .menu-icon__cheeckbox:checked+div span:first-of-type {
   transform: rotate(45deg);
   top: 5px;
 }
+
 .menu-icon.active span:last-of-type,
-.menu-icon .menu-icon__cheeckbox:checked + div span:last-of-type {
+.menu-icon .menu-icon__cheeckbox:checked+div span:last-of-type {
   transform: rotate(-45deg);
   bottom: 5px;
 }
+
 .menu-icon.active:hover span:first-of-type,
 .menu-icon.active:hover span:last-of-type,
-.menu-icon:hover .menu-icon__cheeckbox:checked + div span:first-of-type,
-.menu-icon:hover .menu-icon__cheeckbox:checked + div span:last-of-type {
+.menu-icon:hover .menu-icon__cheeckbox:checked+div span:first-of-type,
+.menu-icon:hover .menu-icon__cheeckbox:checked+div span:last-of-type {
   width: 22px;
 }
 
@@ -932,29 +985,30 @@ footer div :nth-child(3) {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 1rem;
 }
+
 .vorteil-item {
   padding: 20px;
   border-radius: var(--standard-radius);
- background-color: #fff;
- display: grid;
- grid-template-columns: 1fr 2fr;
- grid-gap: 1em;
- transition: all 1s ease;
- z-index: 0;
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 1em;
+  transition: all 1s ease;
+  z-index: 0;
 
   align-items: center;
 }
 
-.vorteil-item:hover{
+.vorteil-item:hover {
   transform: scale(1.04) rotate(1deg);
 }
 
-.vorteil-titel{
+.vorteil-titel {
   font-weight: bold;
   font-size: 20px;
 }
 
-.vorteil-beschreibung{
+.vorteil-beschreibung {
   grid-column: 1/3;
 }
 
@@ -963,7 +1017,7 @@ footer div :nth-child(3) {
 }
 
 
-.insta-button{
+.insta-button {
   display: flex;
   margin: 40px auto;
   width: fit-content;
@@ -979,21 +1033,21 @@ footer div :nth-child(3) {
   z-index: 1;
 }
 
-.insta-button:hover{
+.insta-button:hover {
   background-color: #ededed;
   transform: scale(1.04);
   /* blend in the color with an animation */
-text-decoration: none;
+  text-decoration: none;
   border: var(--primary-color) 0.9px solid;
 }
 
-.insta-button img{
+.insta-button img {
   width: 20px;
   height: 20px;
 
 }
 
-.insta-button span{
+.insta-button span {
   margin-left: 10px;
 }
 
@@ -1018,10 +1072,13 @@ text-decoration: none;
   .menu-icon:hover span:first-of-type {
     width: 26px;
   }
+
   .menu-icon:hover span:last-of-type {
     width: 12px;
   }
-} /*# sourceMappingURL=menu_icon.css.map */
+}
+
+/*# sourceMappingURL=menu_icon.css.map */
 
 /* Media queires to reorder content after window size is smaller than 820px */
 
@@ -1029,6 +1086,7 @@ text-decoration: none;
   nav {
     width: 90vw;
   }
+
   .wider-content-wrapper {
     max-width: 800px;
   }
@@ -1038,17 +1096,21 @@ text-decoration: none;
   .vorteile {
     grid-template-columns: 1fr 1fr;
   }
+
   .content-wrapper,
   .wider-content-wrapper {
     padding-left: 40px;
     padding-right: 40px;
   }
+
   nav a {
     padding: 1rem 1rem;
   }
+
   .ec-cart-widget {
     transform: scale(0.8) translateX(-20px);
   }
+
   .ec-cart-widget:hover {
     transform: scale(0.9) translateX(-20px);
   }
@@ -1059,16 +1121,20 @@ text-decoration: none;
   .two-column {
     grid-template-columns: 1fr;
   }
+
   .two-column-3rds {
     grid-template-columns: 1fr;
   }
+
   .image-row {
     grid-column: span 1;
   }
+
   .image-row :nth-child(1),
   .image-row :nth-child(2) {
     width: 45%;
   }
+
   .image-row :nth-child(3),
   .image-row :nth-child(4) {
     display: none;
@@ -1079,36 +1145,45 @@ text-decoration: none;
   .vorteile {
     grid-template-columns: 1fr;
   }
-  .header-logo{
+
+  .header-logo {
     max-width: 350px;
   }
 
   .nav-wide {
     display: none;
   }
+
   .nav-small {
     pointer-events: all;
     opacity: 1;
   }
+
   .nav-small-remove {
     display: block;
   }
+
   nav a {
     padding: 0.4rem 0.5rem;
   }
+
   nav img {
     width: 30px;
   }
+
   .nav-wrapper {
     top: auto;
     bottom: 40px;
   }
+
   .top-distance {
     margin-top: 60px;
   }
+
   .sticky-banner {
     font-size: small;
   }
+
   nav {
     padding: 10px 0;
     box-shadow: 0 0 300px rgba(0, 0, 0, 0.5);
@@ -1118,6 +1193,7 @@ text-decoration: none;
     width: 30px;
     content: url(../img/logo_white.png);
   }
+
   footer {
     padding-bottom: 150px;
   }
@@ -1128,6 +1204,7 @@ text-decoration: none;
   .white-frame {
     padding: 20px 20px;
   }
+
   .content-wrapper,
   .wider-content-wrapper {
     padding-left: 25px;
@@ -1140,6 +1217,7 @@ text-decoration: none;
   .image-hover:after {
     display: none;
   }
+
   .image-hover:hover {
     transform: translateY(0px) scale(1);
   }
