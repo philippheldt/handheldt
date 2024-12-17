@@ -1,0 +1,13 @@
+[build]
+  publish = "public"      # Directory for static files (replace if necessary)
+  functions = "netlify/functions"  # Directory where serverless functions are located
+
+[dev]
+  command = "npm run dev"  # Run your frontend server locally
+  port = 8888              # Port where Netlify Dev runs your app
+  functionsPort = 9999     # Port to serve serverless functions
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
