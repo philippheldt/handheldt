@@ -1,0 +1,21 @@
+{
+	"siteId": "29bcf2e3-e1ad-4898-9b11-f823b84cf1f6",
+	"geolocation": {
+		"data": {
+			"city": "Haßloch",
+			"country": {
+				"code": "DE",
+				"name": "Germany"
+			},
+			"subdivision": {
+				"code": "RP",
+				"name": "Rheinland-Pfalz"
+			},
+			"timezone": "Europe/Berlin",
+			"latitude": 49.3649,
+			"longitude": 8.2587,
+			"postalCode": "67454"
+		},
+		"timestamp": 1734475228208
+	}
+}
