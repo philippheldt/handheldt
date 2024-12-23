@@ -1,7 +1,7 @@
 const navBar = `
     <div class="sticky-banner">
         <div class="content-wrapper">
-            Ab <b>65€ Bestellwert </b> kostenloser Versand
+           <b>Weihnachtspause</b> 🎄 – Wir versenden wieder ab 06.01.25
         </div>
     </div>
 
