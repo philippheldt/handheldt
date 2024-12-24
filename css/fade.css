@@ -1,0 +1,40 @@
+    .fade-container {
+        display: grid;
+        grid-template-columns: 1fr;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        position: relative;
+    }
+     
+     .fade-container div:nth-child(1) {
+        grid-area: 1/1;
+        opacity: 1 ;
+        animation: fadeEffect 20s infinite;
+         animation-delay: 0s;
+     }
+
+     .fade-container div:nth-child(2) {
+        grid-area: 1/1;
+        opacity: 0 ;
+        animation: fadeEffect 20s infinite;
+         animation-delay: 10s;
+     }
+
+         @keyframes fadeEffect {
+    
+             0%,
+             20% {
+                 opacity: 1;
+             }
+    
+             40%,
+             80% {
+                 opacity: 0;
+             }
+    
+             90%,
+             100% {
+                 opacity: 1;
+             }
+         }

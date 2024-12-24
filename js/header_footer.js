@@ -1,7 +1,15 @@
 const navBar = `
     <div class="sticky-banner">
         <div class="content-wrapper">
-           <b>Weihnachtspause</b> 🎄 – Wir versenden wieder ab 06.01.25
+        <div class="fade-container">
+            <div>
+             <b>Weihnachtspause</b> 🎄 – Wir versenden wieder ab 06.01.25
+            </div>
+            <div>
+                  <b>Kostenloser Versand</b> 🎄 – bis 06.01.25
+            </div>
+        </div>
+           
         </div>
     </div>
 
