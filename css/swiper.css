@@ -1,0 +1,60 @@
+:root {
+    --primary-color: #0c0b21;
+    --secondary-color: #f8f7f4;
+    --accent-color: #FFECD0;
+    --darker-accent-color: #ffe2bf;
+    --accent-color-blue: #dddddd;
+    --standard-radius: 0.3rem;
+}
+
+@font-face {
+    font-family: Euclid;
+    src: url(../fonts/EuclidCircularSemiRegular.ttf);
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: Euclid;
+    src: url(../fonts/EuclidCircularSemiMedium.ttf);
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: Euclid;
+    src: url(../fonts/EuclidCircularBold.ttf);
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: RobotoMono;
+    src: url(../fonts/RobotoMono-Regular.ttf);
+    font-weight: 400;
+}
+
+.swiper {
+max-width: 800px;
+
+}
+
+.swiper-slide {
+    background-color: #fff;
+    margin: auto 0px;
+box-sizing: border-box;
+    box-shadow: 0px 0px 100px #00000027;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+    color: var(--primary-color)
+}
+
+.swiper-pagination {
+    filter: grayscale();
+}
+
+.swiper-overflow-wrapper{
+    width: 100vw;
+    height: fit-content;
+    padding: 70px 0;
+    overflow: hidden;
+}
