@@ -421,6 +421,17 @@ section.white {
   aspect-ratio: 16 / 9;
 }
 
+.blog-video.vertical {
+  aspect-ratio: 9 / 16;
+}
+
+.vertical-post {
+  display: grid;
+  grid-gap: 1.5em;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
 section.full-white {
   background-color: #fff;
   color: var(--primary-color);
@@ -1112,6 +1123,10 @@ footer div :nth-child(3) {
   .vorteile {
     grid-template-columns: 1fr;
   }
+
+    .vertical-post{
+      grid-template-columns: 1fr;
+    }
 
   .header-logo {
     max-width: 350px;
