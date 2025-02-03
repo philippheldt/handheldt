@@ -2,7 +2,7 @@ const navBar = `
     <div class="sticky-banner">
         <div class="content-wrapper">
    
-             Im Januar <b>konstenloser Versand</b>
+            <b>konstenloser Versand</b> ab 50€ Einkaufswert
        
         </div>
            
