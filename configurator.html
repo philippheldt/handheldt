@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        form div{
+            margin: 60px 0 10px 0;
+        }
+    </style>
+
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netlify Form</title>
+</head>
+
+<body>
+    <h1>Customizable Netlify Form</h1>
+
+    <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+        <!-- Hidden Honeypot field to prevent bot submissions -->
+        <div style="display:none;">
+            <label for="bot-field">Don't fill this out if you're human:</label>
+            <input type="text" name="bot-field" id="bot-field">
+        </div>
+
+        <!-- PRODUKT -->
+        <div>
+            <label>Produkt</label><br>
+            <input type="radio" id="tshirt" name="produkt" value="tshirt">
+            <label for="tshirt">T-Shirt</label><br>
+            <input type="radio" id="tote" name="produkt" value="tote">
+            <label for="tote">Totebag</label><br>
+            <input type="radio" id="hoodie" name="produkt" value="hoodie">
+            <label for="hoodie">Hoodie</label>
+        </div>
+
+        <!-- Farbe -->
+        <div>
+            <label>Farbe</label><br>
+            <input type="radio" id="rot" name="farbe" value="rot">
+            <label for="rot">Rot</label><br>
+            <input type="radio" id="gelb" name="farbe" value="gelb">
+            <label for="gelb">Gelb</label><br>
+            <input type="radio" id="blau" name="farbe" value="blau">
+            <label for="blau">blau</label>
+        </div>
+
+        <!-- Motive -->
+        <br><br>
+        <div>
+            <label>Motiv:</label><br>
+            <input type="checkbox" id="vorne" name="Motiv" value="vorne">
+            <label for="vorne">Vorne</label><br>
+            <input type="checkbox" id="hinten" name="Motiv" value="hinten">
+            <label for="hinten">Hinten</label><br>
+            <input type="checkbox" id="sonderposition" name="Motiv" value="sonderposition">
+            <label for="sonderposition">Sonderposition</label><br>
+        </div>
+
+        <!-- Konfiguration Vorne -->
+
+            <div>
+                <label>Vorne Größe:</label><br>
+                <input type="radio" id="vorne-grosse-nichts" name="vorne-groesse" value="vorne-grosse-nichts" checked>
+                <label for="vorne-grosse-nichts">nichts</label><br>
+                <input type="radio" id="vorne-klein" name="vorne-groesse" value="vorne-klein">
+                <label for="vorne-klein">Klein</label><br>
+                <input type="radio" id="vorne-mittel" name="vorne-groesse" value="vorne-mittel">
+                <label for="vorne-mittel">Mittel</label><br>
+                <input type="radio" id="vorne-gross" name="vorne-groesse" value="vorne-gross">
+                <label for="vorne-gross">Groß</label>
+            </div>
+
+                <div>
+                    <label>Vorne Position:</label><br>
+                    <input type="radio" id="vorne-position-nichts" name="vorne-position" value="vorne-position-nichts" checked>
+                    <label for="vorne-position-nichts">nichts</label><br>
+                    <input type="radio" id="vorne-links" name="vorne-position" value="vorne-links">
+                    <label for="vorne-links">links oben</label><br>
+                    <input type="radio" id="vorne-mitte" name="vorne-position" value="vorne-mitte">
+                    <label for="vorne-mitte">mitte oben</label><br>
+                    <input type="radio" id="vorne-rechts" name="vorne-position" value="vorne-rechts">
+                    <label for="vorne-rechts">rechts oben</label><br>
+                    <input type="radio" id="vorne-sonderwunsch" name="vorne-position" value="vorne-sonderwunsch">
+                    <label for="vorne-sonderwunsch">sonderwunsch</label><br>
+                    <label for="vorne-sonderwusch-text">Sonderwunsch Text:</label>
+                    <input type="text" id="vorne-sonderwusch-text" name="vorne-sonderwusch-text">
+                </div>
+
+                    <div>
+                        <label>Vorne Anzahl Farben:</label><br>
+                        <input type="radio" id="vorne-anzahl-1" name="vorne-anzahl-farben" value="vorne-anzahl-1" checked>
+                        <label for="vorne-anzahl-1">1</label><br>
+                        <input type="radio" id="vorne-anzahl-2" name="vorne-anzahl-farben" value="vorne-anzahl-2">
+                        <label for="vorne-anzahl-2">2</label><br>
+                        <input type="radio" id="vorne-anzahl-mehr" name="vorne-anzahl-farben" value="vorne-anzahl-mehr">
+                        <label for="vorne-anzahl-mehr">mehr</label><br>
+                    </div>
+                    
+
+                    <!-- Konfiguration Hinten -->
+                    
+                    <div>
+                        <label>Hinten Größe:</label><br>
+                        <input type="radio" id="hinten-grosse-nichts" name="hinten-groesse" value="hinten-grosse-nichts" checked>
+                        <label for="hinten-grosse-nichts">nichts</label><br>
+                        <input type="radio" id="hinten-klein" name="hinten-groesse" value="hinten-klein">
+                        <label for="hinten-klein">Klein</label><br>
+                        <input type="radio" id="hinten-mittel" name="hinten-groesse" value="hinten-mittel">
+                        <label for="hinten-mittel">Mittel</label><br>
+                        <input type="radio" id="hinten-gross" name="hinten-groesse" value="hinten-gross">
+                        <label for="hinten-gross">Groß</label>
+                    </div>
+                    
+                    <div>
+                        <label>Hinten Position:</label><br>
+                        <input type="radio" id="hinten-position-nichts" name="hinten-position" value="hinten-position-nichts" checked>
+                        <label for="hinten-position-nichts">nichts</label><br>
+                        <input type="radio" id="hinten-oben" name="hinten-position" value="hinten-oben">
+                        <label for="hinten-oben">oben</label><br>
+                        <input type="radio" id="hinten-mitte" name="hinten-position" value="hinten-mitte">
+                        <label for="hinten-mitte">mitte</label><br>
+                        <input type="radio" id="hinten-unten" name="hinten-position" value="hinten-unten">
+                        <label for="hinten-unten">unten</label><br>
+                        <input type="radio" id="hinten-sonderwunsch" name="hinten-position" value="hinten-sonderwunsch">
+                        <label for="hinten-sonderwunsch">sonderwunsch</label><br>
+                        <label for="hinten-sonderwusch-text">Sonderwunsch Text:</label>
+                        <input type="text" id="hinten-sonderwusch-text" name="hinten-sonderwusch-text">
+                    </div>
+                    
+                    <div>
+                        <label>Hinten Anzahl Farben:</label><br>
+                        <input type="radio" id="hinten-anzahl-1" name="hinten-anzahl-farben" value="hinten-anzahl-1" checked>
+                        <label for="hinten-anzahl-1">1</label><br>
+                        <input type="radio" id="hinten-anzahl-2" name="hinten-anzahl-farben" value="hinten-anzahl-2">
+                        <label for="hinten-anzahl-2">2</label><br>
+                        <input type="radio" id="hinten-anzahl-mehr" name="hinten-anzahl-farben" value="hinten-anzahl-mehr">
+                        <label for="hinten-anzahl-mehr">mehr</label><br>
+                    </div>
+            <!-- Konfiguration Sonderposition -->
+            
+            <div>
+                <label>Sonderposition Größe:</label><br>
+                <input type="radio" id="sonderposition-grosse-nichts" name="sonderposition-groesse"
+                    value="sonderposition-grosse-nichts" checked>
+                <label for="sonderposition-grosse-nichts">nichts</label><br>
+                <input type="radio" id="sonderposition-klein" name="sonderposition-groesse" value="sonderposition-klein">
+                <label for="sonderposition-klein">Klein</label><br>
+                <input type="radio" id="sonderposition-mittel" name="sonderposition-groesse" value="sonderposition-mittel">
+                <label for="sonderposition-mittel">Mittel</label><br>
+                <input type="radio" id="sonderposition-gross" name="sonderposition-groesse" value="sonderposition-gross">
+                <label for="sonderposition-gross">Groß</label>
+            </div>
+            
+            <div>
+                <label>Sonderposition Position:</label><br>
+                <input type="text" id="sonderposition-text" name="sonderposition-text">
+            </div>
+            
+            <div>
+                <label>Sonderposition Anzahl Farben:</label><br>
+                <input type="radio" id="sonderposition-anzahl-1" name="sonderposition-anzahl-farben" value="sonderposition-anzahl-1"
+                    checked>
+                <label for="sonderposition-anzahl-1">1</label><br>
+                <input type="radio" id="sonderposition-anzahl-2" name="sonderposition-anzahl-farben"
+                    value="sonderposition-anzahl-2">
+                <label for="sonderposition-anzahl-2">2</label><br>
+                <input type="radio" id="sonderposition-anzahl-mehr" name="sonderposition-anzahl-farben"
+                    value="sonderposition-anzahl-mehr">
+                <label for="sonderposition-anzahl-mehr">mehr</label><br>
+            </div>
+
+<!-- Mengenangaben -->
+
+            <div>
+                <label>Mengenangabe:</label><br>
+                <input type="radio" id="mengenangabe-grobe" name="mengenangabe" value="grobe" checked>
+                <label for="mengenangabe-grobe">Grobe Menge</label><br>
+                <input type="radio" id="mengenangabe-genau" name="mengenangabe" value="genau">
+                <label for="mengenangabe-genau">Genaue Menge</label>
+            </div>
+
+<div>
+    <label>Genaue Mengenangabe:</label><br>
+    <label for="menge-xxs">XXS:</label>
+    <input type="number" id="menge-xxs" name="menge-xxs" min="0" value="0"><br>
+    <label for="menge-xs">XS:</label>
+    <input type="number" id="menge-xs" name="menge-xs" min="0" value="0"><br>
+    <label for="menge-s">S:</label>
+    <input type="number" id="menge-s" name="menge-s" min="0" value="0"><br>
+    <label for="menge-m">M:</label>
+    <input type="number" id="menge-m" name="menge-m" min="0" value="0"><br>
+    <label for="menge-l">L:</label>
+    <input type="number" id="menge-l" name="menge-l" min="0" value="0"><br>
+    <label for="menge-xl">XL:</label>
+    <input type="number" id="menge-xl" name="menge-xl" min="0" value="0"><br>
+    <label for="menge-xxl">XXL:</label>
+    <input type="number" id="menge-xxl" name="menge-xxl" min="0" value="0"><br>
+    <label for="menge-xxxl">XXXL:</label>
+    <input type="number" id="menge-xxxl" name="menge-xxxl" min="0" value="0">
+</div>
+
+<!-- Lieferdatum -->
+<div>
+    <label>Lieferdatum:</label><br>
+    <input type="radio" id="lieferdatum-schnell" name="lieferdatum" value="schnell" checked>
+    <label for="lieferdatum-schnell">Schnellstmöglich</label><br>
+    <input type="radio" id="lieferdatum-fest" name="lieferdatum" value="fest">
+    <label for="lieferdatum-fest">Festes Datum</label><br>
+    <input type="date" id="lieferdatum-datum" name="lieferdatum-datum">
+</div>
+
+
+                    <!-- Kontaktdaten -->
+<div>
+    <label>Name:</label><br>
+    <input type="text" id="kunde-name" name="kunde-name" required>
+</div>
+
+<div>
+    <label>E-Mail:</label><br>
+    <input type="email" id="kunde-email" name="kunde-email" required>
+</div>
+
+<div>
+    <label>Telefonnummer:</label><br>
+    <input type="tel" id="kunde-telefon" name="kunde-telefon">
+</div>
+
+
+
+        <!-- CAPTCHA (using reCAPTCHA v2, example) -->
+        <div>
+            <label for="captcha">Please verify you are human:</label><br>
+            <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+
+    <!-- Add Google reCAPTCHA script -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+
+</html>
+
+</body>
+</html>
