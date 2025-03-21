@@ -23,9 +23,9 @@
 </head>
 
 <body>
-    <h1>Customizable Netlify Form</h1>
+    <h1>Shirt Configurator</h1>
 
-    <form name="contact" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+    <form name="Konfigurator" action="sucess.html" method="POST" data-netlify-honeypot="bot-field" netlify>
         <!-- Hidden Honeypot field to prevent bot submissions -->
         <div style="display:none;">
             <label for="bot-field">Don't fill this out if you're human:</label>
@@ -35,22 +35,22 @@
         <!-- PRODUKT -->
         <div>
             <label>Produkt</label><br>
-            <input type="radio" id="tshirt" name="produkt" value="tshirt">
+            <input type="radio" id="tshirt" name="produkt" value="tshirt" data-code="tshi" checked>
             <label for="tshirt">T-Shirt</label><br>
-            <input type="radio" id="tote" name="produkt" value="tote">
+            <input type="radio" id="tote" name="produkt" value="tote" data-code="tote"> 
             <label for="tote">Totebag</label><br>
-            <input type="radio" id="hoodie" name="produkt" value="hoodie">
+            <input type="radio" id="hoodie" name="produkt" value="hoodie" data-code="hood">
             <label for="hoodie">Hoodie</label>
         </div>
 
         <!-- Farbe -->
         <div>
             <label>Farbe</label><br>
-            <input type="radio" id="rot" name="farbe" value="rot">
+            <input type="radio" id="rot" name="farbe" value="rot" data-code="rot1" checked>
             <label for="rot">Rot</label><br>
-            <input type="radio" id="gelb" name="farbe" value="gelb">
+            <input type="radio" id="gelb" name="farbe" value="gelb" data-code="gelb">
             <label for="gelb">Gelb</label><br>
-            <input type="radio" id="blau" name="farbe" value="blau">
+            <input type="radio" id="blau" name="farbe" value="blau" data-code="blau">
             <label for="blau">blau</label>
         </div>
 
@@ -70,27 +70,27 @@
 
             <div>
                 <label>Vorne Größe:</label><br>
-                <input type="radio" id="vorne-grosse-nichts" name="vorne-groesse" value="vorne-grosse-nichts" checked>
+                <input type="radio" id="vorne-grosse-nichts" name="vorne-groesse" value="vorne-grosse-nichts" checked data-code="vgni">
                 <label for="vorne-grosse-nichts">nichts</label><br>
-                <input type="radio" id="vorne-klein" name="vorne-groesse" value="vorne-klein">
+                <input type="radio" id="vorne-klein" name="vorne-groesse" value="vorne-klein" data-code="vgkl">
                 <label for="vorne-klein">Klein</label><br>
-                <input type="radio" id="vorne-mittel" name="vorne-groesse" value="vorne-mittel">
+                <input type="radio" id="vorne-mittel" name="vorne-groesse" value="vorne-mittel" data-code="vgmi">
                 <label for="vorne-mittel">Mittel</label><br>
-                <input type="radio" id="vorne-gross" name="vorne-groesse" value="vorne-gross">
+                <input type="radio" id="vorne-gross" name="vorne-groesse" value="vorne-gross" data-code="vgrs">
                 <label for="vorne-gross">Groß</label>
             </div>
 
                 <div>
                     <label>Vorne Position:</label><br>
-                    <input type="radio" id="vorne-position-nichts" name="vorne-position" value="vorne-position-nichts" checked>
+                    <input type="radio" id="vorne-position-nichts" name="vorne-position" value="vorne-position-nichts" checked data-code="vpni">
                     <label for="vorne-position-nichts">nichts</label><br>
-                    <input type="radio" id="vorne-links" name="vorne-position" value="vorne-links">
+                    <input type="radio" id="vorne-links" name="vorne-position" value="vorne-links" data-code="vpli">
                     <label for="vorne-links">links oben</label><br>
-                    <input type="radio" id="vorne-mitte" name="vorne-position" value="vorne-mitte">
+                    <input type="radio" id="vorne-mitte" name="vorne-position" value="vorne-mitte" data-code="vpmi">
                     <label for="vorne-mitte">mitte oben</label><br>
-                    <input type="radio" id="vorne-rechts" name="vorne-position" value="vorne-rechts">
+                    <input type="radio" id="vorne-rechts" name="vorne-position" value="vorne-rechts" data-code="vpre">
                     <label for="vorne-rechts">rechts oben</label><br>
-                    <input type="radio" id="vorne-sonderwunsch" name="vorne-position" value="vorne-sonderwunsch">
+                    <input type="radio" id="vorne-sonderwunsch" name="vorne-position" value="vorne-sonderwunsch" data-code="vpso">
                     <label for="vorne-sonderwunsch">sonderwunsch</label><br>
                     <label for="vorne-sonderwusch-text">Sonderwunsch Text:</label>
                     <input type="text" id="vorne-sonderwusch-text" name="vorne-sonderwusch-text">
@@ -98,11 +98,13 @@
 
                     <div>
                         <label>Vorne Anzahl Farben:</label><br>
-                        <input type="radio" id="vorne-anzahl-1" name="vorne-anzahl-farben" value="vorne-anzahl-1" checked>
+                        <input type="radio" id="vorne-anzahl-0" name="vorne-anzahl-farben" value="vorne-anzahl-0" checked data-code="vz0f">
+                        <label for="vorne-anzahl-0">0</label><br>
+                        <input type="radio" id="vorne-anzahl-1" name="vorne-anzahl-farben" value="vorne-anzahl-1" data-code="vz1f">
                         <label for="vorne-anzahl-1">1</label><br>
-                        <input type="radio" id="vorne-anzahl-2" name="vorne-anzahl-farben" value="vorne-anzahl-2">
+                        <input type="radio" id="vorne-anzahl-2" name="vorne-anzahl-farben" value="vorne-anzahl-2" data-code="vz2f">
                         <label for="vorne-anzahl-2">2</label><br>
-                        <input type="radio" id="vorne-anzahl-mehr" name="vorne-anzahl-farben" value="vorne-anzahl-mehr">
+                        <input type="radio" id="vorne-anzahl-mehr" name="vorne-anzahl-farben" value="vorne-anzahl-mehr" data-code="vzme">
                         <label for="vorne-anzahl-mehr">mehr</label><br>
                     </div>
                     
@@ -111,27 +113,27 @@
                     
                     <div>
                         <label>Hinten Größe:</label><br>
-                        <input type="radio" id="hinten-grosse-nichts" name="hinten-groesse" value="hinten-grosse-nichts" checked>
+                        <input type="radio" id="hinten-grosse-nichts" name="hinten-groesse" value="hinten-grosse-nichts" checked data-code="hgni">
                         <label for="hinten-grosse-nichts">nichts</label><br>
-                        <input type="radio" id="hinten-klein" name="hinten-groesse" value="hinten-klein">
+                        <input type="radio" id="hinten-klein" name="hinten-groesse" value="hinten-klein" data-code="hgkl">
                         <label for="hinten-klein">Klein</label><br>
-                        <input type="radio" id="hinten-mittel" name="hinten-groesse" value="hinten-mittel">
+                        <input type="radio" id="hinten-mittel" name="hinten-groesse" value="hinten-mittel" data-code="hgmi">
                         <label for="hinten-mittel">Mittel</label><br>
-                        <input type="radio" id="hinten-gross" name="hinten-groesse" value="hinten-gross">
+                        <input type="radio" id="hinten-gross" name="hinten-groesse" value="hinten-gross" data-code="hgrs">
                         <label for="hinten-gross">Groß</label>
                     </div>
                     
                     <div>
                         <label>Hinten Position:</label><br>
-                        <input type="radio" id="hinten-position-nichts" name="hinten-position" value="hinten-position-nichts" checked>
+                        <input type="radio" id="hinten-position-nichts" name="hinten-position" value="hinten-position-nichts" checked data-code="hpni">
                         <label for="hinten-position-nichts">nichts</label><br>
-                        <input type="radio" id="hinten-oben" name="hinten-position" value="hinten-oben">
+                        <input type="radio" id="hinten-oben" name="hinten-position" value="hinten-oben" data-code="hpob">
                         <label for="hinten-oben">oben</label><br>
-                        <input type="radio" id="hinten-mitte" name="hinten-position" value="hinten-mitte">
+                        <input type="radio" id="hinten-mitte" name="hinten-position" value="hinten-mitte" data-code="hpmi">
                         <label for="hinten-mitte">mitte</label><br>
-                        <input type="radio" id="hinten-unten" name="hinten-position" value="hinten-unten">
+                        <input type="radio" id="hinten-unten" name="hinten-position" value="hinten-unten" data-code="hpun">
                         <label for="hinten-unten">unten</label><br>
-                        <input type="radio" id="hinten-sonderwunsch" name="hinten-position" value="hinten-sonderwunsch">
+                        <input type="radio" id="hinten-sonderwunsch" name="hinten-position" value="hinten-sonderwunsch" data-code="hpso">
                         <label for="hinten-sonderwunsch">sonderwunsch</label><br>
                         <label for="hinten-sonderwusch-text">Sonderwunsch Text:</label>
                         <input type="text" id="hinten-sonderwusch-text" name="hinten-sonderwusch-text">
@@ -139,11 +141,13 @@
                     
                     <div>
                         <label>Hinten Anzahl Farben:</label><br>
-                        <input type="radio" id="hinten-anzahl-1" name="hinten-anzahl-farben" value="hinten-anzahl-1" checked>
+                        <input type="radio" id="hinten-anzahl-0" name="hinten-anzahl-farben" value="hinten-anzahl-0" checked data-code="hz0f">
+                        <label for="hinten-anzahl-0">0</label><br>
+                        <input type="radio" id="hinten-anzahl-1" name="hinten-anzahl-farben" value="hinten-anzahl-1" data-code="hz1f">
                         <label for="hinten-anzahl-1">1</label><br>
-                        <input type="radio" id="hinten-anzahl-2" name="hinten-anzahl-farben" value="hinten-anzahl-2">
+                        <input type="radio" id="hinten-anzahl-2" name="hinten-anzahl-farben" value="hinten-anzahl-2" data-code="hz2f">
                         <label for="hinten-anzahl-2">2</label><br>
-                        <input type="radio" id="hinten-anzahl-mehr" name="hinten-anzahl-farben" value="hinten-anzahl-mehr">
+                        <input type="radio" id="hinten-anzahl-mehr" name="hinten-anzahl-farben" value="hinten-anzahl-mehr" data-code="hzmf">
                         <label for="hinten-anzahl-mehr">mehr</label><br>
                     </div>
             <!-- Konfiguration Sonderposition -->
@@ -151,13 +155,13 @@
             <div>
                 <label>Sonderposition Größe:</label><br>
                 <input type="radio" id="sonderposition-grosse-nichts" name="sonderposition-groesse"
-                    value="sonderposition-grosse-nichts" checked>
+                    value="sonderposition-grosse-nichts" checked >
                 <label for="sonderposition-grosse-nichts">nichts</label><br>
-                <input type="radio" id="sonderposition-klein" name="sonderposition-groesse" value="sonderposition-klein">
+                <input type="radio" id="sonderposition-klein" name="sonderposition-groesse" value="sonderposition-klein" >
                 <label for="sonderposition-klein">Klein</label><br>
-                <input type="radio" id="sonderposition-mittel" name="sonderposition-groesse" value="sonderposition-mittel">
+                <input type="radio" id="sonderposition-mittel" name="sonderposition-groesse" value="sonderposition-mittel" >
                 <label for="sonderposition-mittel">Mittel</label><br>
-                <input type="radio" id="sonderposition-gross" name="sonderposition-groesse" value="sonderposition-gross">
+                <input type="radio" id="sonderposition-gross" name="sonderposition-groesse" value="sonderposition-gross" >
                 <label for="sonderposition-gross">Groß</label>
             </div>
             
@@ -168,8 +172,10 @@
             
             <div>
                 <label>Sonderposition Anzahl Farben:</label><br>
-                <input type="radio" id="sonderposition-anzahl-1" name="sonderposition-anzahl-farben" value="sonderposition-anzahl-1"
+                <input type="radio" id="sonderposition-anzahl-0" name="sonderposition-anzahl-farben" value="sonderposition-anzahl-0"
                     checked>
+                <label for="sonderposition-anzahl-">0</label><br>
+                <input type="radio" id="sonderposition-anzahl-1" name="sonderposition-anzahl-farben" value="sonderposition-anzahl-1">
                 <label for="sonderposition-anzahl-1">1</label><br>
                 <input type="radio" id="sonderposition-anzahl-2" name="sonderposition-anzahl-farben"
                     value="sonderposition-anzahl-2">
@@ -238,11 +244,7 @@
 
 
 
-        <!-- CAPTCHA (using reCAPTCHA v2, example) -->
-        <div>
-            <label for="captcha">Please verify you are human:</label><br>
-            <div class="g-recaptcha" data-sitekey="your-site-key"></div>
-        </div>
+<div data-netlify-recaptcha="true"></div>
 
         <!-- Submit Button -->
         <div>
@@ -250,8 +252,64 @@
         </div>
     </form>
 
-    <!-- Add Google reCAPTCHA script -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+        <script>
+            // Function to gather selected data-code values
+            function updateCodes() {
+                // Get all the selected inputs (radio buttons and checkboxes)
+                const selectedInputs = document.querySelectorAll('input:checked');
+                const vorneCheckbox = document.querySelector('#vorne')
+                const hintenCheckbox = document.querySelector('#hinten')
+
+                // Create an array to store the data-code values
+                const codesVorne = [];
+                const codesHinten = [];
+
+                // Loop through selected inputs and push their data-code values to the array
+                selectedInputs.forEach(input => {
+                    if (input.hasAttribute('data-code')) {
+                        if (input.getAttribute('data-code').includes("hz") || input.getAttribute('data-code').includes("hp") || input.getAttribute('data-code').includes("hg")){
+                            //DO NOTHING
+                        } else if (input.getAttribute('data-code').includes("vz") || input.getAttribute('data-code').includes("vp") || input.getAttribute('data-code').includes("vg")) {
+                            if (vorneCheckbox.checked){
+                                codesVorne.push(input.getAttribute('data-code'));
+                            } 
+                        } else {
+                            codesVorne.push(input.getAttribute('data-code'));
+                        }
+                    } 
+                });
+
+                selectedInputs.forEach(input => {
+                    if (input.hasAttribute('data-code')) {
+                        if (input.getAttribute('data-code').includes("vz") || input.getAttribute('data-code').includes("vp") || input.getAttribute('data-code').includes("vg")) {
+                            //DO NOTHING
+                        } else if (input.getAttribute('data-code').includes("hz") || input.getAttribute('data-code').includes("hp") || input.getAttribute('data-code').includes("hg")) {
+                            if (hintenCheckbox.checked) {
+                                codesHinten.push(input.getAttribute('data-code'));
+                            }
+                        } else {
+                            codesHinten.push(input.getAttribute('data-code'));
+                        }
+                    }
+                });
+
+
+                const codesVorneString = codesVorne.join('-');
+                const codesHintenString = codesHinten.join('-');
+
+                // Log the result to the console
+                console.log('Selected codes Vorne:', codesVorneString);
+                console.log('Selected codes Hinten:', codesHintenString);
+            }
+
+            // Listen for changes to any input in the form
+            const formElements = document.querySelectorAll('input');
+            formElements.forEach(element => {
+                element.addEventListener('change', updateCodes);
+            });
+        </script>
+
 </body>
 
 </html>
