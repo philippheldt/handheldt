@@ -1,0 +1,150 @@
+{
+  "Tote Bag": {
+    "Farben": {
+      "Black": "C002",
+      "White": "C001",
+      "Heather Grey": "C250",
+      "Midnight Blue": "C591",
+      "Natural": "C007"
+    },
+    "Druckbereiche": {
+      "Vorne": "VORN",
+      "Hinten": "HINT"
+    },
+    "Vorne": {
+      "Druckgrößen": {
+        "Klein": "VKLE",
+        "Mittel": "VMIT",
+        "Groß": "VGRO"
+      },
+      "Druckpositionen": {
+        "Oben": "VPMO",
+        "Mitte": "VPMM",
+        "Unten": "VPMU",
+        "Sonderwunsch": "VPSO"
+      },
+      "Anzahl Druckfarben": {
+        "1": "VZ1F",
+        "2": "VZ2F",
+        "Mehr": "VZME"
+      }
+    },
+    "Hinten": {
+      "Druckgrößen": {
+        "Klein": "HKLE",
+        "Mittel": "HMIT",
+        "Groß": "HGRO"
+      },
+      "Druckpositionen": {
+        "Oben": "HPMO",
+        "Mitte": "HPMM",
+        "Unten": "HPMU",
+        "Sonderwunsch": "HPSO"
+      },
+      "Anzahl Druckfarben": {
+        "1": "VZ1F",
+        "2": "VZ2F",
+        "Mehr": "VZME"
+      }
+    }
+  },
+  "Tshirts": {
+    "Farben": {
+      "Lilac Dream": "C355",
+      "Viva Yellow": "C356",
+      "Pool Blue": "C357",
+      "Stone": "C358",
+      "Black": "C002",
+      "White": "C001",
+      "French Navy": "C727",
+      "Heather Grey": "C250",
+      "Natural Raw": "C054",
+      "Fiesta": "C143",
+      "Nispero": "C142",
+      "Fraiche Peche": "C101",
+      "Bubble Pink": "C129",
+      "Cotton Pink": "C005",
+      "Red Brown": "C116",
+      "Burgundy": "C244",
+      "Red": "C004",
+      "Lavender": "C063",
+      "Purple Love": "C115",
+      "Worker Blue": "C088",
+      "Blue Ice": "C728",
+      "Blue Soul": "C149",
+      "Aqua Blue": "C145",
+      "Bright Blue": "C053",
+      "Mindful Blue": "C729",
+      "Dark Heather Blue": "C652",
+      "Aloe": "C089",
+      "Stargazer": "C702",
+      "Misty Jade": "C735",
+      "Green Bay": "C144",
+      "Glazed Green": "C036",
+      "Khaki": "C223",
+      "Spectra Yellow": "C204",
+      "Ochre": "C048",
+      "Heritage Brown": "C730",
+      "Latte": "C112",
+      "Desert Dust": "C028",
+      "Vintage White": "C504",
+      "Off White": "C018"
+    },
+    "Druckbereiche": {
+      "Vorne": "VORN",
+      "Hinten": "HINT",
+      "Sonderbereich": "SONB"
+    },
+    "Vorne": {
+      "Druckgrößen": {
+        "Klein": "VKLE",
+        "Mittel": "VMIT",
+        "Groß": "VGRO"
+      },
+      "Druckpositionen": {
+        "Links": "VPLI",
+        "Mitte": "VPMO",
+        "Rechts": "VPRE",
+        "Sonderwunsch": "VPSO"
+      },
+      "Anzahl Druckfarben": {
+        "1": "VZ1F",
+        "2": "VZ2F",
+        "Mehr": "VZME"
+      }
+    },
+    "Hinten": {
+      "Druckgrößen": {
+        "Klein": "HKLE",
+        "Mittel": "HMIT",
+        "Groß": "HGRO"
+      },
+      "Druckpositionen": {
+        "Oben": "HPMO",
+        "Mitte": "HPMM",
+        "Unten": "HPMU",
+        "Sonderwunsch": "HPSO"
+      },
+      "Anzahl Druckfarben": {
+        "1": "VZ1F",
+        "2": "VZ2F",
+        "Mehr": "VZME"
+      }
+    },
+    "Sonderbereich": {
+      "Druckgrößen": {
+        "Klein": "SKLE",
+        "Mittel": "SMIT",
+        "Groß": "SGRO"
+      },
+      "Druckpositionen": {
+        "Sonderwunsch": "SPSO"
+      },
+      "Anzahl Druckfarben": {
+        "1": "SZ1F",
+        "2": "SZ2F",
+        "Mehr": "SZME"
+      }
+    }
+  }
+}
