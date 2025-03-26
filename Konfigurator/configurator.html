@@ -5,12 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 
-    <style>
-        form div{
-            margin: 60px 0 10px 0;
-        }
-    </style>
-
 </head>
 <body>
 <!DOCTYPE html>
@@ -19,250 +13,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="configurator.js" defer></script>
+
     <title>Netlify Form</title>
+
+    <style>
+        .active {
+            background-color: red;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Shirt Configurator</h1>
-
-    <form name="Konfigurator" action="sucess.html" method="POST" data-netlify-honeypot="bot-field" netlify>
-        <!-- Hidden Honeypot field to prevent bot submissions -->
-        <div style="display:none;">
-            <label for="bot-field">Don't fill this out if you're human:</label>
-            <input type="text" name="bot-field" id="bot-field">
+<div class="konfigurator">
+    <div id="produktauswahl">
+        <h2>Produkt</h2>
+    </div>
+    <div id="farbauswahl">
+    </div>
+    <div id="druckbereich-vorne">
+        <h2>Vorne</h2>
+        <input type="checkbox" name="vorne-option" id="vorne-option" value="vorne">
+        <div id="vorne-konfiguration">
+            <div class="size"></div>
+            <div class="position"></div>
+            <div class="farbe"></div>
         </div>
-
-        <!-- PRODUKT -->
-        <div>
-            <label>Produkt</label><br>
-            <input type="radio" id="tshirt" name="produkt" value="tshirt" data-code="tshi" checked>
-            <input type="radio" id="tote" name="produkt" value="tote" data-code="tote"> 
-            <input type="radio" id="hoodie" name="produkt" value="hoodie" data-code="hood">
+    </div>
+    <div id="druckbereich-hinten">
+        <h2>Hinten</h2>
+        <input type="checkbox" name="hinten-option" id="hinten-option" value="hinten">
+        <div id="hinten-konfiguration">
+            <div class="size"></div>
+            <div class="position"></div>
+            <div class="farbe"></div>
         </div>
-
-        <!-- Farbe -->
-        <div>
-            <label>Farbe</label><br>
-            <input type="radio" id="rot" name="farbe" value="rot" data-code="rot1" checked>
-            <input type="radio" id="gelb" name="farbe" value="gelb" data-code="gelb">
-            <input type="radio" id="blau" name="farbe" value="blau" data-code="blau">
-        </div>
-
-        <!-- Motive -->
-        <br><br>
-        <div>
-            <label>Motiv:</label><br>
-            <input type="checkbox" id="vorne" name="Motiv" value="vorne">
-            <input type="checkbox" id="hinten" name="Motiv" value="hinten">
-            <input type="checkbox" id="sonderposition" name="Motiv" value="sonderposition">
-        </div>
-
-        <!-- Konfiguration Vorne -->
-
-            <div>
-                <label>Vorne Größe:</label><br>
-                <input type="radio" id="vorne-klein" name="vorne-groesse" value="vorne-klein" data-code="vgkl">
-                <input type="radio" id="vorne-mittel" name="vorne-groesse" value="vorne-mittel" data-code="vgmi">
-                <input type="radio" id="vorne-gross" name="vorne-groesse" value="vorne-gross" data-code="vgrs">
-            </div>
-
-                <div>
-                    <label>Vorne Position:</label><br>
-                    <input type="radio" id="vorne-links" name="vorne-position" value="vorne-links" data-code="vpli">
-                    <input type="radio" id="vorne-mitte" name="vorne-position" value="vorne-mitte-oben" data-code="vpom">
-                    <input type="radio" id="vorne-mitte" name="vorne-position" value="vorne-mitte" data-code="vpmm">
-                    <input type="radio" id="vorne-mitte" name="vorne-position" value="vorne-mitte-unten" data-code="vpum">
-                    <input type="radio" id="vorne-rechts" name="vorne-position" value="vorne-rechts" data-code="vpre">
-                    <input type="radio" id="vorne-sonderwunsch" name="vorne-position" value="vorne-sonderwunsch" data-code="vpso">
-                    <label for="vorne-sonderwusch-text">Sonderwunsch Text:</label>
-                    <input type="text" id="vorne-sonderwusch-text" name="vorne-sonderwusch-text">
-                </div>
-
-                    <div>
-                        <label>Vorne Anzahl Farben:</label><br>
-                        <input type="radio" id="vorne-anzahl-1" name="vorne-anzahl-farben" value="vorne-anzahl-1" data-code="vz1f">
-                        <input type="radio" id="vorne-anzahl-2" name="vorne-anzahl-farben" value="vorne-anzahl-2" data-code="vz2f">
-                        <input type="radio" id="vorne-anzahl-mehr" name="vorne-anzahl-farben" value="vorne-anzahl-mehr" data-code="vzme">
-                    </div>
-                    
-
-                    <!-- Konfiguration Hinten -->
-                    
-                    <div>
-                        <label>Hinten Größe:</label><br>
-                        <input type="radio" id="hinten-klein" name="hinten-groesse" value="hinten-klein" data-code="hgkl">
-                        <input type="radio" id="hinten-mittel" name="hinten-groesse" value="hinten-mittel" data-code="hgmi">
-                        <input type="radio" id="hinten-gross" name="hinten-groesse" value="hinten-gross" data-code="hgrs">
-                    </div>
-                    
-                    <div>
-                        <label>Hinten Position:</label><br>
-                        <input type="radio" id="hinten-oben" name="hinten-position" value="hinten-oben" data-code="hpob">
-                        <input type="radio" id="hinten-mitte" name="hinten-position" value="hinten-mitte" data-code="hpmi">
-                        <input type="radio" id="hinten-unten" name="hinten-position" value="hinten-unten" data-code="hpun">
-                        <input type="radio" id="hinten-sonderwunsch" name="hinten-position" value="hinten-sonderwunsch" data-code="hpso">
-                        <label for="hinten-sonderwusch-text">Sonderwunsch Text:</label>
-                        <input type="text" id="hinten-sonderwusch-text" name="hinten-sonderwusch-text">
-                    </div>
-                    
-                    <div>
-                        <label>Hinten Anzahl Farben:</label><br>
-                        <input type="radio" id="hinten-anzahl-1" name="hinten-anzahl-farben" value="hinten-anzahl-1" data-code="hz1f">
-                        <input type="radio" id="hinten-anzahl-2" name="hinten-anzahl-farben" value="hinten-anzahl-2" data-code="hz2f">
-                        <input type="radio" id="hinten-anzahl-mehr" name="hinten-anzahl-farben" value="hinten-anzahl-mehr" data-code="hzmf">
-                        <label for="hinten-anzahl-mehr">mehr</label><br>
-                    </div>
-            <!-- Konfiguration Sonderposition -->
-            
-            <div>
-                <label>Sonderposition Größe:</label><br>
-                <input type="radio" id="sonderposition-klein" name="sonderposition-groesse" value="sonderposition-klein" >
-                <input type="radio" id="sonderposition-mittel" name="sonderposition-groesse" value="sonderposition-mittel" >
-                <input type="radio" id="sonderposition-gross" name="sonderposition-groesse" value="sonderposition-gross" >
-            </div>
-            
-            <div>
-                <label>Sonderposition Position:</label><br>
-                <input type="text" id="sonderposition-text" name="sonderposition-text">
-            </div>
-            
-            <div>
-                <label>Sonderposition Anzahl Farben:</label><br>
-                <input type="radio" id="sonderposition-anzahl-1" name="sonderposition-anzahl-farben" value="sonderposition-anzahl-1">
-                <input type="radio" id="sonderposition-anzahl-2" name="sonderposition-anzahl-farben"
-                    value="sonderposition-anzahl-2">
-                <input type="radio" id="sonderposition-anzahl-mehr" name="sonderposition-anzahl-farben"
-                    value="sonderposition-anzahl-mehr">
-            </div>
-
-<!-- Mengenangaben -->
-
-            <div>
-                <label>Mengenangabe:</label><br>
-                <input type="radio" id="mengenangabe-grobe" name="mengenangabe" value="grob" checked>
-                <label for="mengenangabe-grobe">Grobe Menge</label><br>
-                <input type="radio" id="mengenangabe-genau" name="mengenangabe" value="genau">
-                <label for="mengenangabe-genau">Genaue Menge</label>
-            </div>
-
-<div>
-    <label>Genaue Mengenangabe:</label><br>
-    <label for="menge-xxs">XXS:</label>
-    <input type="number" id="menge-xxs" name="menge-xxs" min="0" value="0"><br>
-    <label for="menge-xs">XS:</label>
-    <input type="number" id="menge-xs" name="menge-xs" min="0" value="0"><br>
-    <label for="menge-s">S:</label>
-    <input type="number" id="menge-s" name="menge-s" min="0" value="0"><br>
-    <label for="menge-m">M:</label>
-    <input type="number" id="menge-m" name="menge-m" min="0" value="0"><br>
-    <label for="menge-l">L:</label>
-    <input type="number" id="menge-l" name="menge-l" min="0" value="0"><br>
-    <label for="menge-xl">XL:</label>
-    <input type="number" id="menge-xl" name="menge-xl" min="0" value="0"><br>
-    <label for="menge-xxl">XXL:</label>
-    <input type="number" id="menge-xxl" name="menge-xxl" min="0" value="0"><br>
-    <label for="menge-xxxl">XXXL:</label>
-    <input type="number" id="menge-xxxl" name="menge-xxxl" min="0" value="0">
 </div>
-
-<!-- Lieferdatum -->
-<div>
-    <label>Lieferdatum:</label><br>
-    <input type="radio" id="lieferdatum-schnell" name="lieferdatum" value="schnell" checked>
-    <label for="lieferdatum-schnell">Schnellstmöglich</label><br>
-    <input type="radio" id="lieferdatum-fest" name="lieferdatum" value="fest">
-    <label for="lieferdatum-fest">Festes Datum</label><br>
-    <input type="date" id="lieferdatum-datum" name="lieferdatum-datum">
-</div>
-
-
-                    <!-- Kontaktdaten -->
-<div>
-    <label>Name:</label><br>
-    <input type="text" id="kunde-name" name="kunde-name" required>
-</div>
-
-<div>
-    <label>E-Mail:</label><br>
-    <input type="email" id="kunde-email" name="kunde-email" required>
-</div>
-
-<div>
-    <label>Telefonnummer:</label><br>
-    <input type="tel" id="kunde-telefon" name="kunde-telefon">
-</div>
-
-
-
-<div data-netlify-recaptcha="true"></div>
-
-        <!-- Submit Button -->
-        <div>
-            <button type="submit">Submit</button>
-        </div>
-    </form>
-
-
-        <script>
-            // Function to gather selected data-code values
-            function updateCodes() {
-                // Get all the selected inputs (radio buttons and checkboxes)
-                const selectedInputs = document.querySelectorAll('input:checked');
-                const vorneCheckbox = document.querySelector('#vorne')
-                const hintenCheckbox = document.querySelector('#hinten')
-
-                // Create an array to store the data-code values
-                const codesVorne = [];
-                const codesHinten = [];
-
-                // Loop through selected inputs and push their data-code values to the array
-                selectedInputs.forEach(input => {
-                    if (input.hasAttribute('data-code')) {
-                        if (input.getAttribute('data-code').includes("hz") || input.getAttribute('data-code').includes("hp") || input.getAttribute('data-code').includes("hg")){
-                            //DO NOTHING
-                        } else if (input.getAttribute('data-code').includes("vz") || input.getAttribute('data-code').includes("vp") || input.getAttribute('data-code').includes("vg")) {
-                            if (vorneCheckbox.checked){
-                                codesVorne.push(input.getAttribute('data-code'));
-                            } 
-                        } else {
-                            codesVorne.push(input.getAttribute('data-code'));
-                        }
-                    } 
-                });
-
-                selectedInputs.forEach(input => {
-                    if (input.hasAttribute('data-code')) {
-                        if (input.getAttribute('data-code').includes("vz") || input.getAttribute('data-code').includes("vp") || input.getAttribute('data-code').includes("vg")) {
-                            //DO NOTHING
-                        } else if (input.getAttribute('data-code').includes("hz") || input.getAttribute('data-code').includes("hp") || input.getAttribute('data-code').includes("hg")) {
-                            if (hintenCheckbox.checked) {
-                                codesHinten.push(input.getAttribute('data-code'));
-                            }
-                        } else {
-                            codesHinten.push(input.getAttribute('data-code'));
-                        }
-                    }
-                });
-
-
-                const codesVorneString = codesVorne.join('-');
-                const codesHintenString = codesHinten.join('-');
-
-                // Log the result to the console
-                console.log('Selected codes Vorne:', codesVorneString);
-                console.log('Selected codes Hinten:', codesHintenString);
-            }
-
-            // Listen for changes to any input in the form
-            const formElements = document.querySelectorAll('input');
-            formElements.forEach(element => {
-                element.addEventListener('change', updateCodes);
-            });
-        </script>
-
 </body>
 
-</html>
-
-</body>
 </html>

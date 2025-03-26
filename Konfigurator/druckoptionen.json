@@ -1,5 +1,6 @@
 {
   "Tote Bag": {
+    "Produktcode": "TOTE",
     "Farben": {
       "Black": "C002",
       "White": "C001",
@@ -12,7 +13,7 @@
       "Hinten": "HINT"
     },
     "Vorne": {
-      "Druckgrößen": {
+      "Druckgroessen": {
         "Klein": "VKLE",
         "Mittel": "VMIT",
         "Groß": "VGRO"
@@ -23,14 +24,14 @@
         "Unten": "VPMU",
         "Sonderwunsch": "VPSO"
       },
-      "Anzahl Druckfarben": {
+      "Druckfarben": {
         "1": "VZ1F",
         "2": "VZ2F",
         "Mehr": "VZME"
       }
     },
     "Hinten": {
-      "Druckgrößen": {
+      "Druckgroessen": {
         "Klein": "HKLE",
         "Mittel": "HMIT",
         "Groß": "HGRO"
@@ -41,14 +42,15 @@
         "Unten": "HPMU",
         "Sonderwunsch": "HPSO"
       },
-      "Anzahl Druckfarben": {
-        "1": "VZ1F",
-        "2": "VZ2F",
-        "Mehr": "VZME"
+      "Druckfarben": {
+        "1": "HZ1F",
+        "2": "HZ2F",
+        "Mehr": "HZME"
       }
     }
   },
-  "Tshirts": {
+  "T-Shirt": {
+    "Produktcode": "TSHI",
     "Farben": {
       "Lilac Dream": "C355",
       "Viva Yellow": "C356",
@@ -96,7 +98,7 @@
       "Sonderbereich": "SONB"
     },
     "Vorne": {
-      "Druckgrößen": {
+      "Druckgroessen": {
         "Klein": "VKLE",
         "Mittel": "VMIT",
         "Groß": "VGRO"
@@ -107,14 +109,14 @@
         "Rechts": "VPRE",
         "Sonderwunsch": "VPSO"
       },
-      "Anzahl Druckfarben": {
+      "Druckfarben": {
         "1": "VZ1F",
         "2": "VZ2F",
         "Mehr": "VZME"
       }
     },
     "Hinten": {
-      "Druckgrößen": {
+      "Druckgroessen": {
         "Klein": "HKLE",
         "Mittel": "HMIT",
         "Groß": "HGRO"
@@ -125,14 +127,14 @@
         "Unten": "HPMU",
         "Sonderwunsch": "HPSO"
       },
-      "Anzahl Druckfarben": {
-        "1": "VZ1F",
-        "2": "VZ2F",
-        "Mehr": "VZME"
+      "Druckfarben": {
+        "1": "HZ1F",
+        "2": "HZ2F",
+        "Mehr": "HZME"
       }
     },
     "Sonderbereich": {
-      "Druckgrößen": {
+      "Druckgroessen": {
         "Klein": "SKLE",
         "Mittel": "SMIT",
         "Groß": "SGRO"
@@ -140,7 +142,7 @@
       "Druckpositionen": {
         "Sonderwunsch": "SPSO"
       },
-      "Anzahl Druckfarben": {
+      "Druckfarben": {
         "1": "SZ1F",
         "2": "SZ2F",
         "Mehr": "SZME"
