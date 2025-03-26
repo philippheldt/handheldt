@@ -154,19 +154,19 @@
                     <h2>Menge</h2>
                     <div id="mengenangabe">
                         <div class="checkbox-container">
-                            <input type="radio" name="mengenauswahl" id="mengenauswahl-grob" value="grob" class="cutom-Radio" checked>
+                            <input type="radio" name="mengenauswahl" value="grob" id="mengenauswahl-grob-checkbox" class="cutom-Radio" checked>
                             <div class="checkbox-label">
                                 <h3>Grobe Anzahl</h3>
                                 <div class="subtitle"> Untertitel</div>
                             </div>
                         </div>
                         <div class="radios" id="anzahl-grob">
-                            <input type="number" name="anzahl-grob"  value="1" min="1" max="500">
+                            <input type="number" name="anzahl-grob" id="mengenauswahl-grob"   value="1" min="1" max="500">
                         </div>
 
                       
                         <div class="checkbox-container">
-                            <input type="radio" name="mengenauswahl" id="mengenauswahl-genau" value="genau" class="cutom-Radio">
+                            <input type="radio" name="mengenauswahl" id="mengenauswahl-genau-checkbox" value="genau" class="cutom-Radio">
                             <div class="checkbox-label">
                                 <h3>Genaue Anzahl</h3>
                                 <div class="subtitle"> Untertitel</div>
@@ -176,21 +176,21 @@
                         
                         <div id="anzahl-genau" class="radios" style="display: none;">
                             <h5>XXS</h5>
-                            <input type="number" name="anzahl-XXS" id="anzahl-XXS" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XXS" id="anzahl-XXS" value="0" min="0" max="100">
                             <h5>XS</h5>
-                            <input type="number" name="anzahl-XS" id="anzahl-XS" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XS" id="anzahl-XS" value="0" min="0" max="100">
                             <h5>S</h5>
-                            <input type="number" name="anzahl-S" id="anzahl-S" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-S" id="anzahl-S" value="0" min="0" max="100">
                             <h5>M</h5>
-                            <input type="number" name="anzahl-M" id="anzahl-M" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-M" id="anzahl-M" value="0" min="0" max="100">
                             <h5>L</h5>
-                            <input type="number" name="anzahl-L" id="anzahl-L" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-L" id="anzahl-L" value="0" min="0" max="100">
                             <h5>XL</h5>
-                            <input type="number" name="anzahl-XL" id="anzahl-XL" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XL" id="anzahl-XL" value="0" min="0" max="100">
                             <h5>XXL</h5>
-                            <input type="number" name="anzahl-XXL" id="anzahl-XXL" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XXL" id="anzahl-XXL" value="0" min="0" max="100">
                             <h5>XXXL</h5>
-                            <input type="number" name="anzahl-XXXL" id="anzahl-XXXL" value="0" min="0" max="100">
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XXXL" id="anzahl-XXXL" value="0" min="0" max="100">
                         </div>
                     </div>
 
@@ -220,8 +220,8 @@
                     <div class="preisrechner">
                         <div class="content-wrapper">
                             <div class="preis">
-                                <h2 id="gesamtpreis">ca. 150-300€</h2>
-                                <div class="subtitle" id="stueckpreis"> ca. 15-20 stck.</div>
+                                <h2 id="gesamtpreis"></h2>
+                                <div class="subtitle" id="stueckpreis"></div>
                             </div>
                                 <button type="submit" class="black">Anfrage senden</button>
                         </div>

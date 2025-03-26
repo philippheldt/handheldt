@@ -266,15 +266,18 @@ sonderwunschCheckbox.addEventListener('change', (event) => {
 const mengenauswahl = document.querySelectorAll('input[name="mengenauswahl"]')
 const anzahlGenau = document.querySelector('#anzahl-genau')
 const anzahlGrob = document.querySelector('#anzahl-grob')
+var grobQuery = true
 
 mengenauswahl.forEach((radio) => {
     radio.addEventListener('change', (event) => {
         if (event.target.value === 'genau') {
             anzahlGenau.style.display = 'grid'
             anzahlGrob.style.display = 'none'
+            grobQuery = false
         } else {
             anzahlGenau.style.display = 'none'
             anzahlGrob.style.display = 'block'
+            grobQuery = true
         }
     })
 })
@@ -355,6 +358,25 @@ document.addEventListener('change', (event) => {
 
     console.log('back: ' + backSetup)
 
+    //SONDERWUNSCH SETUP
+    const sonderwunschSize = document.querySelector(
+        'input[name="sonderwunsch-size"]:checked'
+    )
+    const sonderwunschAnzahl = document.querySelector(
+        'input[name="sonderwunsch-anzahl"]:checked'
+    )
+
+    const sonderwunschCheckboxQuery = document.querySelector(
+        'input[name="sonderwunsch-option"]:checked'
+    )
+
+    var sonderwunschSetup = sonderwunschCheckboxQuery
+        ? `${sonderwunschSize.getAttribute(
+              'data-code'
+          )}-${sonderwunschAnzahl.getAttribute('data-code')}`
+        : '-'
+    console.log('sonderwunsch: ' + sonderwunschSetup)
+
     //PREVIEW UPDATER:
 
     const colorPreview = document.querySelector('.background-color')
@@ -363,4 +385,92 @@ document.addEventListener('change', (event) => {
 
     const productPreview = document.querySelector('.product-preview')
     productPreview.src = `img/configurator/config/${frontSetup}.png`
+
+    //PRICE UPDATER
+    var priceMin = 0
+    var priceMax = 0
+
+    //Get all data-codes form each selected element and take the corresponding price from the Prices object
+    frontSetup.split('-').forEach((element) => {
+        console.log(element)
+        if (element in Prices) {
+            priceMin += Prices[element]
+            priceMax += Prices[element]
+        } else if (element + 'MIN' in Prices && element + 'MAX' in Prices) {
+            priceMax += Prices[element + 'MAX']
+            priceMin += Prices[element + 'MIN']
+        }
+    })
+
+    backSetup.split('-').forEach((element) => {
+        console.log(element)
+        if (element in Prices) {
+            priceMin += Prices[element]
+            priceMax += Prices[element]
+        }
+    })
+
+    sonderwunschSetup.split('-').forEach((element) => {
+        console.log(element)
+        if (element in Prices) {
+            priceMin += Prices[element]
+            priceMax += Prices[element]
+        }
+    })
+
+    const priceElement = document.querySelector('#gesamtpreis')
+    const priceSingleElement = document.querySelector('#stueckpreis')
+    const multiplicatorGrob = document.querySelector(
+        '#mengenauswahl-grob'
+    ).value
+    const multiplicatorGenauArray = document.querySelectorAll(
+        '.mengenauswahl-genau'
+    )
+    var multiplicatorGenau = 0
+    multiplicatorGenauArray.forEach((element) => {
+        multiplicatorGenau += Number(element.value)
+    })
+
+    const multiplicator = grobQuery ? multiplicatorGrob : multiplicatorGenau
+    console.log(grobQuery)
+
+    priceElement.innerHTML = `${priceMin * multiplicator} € - ${
+        priceMax * multiplicator
+    } €`
+
+    if (multiplicator > 1) {
+        priceSingleElement.innerHTML = `${priceMin} € - ${priceMax} € stk.`
+    } else {
+        priceSingleElement.innerHTML = ''
+    }
+
+    console.log('min: ' + priceMin)
+    console.log('max: ' + priceMax)
 })
+
+const Prices = {
+    TSHIMIN: 6,
+    TSHIMAX: 12,
+    TOTEMIN: 3,
+    TOTEMAX: 6,
+    VKLE: 1,
+    VMIT: 2,
+    VGRO: 3,
+    HKLE: 1,
+    HMIT: 2,
+    HGRO: 3,
+    SKLE: 1,
+    SMIT: 2,
+    SGRO: 3,
+    VZ1F: 0,
+    VZ2F: 2,
+    VZME: 4,
+    HZ1F: 0,
+    HZ2F: 2,
+    HZME: 4,
+    SZ1F: 0,
+    SZ2F: 2,
+    SZME: 4,
+    MARGMIN: 2,
+    MARGMAX: 6,
+}

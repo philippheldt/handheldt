@@ -260,13 +260,14 @@ input[type="checkbox"]:checked {
 
 .preisrechner {
     position: fixed;
-    left: 0;
-    bottom: 0;
-    right: 0;
+    left: 10px;
+    bottom: 10px;
+    right: 10px;
 background-color: var(--secondary-color);
 box-shadow: 0px 0px 100px 0px #0000001a;
 z-index: 1000000;
-    padding: 20px;
+    padding: 40px;
+    border-radius: var(--standard-radius);
 }
 
 .preisrechner .content-wrapper{
@@ -277,6 +278,10 @@ z-index: 1000000;
     gap: 20px;
 }
 
+.preisrechner .content-wrapper button {
+    margin: 0;
+}
+
 .preis {
     text-align: right;
 }
@@ -285,4 +290,16 @@ z-index: 1000000;
     font-size: 1.5rem;
     color: var(--primary-color);
     margin: 0 ;
+}
+
+#stueckpreis {
+    color: #0c0b2137;
+}
+
+.full-white{
+z-index: -10;
+}
+
+.footer{
+    z-index: -10;
 }

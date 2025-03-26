@@ -120,7 +120,7 @@ const footer = `
         </div>
 
     </section>
-    <section class="black">
+    <section class="black footer">
         <footer class="content-wrapper">
 
             <div class="">
