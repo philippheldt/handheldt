@@ -40,36 +40,15 @@
         <div class="content-wrapper ">
             <div class="two-columns">
                 <div class="preview">
-                    Hallo
+                    <div class="preview-wrapper">
+                        <div class="background-color"></div>
+                        <img src="img/configurator/config/TSHI.png" class="product-preview" alt="">
+                    </div>
+                    
                 </div>
+                <div class="preview-placeholder"></div>
                 <div class="konfigurator">
-                    <!-- <div id="testsection">
-                        <h2>Test</h2>
-                        <div class="radios">
-                            <label for="test1" class="radio-item">
-                                <img src="img/configurator/test-image.png" alt="">
-                                <div class="label-text">testname</div>
-                                <input type="radio" name="test" id="test1" value="test1" checked>
-                            </label>
-                            <label for="test2" class="radio-item">
-                                <img src="img/configurator/test-image.png" alt="">
-                                <div class="label-text">testname</div>
-                                <input type="radio" name="test" id="test2" value="test2" >
-                            </label>
-                            <label for="test2" class="radio-item">
-                                <img src="img/configurator/test-image.png" alt="">
-                                <div class="label-text">testname</div>
-                                <input type="radio" name="test" id="test2" value="test2" >
-                            </label>
-                            <label for="test2" class="radio-item">
-                                <img src="img/configurator/test-image.png" alt="">
-                                <div class="label-text">testname</div>
-                                <input type="radio" name="test" id="test2" value="test2" >
-                            </label>
-                        </div>
-                     
-                    </div> -->
-                    <div>
+                         <div>
                         <h2>Produkt</h2>
                         <div class="radios" id="produktauswahl">
                             
@@ -123,55 +102,130 @@
                             </div>
                         </div>
                         <div id="sonderwunsch-konfiguration" style="display: none;">
-                            <div class="size">
-                                <h4>Größe</h4>
-                                <input type="radio" name="sonderwunsch-size" value="Klein" id="Klein" data-code="SKLE"
-                                    checked>
-                                <input type="radio" name="sonderwunsch-size" value="Mittel" id="Mittel"
-                                    data-code="SMIT">
-                                <input type="radio" name="sonderwunsch-size" value="Groß" id="Groß" data-code="SGRO">
+                            <div class="size radios">
+                                <h4>Größe</h4><label for="sonderwunsch-Klein" class="radio-item">
+                                    <img src="img/configurator/test-image.png" alt="">
+                                    <div class="label-text">Klein</div>
+                                    <input type="radio" name="sonderwunsch-size" value="sonderwunsch-Klein" id="sonderwunsch-Klein" data-code="SKLE" checked>
+                                </label><label for="sonderwunsch-Mittel" class="radio-item">
+                                    <img src="img/configurator/test-image.png" alt="">
+                                    <div class="label-text">Mittel</div>
+                                    <input type="radio" name="sonderwunsch-size" value="sonderwunsch-Mittel" id="sonderwunsch-Mittel" data-code="SMIT">
+                                </label><label for="sonderwunsch-Groß" class="radio-item">
+                                    <img src="img/configurator/test-image.png" alt="">
+                                    <div class="label-text">Groß</div>
+                                    <input type="radio" name="sonderwunsch-size" value="sonderwunsch-Groß" id="sonderwunsch-Groß" data-code="SGRO">
+                                </label>
                             </div>
-                            <div class="position">
-                                <h4>Position</h4>
-                                <input type="text" name="sonderwunsch-sonderwunsch-text"
-                                    id="sonderwunsch-sonderwunsch-text" placeholder="Sonderwunsch">
+                            <div class="position radios">
+                                        <h4>Position</h4>
+                                        <input type="text" name="sonderwunsch-text" placeholder="Sonderwunsch" id="back-sonderwunsch-text"
+                                            style="display: block;">
+                                 
                             </div>
-                            <div class="farbe">
-                                <h4>Farbe</h4>
-                                <input type="radio" name="sonderwunsch-color-number" value="1" id="1" data-code="SZ1F"
-                                    checked>
-                                <input type="radio" name="sonderwunsch-color-number" value="2" id="2" data-code="SZ2F">
-                                <input type="radio" name="sonderwunsch-color-number" value="Mehr" id="Mehr"
-                                    data-code="SZME">
+                            <div class="farbe radios">
+                                  
+                                        <h4>Anzahl der Farben auf dem Motiv</h4>
+                                        <label for="sonderwunsch-1" class="radio-item">
+                                            <img src="img/configurator/test-image.png" alt="">
+                                            <div class="label-text">1</div>
+                                            <input type="radio" name="sonderwunsch-anzahl" value="sonderwunsch-1" id="sonderwunsch-1" data-code="SZ1F" checked>
+                                        </label>
+                                        <label for="sonderwunsch-2" class="radio-item">
+                                            <img src="img/configurator/test-image.png" alt="">
+                                            <div class="label-text">2</div>
+                                            <input type="radio" name="sonderwunsch-anzahl" value="sonderwunsch-2" id="sonderwunsch-2" data-code="SZ2F">
+                                        </label>
+                                        <label for="sonderwunsch-Mehr" class="radio-item">
+                                            <img src="img/configurator/test-image.png" alt="">
+                                            <div class="label-text">Mehr</div>
+                                            <input type="radio" name="sonderwunsch-anzahl" value="sonderwunsch-Mehr" id="sonderwunsch-Mehr" data-code="SZME">
+                                        </label>
+                                 
                             </div>
                         </div>
                     </div>
                     <div class="uploader">
-                        <h2>Upload</h2>
+                        <p>Falls du Dateien hast, lade deine
+                        sie hier hoch. Auch eine grobe Skizze
+                        hilft uns zu sagen ob es funktioniert.</p>
+                        <button class="black">Hochladen</button>
                     </div>
+                    <h2>Menge</h2>
                     <div id="mengenangabe">
-                        <h2>Menge</h2>
-                        <input type="radio" name="mengenauswahl" id="mengenauswahl-grob" value="grob" checked>
-                        <input type="number" name="anzahl-grob" id="anzahl-grob" value="1" min="1" max="500">
-                        <input type="radio" name="mengenauswahl" id="mengenauswahl-genau" value="genau">
-                        <div id="anzahl-genau" style="display: none;">
+                        <div class="checkbox-container">
+                            <input type="radio" name="mengenauswahl" id="mengenauswahl-grob" value="grob" class="cutom-Radio" checked>
+                            <div class="checkbox-label">
+                                <h3>Grobe Anzahl</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+                        <div class="radios" id="anzahl-grob">
+                            <input type="number" name="anzahl-grob"  value="1" min="1" max="500">
+                        </div>
+
+                      
+                        <div class="checkbox-container">
+                            <input type="radio" name="mengenauswahl" id="mengenauswahl-genau" value="genau" class="cutom-Radio">
+                            <div class="checkbox-label">
+                                <h3>Genaue Anzahl</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div id="anzahl-genau" class="radios" style="display: none;">
+                            <h5>XXS</h5>
                             <input type="number" name="anzahl-XXS" id="anzahl-XXS" value="0" min="0" max="100">
+                            <h5>XS</h5>
                             <input type="number" name="anzahl-XS" id="anzahl-XS" value="0" min="0" max="100">
+                            <h5>S</h5>
                             <input type="number" name="anzahl-S" id="anzahl-S" value="0" min="0" max="100">
+                            <h5>M</h5>
                             <input type="number" name="anzahl-M" id="anzahl-M" value="0" min="0" max="100">
+                            <h5>L</h5>
                             <input type="number" name="anzahl-L" id="anzahl-L" value="0" min="0" max="100">
+                            <h5>XL</h5>
                             <input type="number" name="anzahl-XL" id="anzahl-XL" value="0" min="0" max="100">
+                            <h5>XXL</h5>
                             <input type="number" name="anzahl-XXL" id="anzahl-XXL" value="0" min="0" max="100">
+                            <h5>XXXL</h5>
                             <input type="number" name="anzahl-XXXL" id="anzahl-XXXL" value="0" min="0" max="100">
                         </div>
                     </div>
 
                     <div id="lieferdatumauswahl">
                         <h2>Lieferdatum</h2>
-                        <input type="radio" name="lieferdatumauswahl" id="lieferdatumauswahl-schnell" value="schnell"
-                            checked>
-                        <input type="radio" name="lieferdatumauswahl" id="lieferdatumauswahl-datum" value="datum">
-                        <input type="date" name="lieferdatum" id="lieferdatum" style="display: none;">
+                          <div class="checkbox-container">
+                            <input type="radio" name="lieferdatumauswahl" id="lieferdatumauswahl-schnell" value="schnell" class="cutom-Radio" checked>
+                            <div class="checkbox-label">
+                                <h3>So bald wie möglich</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                          </div>
+
+                        <div class="checkbox-container">
+                            <input type="radio" name="lieferdatumauswahl" id="lieferdatumauswahl-datum" class="cutom-Radio" value="datum">
+                            <div class="checkbox-label">
+                                <h3>Genaues Datum</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+                        <div class="radios" id="lieferdatum"  style="display: none;">
+                            <input type="date" name="lieferdatum">
+                        </div>
+                        
+                    </div>
+
+                    <div class="preisrechner">
+                        <div class="content-wrapper">
+                            <div class="preis">
+                                <h2 id="gesamtpreis">ca. 150-300€</h2>
+                                <div class="subtitle" id="stueckpreis"> ca. 15-20 stck.</div>
+                            </div>
+                                <button type="submit" class="black">Anfrage senden</button>
+                        </div>
+                      
                     </div>
                 </div>
             </div>

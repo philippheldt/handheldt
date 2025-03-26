@@ -1,64 +1,13 @@
-{
-  "Tote Bag": {
-    "Produktcode": "TOTE",
-    "Farben": {
-      "Black": "C002",
-      "White": "C001",
-      "Heather Grey": "C250",
-      "Midnight Blue": "C591",
-      "Natural": "C007"
-    },
-    "Druckbereiche": {
-      "Vorne": "VORN",
-      "Hinten": "HINT"
-    },
-    "Vorne": {
-      "Druckgroessen": {
-        "Klein": "VKLE",
-        "Mittel": "VMIT",
-        "Groß": "VGRO"
-      },
-      "Druckpositionen": {
-        "Oben": "VPMO",
-        "Mitte": "VPMM",
-        "Unten": "VPMU",
-        "Sonderwunsch": "VPSO"
-      },
-      "Druckfarben": {
-        "1": "VZ1F",
-        "2": "VZ2F",
-        "Mehr": "VZME"
-      }
-    },
-    "Hinten": {
-      "Druckgroessen": {
-        "Klein": "HKLE",
-        "Mittel": "HMIT",
-        "Groß": "HGRO"
-      },
-      "Druckpositionen": {
-        "Oben": "HPMO",
-        "Mitte": "HPMM",
-        "Unten": "HPMU",
-        "Sonderwunsch": "HPSO"
-      },
-      "Druckfarben": {
-        "1": "HZ1F",
-        "2": "HZ2F",
-        "Mehr": "HZME"
-      }
-    }
-  },
-  "T-Shirt": {
+{"T-Shirt": {
     "Produktcode": "TSHI",
     "Farben": {
+      "French Navy": "C727",
+      "Black": "C002",
       "Lilac Dream": "C355",
       "Viva Yellow": "C356",
       "Pool Blue": "C357",
       "Stone": "C358",
-      "Black": "C002",
       "White": "C001",
-      "French Navy": "C727",
       "Heather Grey": "C250",
       "Natural Raw": "C054",
       "Fiesta": "C143",
@@ -146,6 +95,56 @@
         "1": "SZ1F",
         "2": "SZ2F",
         "Mehr": "SZME"
+      }
+    }
+  },
+  "Tote Bag": {
+    "Produktcode": "TOTE",
+    "Farben": {
+      "Black": "C002",
+      "White": "C001",
+      "Heather Grey": "C250",
+      "Midnight Blue": "C591",
+      "Natural": "C007"
+    },
+    "Druckbereiche": {
+      "Vorne": "VORN",
+      "Hinten": "HINT"
+    },
+    "Vorne": {
+      "Druckgroessen": {
+        "Klein": "VKLE",
+        "Mittel": "VMIT",
+        "Groß": "VGRO"
+      },
+      "Druckpositionen": {
+        "Oben": "VPMO",
+        "Mitte": "VPMM",
+        "Unten": "VPMU",
+        "Sonderwunsch": "VPSO"
+      },
+      "Druckfarben": {
+        "1": "VZ1F",
+        "2": "VZ2F",
+        "Mehr": "VZME"
+      }
+    },
+    "Hinten": {
+      "Druckgroessen": {
+        "Klein": "HKLE",
+        "Mittel": "HMIT",
+        "Groß": "HGRO"
+      },
+      "Druckpositionen": {
+        "Oben": "HPMO",
+        "Mitte": "HPMM",
+        "Unten": "HPMU",
+        "Sonderwunsch": "HPSO"
+      },
+      "Druckfarben": {
+        "1": "HZ1F",
+        "2": "HZ2F",
+        "Mehr": "HZME"
       }
     }
   }

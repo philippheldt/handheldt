@@ -8,6 +8,56 @@ const frontCheckbox = document.querySelector('#vorne-option')
 const backCheckbox = document.querySelector('#hinten-option')
 const sonderwunschCheckbox = document.querySelector('#sonderwunsch-option')
 
+const colorHexMapping = {
+    C001: '#F1F1F1',
+    C002: '#2F2F2F',
+    C004: '#A32E40',
+    C005: '#FEBCCA',
+    C007: '#ECE8DC',
+    C018: '#EDE9E6',
+    C028: '#BCAC9D',
+    C036: '#013D3E',
+    C048: '#BE7D1A',
+    C053: '#4E7DB1',
+    C054: '#F9EFD8',
+    C063: '#B9B7CC',
+    C088: '#1E2D70',
+    C089: '#A6B8AC',
+    C101: '#F0AE96',
+    C112: '#D4A77E',
+    C116: '#52323A',
+    C129: '#EC98BA',
+    C142: '#E6B372',
+    C143: '#FB6445',
+    C144: '#6B8883',
+    C145: '#4AC1E8',
+    C146: '#EBE6ED',
+    C147: '#F6E9E2',
+    C149: '#B2D0EC',
+    C115: '#614790',
+    C204: '#F6B846',
+    C223: '#636359',
+    C244: '#592930',
+    C250: '#D3D3D3',
+    C253: '#5D5D5D',
+    C355: '#BD8D99',
+    C356: '#E8CC87',
+    C357: '#69AEAA',
+    C358: '#AAA696',
+    C504: '#EFEBE7',
+    C591: '#41455B',
+    C651: '#A2A1A6',
+    C652: '#464D5D',
+    C702: '#405361',
+    C715: '#444A5D',
+    C727: '#1F1E30',
+    C728: '#D8E2E3',
+    C729: '#306FA4',
+    C730: '#A64D3B',
+    C731: '#DED4CB',
+    C735: '#A4CDAF',
+}
+
 function createForm(data) {
     console.log(data)
     var i = 0
@@ -15,7 +65,9 @@ function createForm(data) {
         productObject.innerHTML =
             productObject.innerHTML +
             `<label for="${product}" class="radio-item">
-                <img src="img/configurator/test-image.png" alt="">
+                <img src="img/configurator/${
+                    data[product].Produktcode
+                }.png" alt="">
                 <div class="label-text">${product}</div>
                 <input type="radio" name="product" value="${product}" id="${product}" data-code="${
                 data[product].Produktcode
@@ -55,10 +107,12 @@ function loadColors(produktAuswahl) {
             var i = 0
             Object.entries(productData.Farben).forEach(
                 ([colorName, colorCode]) => {
+                    //take colorCode and get the corresponding hex value
+                    const colorHex = colorHexMapping[colorCode]
                     productColor.innerHTML =
                         productColor.innerHTML +
-                        `<label for="${colorName}" class="radio-item">
-                            <img src="img/configurator/test-image.png" alt="">
+                        `<label for="${colorName}" class="radio-item color">
+                            <div class="color-preview" style="background-color: ${colorHex};"></div>
                             <div class="label-text">${colorName}</div>
                             <input type="radio" name="color" value="${colorName}" id="${colorName}" data-code="${colorCode}" ${
                             i === 0 ? 'checked' : ''
@@ -120,7 +174,7 @@ function loadConfiguration(produktAuswahl, druckbereich) {
                             <img src="img/configurator/test-image.png" alt="">
                             <div class="label-text">${positionName}</div>
                             <input type="radio" name="${frontBackValue}-position" value="${frontBackValue}-${positionName}" id="${frontBackValue}-${positionName}" data-code="${positionCode}" ${
-                            i === 0 ? 'checked' : ''
+                            i === 1 ? 'checked' : ''
                         }>
                         </label>`
 
@@ -216,7 +270,7 @@ const anzahlGrob = document.querySelector('#anzahl-grob')
 mengenauswahl.forEach((radio) => {
     radio.addEventListener('change', (event) => {
         if (event.target.value === 'genau') {
-            anzahlGenau.style.display = 'block'
+            anzahlGenau.style.display = 'grid'
             anzahlGrob.style.display = 'none'
         } else {
             anzahlGenau.style.display = 'none'
@@ -254,12 +308,10 @@ document.addEventListener('change', (event) => {
         'input[name="front-position"]:checked'
     )
     const selectedFrontColorNumber = document.querySelector(
-        'input[name="front-color-number"]:checked'
+        'input[name="front-anzahl"]:checked'
     )
 
-    var frontSetup = `${selectedProduct.getAttribute(
-        'data-code'
-    )}-${selectedColor.getAttribute('data-code')}`
+    var frontSetup = `${selectedProduct.getAttribute('data-code')}`
 
     const frontCheckedQuery = document.querySelector(
         'input[name="vorne-option"]:checked'
@@ -284,12 +336,10 @@ document.addEventListener('change', (event) => {
         'input[name="back-position"]:checked'
     )
     const selectedBackColorNumber = document.querySelector(
-        'input[name="back-color-number"]:checked'
+        'input[name="back-anzahl"]:checked'
     )
 
-    var backSetup = `${selectedProduct.getAttribute(
-        'data-code'
-    )}-${selectedColor.getAttribute('data-code')}`
+    var backSetup = `${selectedProduct.getAttribute('data-code')}`
 
     const backCheckedQuery = document.querySelector(
         'input[name="hinten-option"]:checked'
@@ -304,4 +354,13 @@ document.addEventListener('change', (event) => {
         : null
 
     console.log('back: ' + backSetup)
+
+    //PREVIEW UPDATER:
+
+    const colorPreview = document.querySelector('.background-color')
+    colorPreview.style.backgroundColor =
+        colorHexMapping[selectedColor.getAttribute('data-code')]
+
+    const productPreview = document.querySelector('.product-preview')
+    productPreview.src = `img/configurator/config/${frontSetup}.png`
 })

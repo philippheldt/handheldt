@@ -7,6 +7,7 @@
     --standard-radius: 0.3rem;
 }
 
+
 .two-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -19,7 +20,7 @@
     align-items: center;
     border-radius: var(--standard-radius);
     padding: 10px;
-    width: 100px;
+    width: 25.1%;
     background-color: var(--secondary-color);
     border: solid #0c0b2100 1px;
     cursor: pointer;
@@ -28,23 +29,55 @@
 
 .radio-item img{
     width: 100%;
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
+}
+
+.color-preview {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: var(--standard-radius);
+    background-color: #000;
+}
+
+.radio-item.color .label-text {
+    text-align: center;
+    margin-top: 10px;
+    height: 35px;
 }
 
 
 
 .radio-item:has(input[type="radio"]:checked) {
     border: solid #0c0b21 1px;
+    transition: border 0.1s ease;
 }
 
 
 .radio-item .label-text {
     color: #0c0b2179;
     font-size: 0.8rem;
-
+    transition: color 0.1s ease;
 }
 
 .radio-item:has(input[type="radio"]:checked) .label-text {
     color: var(--primary-color);
+}
+
+.radio-item:has(input[type="radio"]:checked) img {
+    opacity: 1;
+}
+
+.radio-item:hover img {
+    opacity: 1;
+}
+
+.radio-item:hover .label-text {
+    color: var(--primary-color);
+}
+
+.radio-item:hover {
+    border: solid #0c0b212e 1px;
 }
 
 .radio-item input[type="radio"] {
@@ -57,7 +90,7 @@ div:has(> .radio-item) {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     gap: 10px;
     flex-wrap: wrap;
 }
@@ -69,6 +102,7 @@ div:has(> .radio-item) {
 }
 
 .radios{
+    box-sizing: border-box;
     background-color: #fff;
     border-radius: var(--standard-radius);
     padding: 20px;
@@ -80,6 +114,42 @@ div:has(> .radio-item) {
     /* make flex go across the whole line */
     width: 100%;
     margin: 5px 0;
+}
+
+
+.cutom-Radio {
+        appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            border-radius: 100%;
+            background-color: #f0f0f0;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+}
+
+.cutom-Radio:checked {
+    background-color: black;
+    border-color: black;
+}
+
+
+.radios input[type="text"],
+.radios input[type="number"],
+.radios input[type="date"]{
+    width: 100%;
+    height: 40px;
+    background-color: var(--secondary-color);
+    margin: 0px;
+    box-sizing: border-box;
+    border: 1px #0c0b214b  solid;
+    padding: 0rem 1rem;
+    border-radius: var(--standard-radius);
+    font-family: "euclid", sans-serif;
+    outline: none;
 }
 
 input[type="checkbox"] {
@@ -103,6 +173,7 @@ input[type="checkbox"]:checked {
 }
 
 .checkbox-container{
+    box-sizing: border-box;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -128,4 +199,90 @@ input[type="checkbox"]:checked {
 
 .checkbox-label{
     margin: 0 0 0 10px;
+}
+
+.uploader{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    justify-content: space-between;
+    margin: 20px 0 20px 0;
+}
+
+.uploader p {
+    color: #0c0b2179;
+    font-size: smaller;
+}
+
+
+
+/* Konfigurator Preview Section */
+
+.preview {
+    position: fixed;
+    width: 800px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+.preview-wrapper{
+    width: 45%;
+    display: grid;
+    grid-template-columns: 1fr;
+
+}
+
+.preview img{
+    grid-area: 1/1 ;
+    width: 100%;
+    border-radius: var(--standard-radius);
+}
+
+.background-color {
+    grid-area: 1/1;
+    background-color: var(--primary-color);
+    width: 95%;
+    aspect-ratio: 1/1;
+    margin: 5px;
+}
+
+#anzahl-genau {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 70px;
+}
+
+
+/* PREISRECHNER */
+
+.preisrechner {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    right: 0;
+background-color: var(--secondary-color);
+box-shadow: 0px 0px 100px 0px #0000001a;
+z-index: 1000000;
+    padding: 20px;
+}
+
+.preisrechner .content-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    gap: 20px;
+}
+
+.preis {
+    text-align: right;
+}
+
+#gesamtpreis {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: 0 ;
 }
