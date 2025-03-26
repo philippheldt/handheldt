@@ -1,0 +1,131 @@
+:root {
+    --primary-color: #0c0b21;
+    --secondary-color: #f8f7f4;
+    --accent-color: #FFECD0;
+    --darker-accent-color: #ffe2bf;
+    --accent-color-blue: #dddddd;
+    --standard-radius: 0.3rem;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+}
+
+.radio-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: var(--standard-radius);
+    padding: 10px;
+    width: 100px;
+    background-color: var(--secondary-color);
+    border: solid #0c0b2100 1px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.radio-item img{
+    width: 100%;
+}
+
+
+
+.radio-item:has(input[type="radio"]:checked) {
+    border: solid #0c0b21 1px;
+}
+
+
+.radio-item .label-text {
+    color: #0c0b2179;
+    font-size: 0.8rem;
+
+}
+
+.radio-item:has(input[type="radio"]:checked) .label-text {
+    color: var(--primary-color);
+}
+
+.radio-item input[type="radio"] {
+    display: none;
+}
+
+/* select .radio-item parent elemnt */
+
+div:has(> .radio-item) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.konfigurator h2 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin: 50px 0 20px 0; 
+}
+
+.radios{
+    background-color: #fff;
+    border-radius: var(--standard-radius);
+    padding: 20px;
+    width: 100%;
+    margin: 3px 0;
+}
+
+.radios h4 {
+    /* make flex go across the whole line */
+    width: 100%;
+    margin: 5px 0;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    border-radius: 0.1rem;
+    background-color: #f0f0f0;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Checked state */
+input[type="checkbox"]:checked {
+    background-color: black;
+    border-color: black;
+}
+
+.checkbox-container{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 50px 0 20px 0;
+
+    background-color: #fff;
+        border-radius: var(--standard-radius);
+        padding: 20px;
+        width: 100%;
+        margin: 20px 0 3px 0;
+}
+
+.checkbox-container h3 {
+    font-size: 1.2rem;
+   margin:  0;
+
+}
+
+.checkbox-container .subtitle {
+    font-size: 0.8rem;
+    color: #0c0b2179;
+}
+
+.checkbox-label{
+    margin: 0 0 0 10px;
+}

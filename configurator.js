@@ -12,23 +12,21 @@ function createForm(data) {
     console.log(data)
     var i = 0
     Object.keys(data).forEach((product) => {
-        // create a radio button for each product
-        // add checked value to the first radio button
+        productObject.innerHTML =
+            productObject.innerHTML +
+            `<label for="${product}" class="radio-item">
+                <img src="img/configurator/test-image.png" alt="">
+                <div class="label-text">${product}</div>
+                <input type="radio" name="product" value="${product}" id="${product}" data-code="${
+                data[product].Produktcode
+            }" ${i === 0 ? 'checked' : ''}>
+            </label>`
 
-        const radio = document.createElement('input')
         if (i === 0) {
-            radio.checked = true
             loadColors(product)
             loadConfiguration(product, true)
             loadConfiguration(product, false)
         }
-        radio.type = 'radio'
-        radio.name = 'product'
-        radio.value = product
-        radio.id = product
-        radio.setAttribute('data-code', data[product].Produktcode)
-        productObject.appendChild(radio)
-
         i++
     })
 }
@@ -51,22 +49,21 @@ function loadColors(produktAuswahl) {
     fetch(`druckoptionen.json`)
         .then((response) => response.json())
         .then((data) => {
-            productColor.innerHTML = '<h2>Farbe</h2>'
+            productColor.innerHTML = ''
             const productData = data[produktAuswahl]
 
             var i = 0
             Object.entries(productData.Farben).forEach(
                 ([colorName, colorCode]) => {
-                    const radio = document.createElement('input')
-                    if (i === 0) {
-                        radio.checked = true
-                    }
-                    radio.type = 'radio'
-                    radio.name = 'color'
-                    radio.value = colorName
-                    radio.id = colorName
-                    radio.setAttribute('data-code', colorCode)
-                    productColor.appendChild(radio)
+                    productColor.innerHTML =
+                        productColor.innerHTML +
+                        `<label for="${colorName}" class="radio-item">
+                            <img src="img/configurator/test-image.png" alt="">
+                            <div class="label-text">${colorName}</div>
+                            <input type="radio" name="color" value="${colorName}" id="${colorName}" data-code="${colorCode}" ${
+                            i === 0 ? 'checked' : ''
+                        } >
+                        </label>`
                     i++
                 }
             )
@@ -96,16 +93,15 @@ function loadConfiguration(produktAuswahl, druckbereich) {
             frontSizeElement.innerHTML = '<h4>Größe</h4>'
             Object.entries(frontData.Druckgroessen).forEach(
                 ([sizeName, sizeCode]) => {
-                    const radio = document.createElement('input')
-                    if (i === 0) {
-                        radio.checked = true
-                    }
-                    radio.type = 'radio'
-                    radio.name = frontBackValue + '-size'
-                    radio.value = sizeName
-                    radio.id = sizeName
-                    radio.setAttribute('data-code', sizeCode)
-                    frontSizeElement.appendChild(radio)
+                    frontSizeElement.innerHTML =
+                        frontSizeElement.innerHTML +
+                        `<label for="${frontBackValue}-${sizeName}" class="radio-item">
+                            <img src="img/configurator/test-image.png" alt="">
+                            <div class="label-text">${sizeName}</div>
+                            <input type="radio" name="${frontBackValue}-size" value="${frontBackValue}-${sizeName}" id="${frontBackValue}-${sizeName}" data-code="${sizeCode}" ${
+                            i === 0 ? 'checked' : ''
+                        }>
+                        </label>`
                     i++
                 }
             )
@@ -118,45 +114,51 @@ function loadConfiguration(produktAuswahl, druckbereich) {
             frontPositionElement.innerHTML = '<h4>Position</h4>'
             Object.entries(frontData.Druckpositionen).forEach(
                 ([positionName, positionCode]) => {
-                    const radio = document.createElement('input')
-                    if (i === 0) {
-                        radio.checked = true
-                    }
-                    radio.type = 'radio'
-                    radio.name = frontBackValue + '-position'
-                    radio.value = positionName
-                    radio.id = positionName
-                    radio.setAttribute('data-code', positionCode)
-                    frontPositionElement.appendChild(radio)
+                    frontPositionElement.innerHTML =
+                        frontPositionElement.innerHTML +
+                        `<label for="${frontBackValue}-${positionName}" class="radio-item">
+                            <img src="img/configurator/test-image.png" alt="">
+                            <div class="label-text">${positionName}</div>
+                            <input type="radio" name="${frontBackValue}-position" value="${frontBackValue}-${positionName}" id="${frontBackValue}-${positionName}" data-code="${positionCode}" ${
+                            i === 0 ? 'checked' : ''
+                        }>
+                        </label>`
+
                     i++
-
                     if (positionCode === 'HPSO' || positionCode === 'VPSO') {
-                        const text = document.createElement('input')
-                        text.type = 'text'
-                        text.name = 'sonderwunsch-text'
-                        text.placeholder = 'Sonderwunsch'
-                        text.id = frontBackValue + '-sonderwunsch-text'
-                        text.style.display = 'none'
-                        frontPositionElement.appendChild(text)
+                        frontPositionElement.innerHTML =
+                            frontPositionElement.innerHTML +
+                            `<input type="text" name="sonderwunsch-text" placeholder="Sonderwunsch" id="${frontBackValue}-sonderwunsch-text" style="display:none">`
                     }
 
-                    //check if HPSO or VPSO is selected and show text input/ hide text input
-                    radio.addEventListener('change', (event) => {
-                        if (
-                            positionCode === 'HPSO' ||
-                            positionCode === 'VPSO'
-                        ) {
-                            const sonderwunschText = document.querySelector(
-                                `#${frontBackValue}-sonderwunsch-text`
-                            )
-                            sonderwunschText.style.display = 'block'
-                        } else {
-                            const sonderwunschText = document.querySelector(
-                                `#${frontBackValue}-sonderwunsch-text`
-                            )
-                            sonderwunschText.style.display = 'none'
-                        }
-                    })
+                    document
+                        .querySelectorAll(
+                            "input[name='" + frontBackValue + "-position']"
+                        )
+                        .forEach((radio) => {
+                            radio.addEventListener('change', (event) => {
+                                if (
+                                    event.target.getAttribute('data-code') ===
+                                        'HPSO' ||
+                                    event.target.getAttribute('data-code') ===
+                                        'VPSO'
+                                ) {
+                                    document.querySelector(
+                                        '#' +
+                                            frontBackValue +
+                                            '-sonderwunsch-text'
+                                    ).style.display = 'block'
+                                    console.log('show')
+                                } else {
+                                    document.querySelector(
+                                        '#' +
+                                            frontBackValue +
+                                            '-sonderwunsch-text'
+                                    ).style.display = 'none'
+                                    console.log('hide')
+                                }
+                            })
+                        })
                 }
             )
 
@@ -169,16 +171,16 @@ function loadConfiguration(produktAuswahl, druckbereich) {
                 '<h4>Anzahl der Farben auf dem Motiv</h4>'
             Object.entries(frontData.Druckfarben).forEach(
                 ([colorName, colorCode]) => {
-                    const radio = document.createElement('input')
-                    if (i === 0) {
-                        radio.checked = true
-                    }
-                    radio.type = 'radio'
-                    radio.name = frontBackValue + '-color-number'
-                    radio.value = colorName
-                    radio.id = colorName
-                    radio.setAttribute('data-code', colorCode)
-                    frontColorElement.appendChild(radio)
+                    frontColorElement.innerHTML =
+                        frontColorElement.innerHTML +
+                        `
+                    <label for="${frontBackValue}-${colorName}" class="radio-item">
+                        <img src="img/configurator/test-image.png" alt="">
+                        <div class="label-text">${colorName}</div>
+                            <input type="radio" name="${frontBackValue}-anzahl" value="${frontBackValue}-${colorName}" id="${frontBackValue}-${colorName}" data-code="${colorCode}" ${
+                            i === 0 ? 'checked' : ''
+                        }>
+                        </label>`
                     i++
                 }
             )
