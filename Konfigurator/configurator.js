@@ -2,9 +2,11 @@ const productObject = document.querySelector('#produktauswahl')
 const productColor = document.querySelector('#farbauswahl')
 const frontConfig = document.querySelector('#vorne-konfiguration')
 const backConfig = document.querySelector('#hinten-konfiguration')
+const sonderwunschConfig = document.querySelector('#sonderwunsch-konfiguration')
 
 const frontCheckbox = document.querySelector('#vorne-option')
 const backCheckbox = document.querySelector('#hinten-option')
+const sonderwunschCheckbox = document.querySelector('#sonderwunsch-option')
 
 function createForm(data) {
     console.log(data)
@@ -196,6 +198,43 @@ backCheckbox.addEventListener('change', (event) => {
     checked
         ? (backConfig.style.display = 'block')
         : (backConfig.style.display = 'none')
+})
+
+sonderwunschCheckbox.addEventListener('change', (event) => {
+    const checked = event.target.checked
+    checked
+        ? (sonderwunschConfig.style.display = 'block')
+        : (sonderwunschConfig.style.display = 'none')
+})
+
+const mengenauswahl = document.querySelectorAll('input[name="mengenauswahl"]')
+const anzahlGenau = document.querySelector('#anzahl-genau')
+const anzahlGrob = document.querySelector('#anzahl-grob')
+
+mengenauswahl.forEach((radio) => {
+    radio.addEventListener('change', (event) => {
+        if (event.target.value === 'genau') {
+            anzahlGenau.style.display = 'block'
+            anzahlGrob.style.display = 'none'
+        } else {
+            anzahlGenau.style.display = 'none'
+            anzahlGrob.style.display = 'block'
+        }
+    })
+})
+
+const lieferdatumauswahl = document.querySelectorAll(
+    'input[name="lieferdatumauswahl"]'
+)
+const lieferdatumGenau = document.querySelector('#lieferdatum')
+lieferdatumauswahl.forEach((radio) => {
+    radio.addEventListener('change', (event) => {
+        if (event.target.value === 'datum') {
+            lieferdatumGenau.style.display = 'block'
+        } else {
+            lieferdatumGenau.style.display = 'none'
+        }
+    })
 })
 
 document.addEventListener('change', (event) => {
