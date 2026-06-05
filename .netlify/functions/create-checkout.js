@@ -1,7 +1,8 @@
+// netlify/functions/create-checkout.js
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-// 🌟 HIER GEÄNDERT: export const handler statt exports.handler
-export const handler = async (event, context) => {
+// Wir nutzen wieder das klassische exports.handler
+exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Methode nicht erlaubt." };
   }
