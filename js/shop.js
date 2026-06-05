@@ -170,30 +170,28 @@ function changeImage(step) {
 // ==========================================
 
 function initBuyButton() {
-  // Wir suchen den "Jetzt kaufen" Button aus deinem HTML
   const buyButton = document.querySelector(".product-details button.black");
   const quantityInput = document.getElementById("quantity");
 
+  // NEU: Wir holen uns den neuen Checkout-Button aus dem HTML
+  const checkoutButton = document.getElementById("go-to-checkout-btn");
+
+  // 1. Logik für den normalen "Jetzt kaufen" Button (In den Warenkorb legen)
   if (buyButton) {
     buyButton.onclick = () => {
       const quantity = parseInt(quantityInput.value) || 1;
-
-      // 1. Wir holen den aktuellen Warenkorb aus dem localStorage (falls vorhanden)
-      // Wenn noch keiner da ist, starten wir mit einem leeren Array []
       let cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
 
-      // 2. Wir bauen das Objekt für das gewählte Produkt
       const cartItem = {
-        priceId: currentProduct.id, // Das ist die ID, die Stripe braucht!
+        priceId: currentProduct.id,
         title: currentProduct.title,
         quantity: quantity,
         size: selectedSize,
         color: selectedColor,
         variant: selectedVariant,
-        image: currentProduct.images[0], // Praktisch, um es später im Warenkorb anzuzeigen
+        image: currentProduct.images[0],
       };
 
-      // 3. Prüfen, ob EXAKT dieses Produkt (mit gleicher Größe/Farbe) schon im Warenkorb ist
       const existingItemIndex = cart.findIndex(
         (item) =>
           item.priceId === cartItem.priceId &&
@@ -203,22 +201,63 @@ function initBuyButton() {
       );
 
       if (existingItemIndex > -1) {
-        // Wenn ja, erhöhen wir nur die Anzahl
         cart[existingItemIndex].quantity += quantity;
       } else {
-        // Wenn nein, fügen wir es neu hinzu
         cart.push(cartItem);
       }
 
-      // 4. Den aktualisierten Warenkorb zurück in den localStorage speichern
       localStorage.setItem("handheldt_cart", JSON.stringify(cart));
-
-      // 5. Kurzes Feedback für den Nutzer (kannst du später schöner stylen)
       alert(`${currentProduct.title} wurde in den Warenkorb gelegt!`);
-      console.log(
-        "Aktueller Warenkorb im Speicher:",
-        JSON.parse(localStorage.getItem("handheldt_cart")),
-      );
+    };
+  }
+
+  // ============================================================
+  // NEU: 2. Logik für den "Zum Warenkorb & Kasse" Button
+  // ============================================================
+  if (checkoutButton) {
+    checkoutButton.onclick = async () => {
+      // Wir holen den aktuellen Warenkorb aus dem Speicher
+      const cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
+
+      // Falls der Warenkorb komplett leer ist, warnen wir den Nutzer kurz
+      if (cart.length === 0) {
+        alert("Dein Warenkorb ist noch leer! Füge zuerst ein Produkt hinzu.");
+        return;
+      }
+
+      try {
+        // Button optisch sperren während des Ladens
+        checkoutButton.disabled = true;
+        checkoutButton.innerText = "Wird zur Kasse weitergeleitet...";
+
+        // Wir senden den GESAMTEN Warenkorb an deine Netlify Function
+        const response = await fetch("/netlify/functions/create-checkout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ items: cart }),
+        });
+
+        const data = await response.json();
+
+        if (data.url) {
+          // WICHTIG: Wir leeren den lokalen Warenkorb, da der Nutzer jetzt bezahlt
+          localStorage.removeItem("handheldt_cart");
+
+          // Ab zu Stripe!
+          window.location.href = data.url;
+        } else {
+          alert("Fehler: " + (data.error || "Checkout konnte nicht geladen werden."));
+          checkoutButton.disabled = false;
+          checkoutButton.innerText = "Zum Warenkorb & Kasse";
+        }
+      } catch (error) {
+        console.error("Fehler beim Checkout:", error);
+        alert("Verbindung zum Server fehlgeschlagen.");
+        checkoutButton.disabled = false;
+        checkoutButton.innerText = "Zum Warenkorb & Kasse";
+      }
     };
   }
 }
