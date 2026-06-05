@@ -231,7 +231,7 @@ function initBuyButton() {
         checkoutButton.innerText = "Wird zur Kasse weitergeleitet...";
 
         // Wir senden den GESAMTEN Warenkorb an deine Netlify Function
-        const response = await fetch("/netlify/functions/create-checkout", {
+        const response = await fetch("/.netlify/functions/create-checkout", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
