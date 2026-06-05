@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handheldt – Shop</title>
+    <link rel="icon" href="img/favicon_3.png" type="image/png">
+    <meta name="description"
+        content="Handbedruckte Shirts, Hoodies, Sweater, Kissen und Papeterie – nachhaltig, individuell und mit Liebe gestaltet. Entdecke Postkarten, Kalender und personalisierte Designs für jeden Anlass in unserem Shop.">
+    <meta name="keywords"
+        content="Handheldt, Druck, Siebdruck, Textildruck, Handmade, DIY, Shop, Postkarten, Kalender, Elisa, Philipp, Heldt,  EC, Sozial-Missionarische Arebit, SMA">
+    <link rel=" preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/cookie-consent.css">
+    <link rel="stylesheet" href="css/fade.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <script src="js/header_footer.js" defer></script>
+    <script type="text/javascript">Ecwid.init();</script>
+    <script src="js/cookie_consent.js" defer></script>
+</head>
+
+<body>
+
+    <section class="top-distance"></section>
+
+    <section class="white" id="about">
+        <div class="content-wrapper">
+
+
+            <!-- Ab Hier Gemini -->
+            <div class="shop-container" id="shop-item">
+                <div class="product-gallery">
+                    <div class="main-image-container" id="main-img-box">
+                        <img id="main-image" src="" alt="Produktbild">
+                        <div class="gallery-nav">
+                            <button class="nav-btn" onclick="changeImage(-1)">&#10094;</button>
+                            <button class="nav-btn" onclick="changeImage(1)">&#10095;</button>
+                        </div>
+                    </div>
+                    <div class="thumbnail-bar" id="thumb-bar">
+                    </div>
+                </div>
+
+                <div class="product-details">
+                    <h1 id="prod-title">Lade Produkt...</h1>
+
+                    <div class="price-row"
+                        style="display: flex; align-items: baseline; gap: 15px; margin-bottom: 20px;">
+                        <span id="old-price"
+                            style="font-size: 1.2rem; text-decoration: line-through; color: #888;"></span>
+                        <span id="price" style="font-size: 1.8rem; font-weight: 700;"></span>
+
+                    </div>
+
+                    <div class="option-group" id="size-group">
+                        <label>Größe auswählen</label>
+                        <div id="size-container" class="size-selector">
+                        </div>
+                    </div>
+
+                    <div class="option-group" id="color-group">
+                        <label>Farbe</label>
+                        <div id="color-container" class="selector-wrapper"></div>
+                    </div>
+
+                    <div class="option-group" id="variant-group">
+                        <label>Variante</label>
+                        <select id="select-variant"></select>
+                    </div>
+
+                    <div class="option-group" id="quantity-group">
+                        <label>Anzahl</label>
+                        <input type="number" id="quantity" value="1" min="1">
+                    </div>
+
+                    <button class="black">Jetzt kaufen</button>
+                </div>
+
+                <div class="product-description">
+                    <h3>Produktbeschreibung</h3>
+                    <p id="prod-desc"></p>
+                </div>
+            </div>
+            <!-- Bis hier gemini -->
+
+        </div>
+    </section>
+
+    <section class="top-distance"></section>
+
+
+    <script src="js/shop.js">
+
+    </script>
+</body>
+
+</html>

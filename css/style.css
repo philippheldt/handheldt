@@ -5,7 +5,7 @@ html {
 :root {
   --primary-color: #0c0b21;
   --secondary-color: #f8f7f4;
-  --accent-color: #FFECD0;
+  --accent-color: #ffecd0;
   --darker-accent-color: #ffe2bf;
   --accent-color-blue: #dddddd;
   --standard-radius: 0.3rem;
@@ -118,7 +118,8 @@ body {
 
 .yellow-underline {
   position: relative;
-  display: inline-block;}
+  display: inline-block;
+}
 
 .yellow-underline::after {
   content: "";
@@ -391,9 +392,7 @@ section {
   z-index: 0;
 }
 
-
 section.white {
-
   background-color: var(--secondary-color);
   color: var(--primary-color);
   margin: -5px 0;
@@ -644,7 +643,6 @@ textarea {
   margin-bottom: 10px;
 }
 
-
 button {
   padding: 1rem 3rem;
   border-radius: var(--standard-radius);
@@ -837,8 +835,6 @@ footer div :nth-child(3) {
   opacity: 0.3;
 }
 
-
-
 .full-width {
   width: 100%;
   height: 150px;
@@ -930,21 +926,21 @@ footer div :nth-child(3) {
 }
 
 .menu-icon.active span:first-of-type,
-.menu-icon .menu-icon__cheeckbox:checked+div span:first-of-type {
+.menu-icon .menu-icon__cheeckbox:checked + div span:first-of-type {
   transform: rotate(45deg);
   top: 5px;
 }
 
 .menu-icon.active span:last-of-type,
-.menu-icon .menu-icon__cheeckbox:checked+div span:last-of-type {
+.menu-icon .menu-icon__cheeckbox:checked + div span:last-of-type {
   transform: rotate(-45deg);
   bottom: 5px;
 }
 
 .menu-icon.active:hover span:first-of-type,
 .menu-icon.active:hover span:last-of-type,
-.menu-icon:hover .menu-icon__cheeckbox:checked+div span:first-of-type,
-.menu-icon:hover .menu-icon__cheeckbox:checked+div span:last-of-type {
+.menu-icon:hover .menu-icon__cheeckbox:checked + div span:first-of-type,
+.menu-icon:hover .menu-icon__cheeckbox:checked + div span:last-of-type {
   width: 22px;
 }
 
@@ -994,7 +990,6 @@ footer div :nth-child(3) {
   width: 100%;
 }
 
-
 .insta-button {
   display: flex;
   margin: 40px auto;
@@ -1027,26 +1022,24 @@ footer div :nth-child(3) {
   border: var(--primary-color) 0.9px solid;
 }
 
-.button-container{
+.button-container {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 
-.button-container .black-button{
+.button-container .black-button {
   margin: 0px;
 }
 
 .insta-button img {
   width: 20px;
   height: 20px;
-
 }
 
 .insta-button span {
   margin-left: 10px;
 }
-
 
 .image-section {
   position: relative;
@@ -1061,9 +1054,6 @@ footer div :nth-child(3) {
   width: 100%;
   height: 40vh;
 }
-
-
-
 
 @media (min-width: 1024px) {
   .menu-icon:hover span:first-of-type {
@@ -1090,6 +1080,26 @@ footer div :nth-child(3) {
 }
 
 @media (max-width: 870px) {
+  /* Shop-spezifische Anpassung für Tablets */
+  .shop-container {
+    grid-template-columns: 1fr; /* Stapeln der Spalten */
+    gap: 20px;
+  }
+  .product-description {
+    grid-column: span 1;
+  }
+  .product-details h1 {
+    font-size: 1.5rem;
+  }
+  .gallery-nav {
+    opacity: 1 !important;
+  }
+  .content-wrapper,
+  .wider-content-wrapper {
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+
   .vorteile {
     grid-template-columns: 1fr 1fr;
   }
@@ -1114,7 +1124,6 @@ footer div :nth-child(3) {
 }
 
 @media (max-width: 750px) {
-
   .two-column {
     grid-template-columns: 1fr;
   }
@@ -1139,13 +1148,25 @@ footer div :nth-child(3) {
 }
 
 @media (max-width: 550px) {
+  /* Shop-spezifische Anpassung für kleine Handys */
+  .thumbnail-bar {
+    gap: 5px;
+  }
+  .buy-button {
+    width: 100%; /* Button über ganze Breite für bessere Daumen-Bedienung */
+    padding: 20px;
+  }
+  .nav-btn {
+    padding: 10px 5px; /* Kleinere Buttons im Bild */
+  }
+
   .vorteile {
     grid-template-columns: 1fr;
   }
 
-    .vertical-post{
-      grid-template-columns: 1fr;
-    }
+  .vertical-post {
+    grid-template-columns: 1fr;
+  }
 
   .header-logo {
     max-width: 350px;
@@ -1204,12 +1225,6 @@ footer div :nth-child(3) {
   .yellow-frame,
   .white-frame {
     padding: 20px 20px;
-  }
-
-  .content-wrapper,
-  .wider-content-wrapper {
-    padding-left: 25px;
-    padding-right: 25px;
   }
 }
 

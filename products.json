@@ -1,0 +1,98 @@
+[
+  {
+    "id": "prod_KTlxcn9L0S7T4Q",
+    "title": "Premium Bio-Baumwolle T-Shirt",
+    "price": 29.9,
+    "discountPrice": 39.9,
+    "currency": "€",
+    "stock": "Auf Lager",
+    "deliveryTime": "2-3 Werktage",
+    "description": "Dieses T-Shirt besteht zu 100% aus zertifizierter Bio-Baumwolle. Es bietet einen modernen Schnitt und eine extrem weiche Oberfläche, ideal für den täglichen Gebrauch.",
+    "images": [
+      "/img/produkte/frucht/frucht_1.jpg",
+      "/img/produkte/frucht/frucht_2.jpg",
+      "/img/produkte/frucht/frucht_3.jpg",
+      "/img/produkte/frucht/frucht_4.jpg"
+    ],
+    "sizes": [],
+    "colors": [
+      { "name": "Weiß", "hex": "#fff" },
+      { "name": "Dunkelgrau", "hex": "#333" },
+      { "name": "Schwarz", "hex": "#000" },
+      { "name": "Schwarz", "hex": "#000" }
+    ],
+    "variants": ["Slim Fit", "Regular Fit"]
+  },
+  {
+    "id": "prod_KTlxcn9L0S7T4Q",
+    "title": "Kissen",
+    "price": 5.5,
+    "discountPrice": 5.5,
+    "currency": "€",
+    "stock": "Auf Lager",
+    "deliveryTime": "2-3 Werktage",
+    "description": "Dieses Kissen besteht zu 100% aus zertifizierter Bio-Baumwolle. Es bietet einen modernen Schnitt und eine extrem weiche Oberfläche, ideal für den täglichen Gebrauch.",
+    "images": [
+      "/img/produkte/kissen/k1.jpg",
+      "/img/produkte/kissen/k2.jpg",
+      "/img/produkte/kissen/k3.jpg",
+      "/img/produkte/kissen/k4.jpg",
+      "/img/produkte/kissen/k6.jpg"
+    ],
+    "sizes": [],
+    "colors": [
+      { "name": "Weiß", "hex": "#fff", "image_index": 0 },
+      { "name": "Dunkelgrau", "hex": "#333", "image_index": 1 },
+      { "name": "Schwarz", "hex": "#000", "image_index": 2 },
+      { "name": "Beige", "hex": "#DDC6A2", "image_index": 3 },
+      { "name": "Rosa", "hex": "#EDD6C9", "image_index": 4 }
+    ],
+    "variants": []
+  },
+  {
+    "id": "prod_KTlxcn9L0S7T4Q",
+    "title": "Premium Bio-Baumwolle T-Shirt",
+    "price": 29.9,
+    "discountPrice": 39.9,
+    "currency": "€",
+    "stock": "Auf Lager",
+    "deliveryTime": "2-3 Werktage",
+    "description": "Dieses T-Shirt besteht zu 100% aus zertifizierter Bio-Baumwolle. Es bietet einen modernen Schnitt und eine extrem weiche Oberfläche, ideal für den täglichen Gebrauch.",
+    "images": [
+      "/img/produkte/frucht/frucht_1.jpg",
+      "/img/produkte/frucht/frucht_2.jpg",
+      "/img/produkte/frucht/frucht_3.jpg",
+      "/img/produkte/frucht/frucht_4.jpg"
+    ],
+    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "colors": [
+      { "name": "Schwarz", "hex": "#000000" },
+      { "name": "Weiß", "hex": "#ffffff" },
+      { "name": "Navy", "hex": "#000080" }
+    ],
+    "variants": ["Slim Fit", "Regular Fit"]
+  },
+  {
+    "id": "prod_KTlxcn9L0S7T4Q",
+    "title": "Premium Bio-Baumwolle T-Shirt",
+    "price": 29.9,
+    "discountPrice": 39.9,
+    "currency": "€",
+    "stock": "Auf Lager",
+    "deliveryTime": "2-3 Werktage",
+    "description": "Dieses T-Shirt besteht zu 100% aus zertifizierter Bio-Baumwolle. Es bietet einen modernen Schnitt und eine extrem weiche Oberfläche, ideal für den täglichen Gebrauch.",
+    "images": [
+      "/img/produkte/frucht/frucht_1.jpg",
+      "/img/produkte/frucht/frucht_2.jpg",
+      "/img/produkte/frucht/frucht_3.jpg",
+      "/img/produkte/frucht/frucht_4.jpg"
+    ],
+    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "colors": [
+      { "name": "Schwarz", "hex": "#000000" },
+      { "name": "Weiß", "hex": "#ffffff" },
+      { "name": "Navy", "hex": "#000080" }
+    ],
+    "variants": ["Slim Fit", "Regular Fit"]
+  }
+]

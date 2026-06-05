@@ -1,0 +1,226 @@
+/* SHOP LAYOUT */
+.shop-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+/* LINKE SPALTE: BILDER */
+.product-gallery {
+  position: relative;
+}
+
+.main-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: var(--bg-light);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Navigations-Buttons im Hauptbild (erscheinen bei Hover) */
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.main-image-container:hover .gallery-nav {
+  opacity: 1;
+}
+
+.nav-btn {
+  /* Überschreibt dein 1rem 3rem Padding */
+  padding: 0 !important;
+  /* Macht den Button quadratisch */
+  width: 45px !important;
+  height: 45px !important;
+
+  /* Zentrierung des Pfeils */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Positionierung */
+  margin-bottom: 0; /* Entfernt den Standard-Abstand nach unten */
+  pointer-events: all;
+
+  border: none;
+  background-color: #eeeeee82;
+  color: #fff;
+  margin: 10px;
+}
+
+/* Thumbnail Leiste */
+.thumbnail-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  object-fit: cover;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.thumb:hover {
+  border-color: var(--accent-color);
+}
+
+/* Price */
+.price-row {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  margin-top: 10px;
+}
+.main-price {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+.old-price {
+  font-size: 1.2rem;
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* RECHTE SPALTE: DETAILS */
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-details h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.option-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+select,
+input[type="number"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.buy-button {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 15px;
+  border: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.buy-button:hover {
+  background-color: #0056b3;
+}
+
+/* BESCHREIBUNG (über volle Breite) */
+.product-description {
+  grid-column: span 2;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  line-height: 1.6;
+}
+/* Container für die Auswahl-Reihen */
+.selector-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* GRÖSSEN BUTTONS (Quadratisch) */
+.size-btn {
+  padding: 0 !important;
+  width: 50px !important;
+  height: 50px !important;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+  background-color: transparent;
+}
+
+#size-container {
+  display: flex;
+  gap: 10px;
+}
+
+/* FARBEN BUTTONS (Rechteckig/Quadratisch mit Farbfeld) */
+.color-btn {
+  padding: 0 15px !important; /* Etwas breiter für Name + Farbe */
+  height: 50px !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+  background-color: transparent;
+  width: auto !important; /* Damit der Name Platz hat */
+}
+
+/* Der kleine Farbkreis im Button */
+.color-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: inline-block;
+}
+
+/* AKTIV-ZUSTAND (Dein Black-Style) */
+.size-btn.active,
+.color-btn.active {
+  background-color: var(--primary-color, #000) !important;
+  color: var(--secondary-color, #fff) !important;
+}
+
+/* Weiß-Korrektur: Wenn der Button schwarz wird, muss die Vorschau sichtbar bleiben */
+.active .color-preview {
+  border-color: #fff;
+}
+
+/* RESPONSIVE ANPASSUNGEN (Zusatz zu deinen Breakpoints) */
+@media (max-width: 820px) {
+  .shop-container {
+    grid-template-columns: 1fr;
+  }
+  .product-description {
+    grid-column: span 1;
+  }
+}
