@@ -1,7 +1,7 @@
-// netlify/functions/create-checkout.js
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-exports.handler = async (event, context) => {
+// 🌟 HIER GEÄNDERT: export const handler statt exports.handler
+export const handler = async (event, context) => {
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Methode nicht erlaubt." };
   }
@@ -11,10 +11,8 @@ exports.handler = async (event, context) => {
 
     const line_items = items.map((item) => {
       return {
-        price: item.priceId, // Deine Stripe Price-ID
+        price: item.priceId,
         quantity: item.quantity,
-        // 🔥 HIER IST DIE MAGIE:
-        // Das erlaubt dem Kunden, die Anzahl bei Stripe zu ändern oder das Produkt zu löschen (Minimum 0)
         adjustable_quantity: {
           enabled: true,
           minimum: 0,
