@@ -19,18 +19,3 @@ document
         this.setAttribute('aria-label', this.checked ? 'Menü schließen' : 'Menü öffnen')
     })
 
-// Kurzer Hinweis unten am Bildschirm (wird von Screenreadern vorgelesen)
-window.showToast = function (message) {
-    let toast = document.getElementById('toast')
-    if (!toast) {
-        toast = document.createElement('div')
-        toast.id = 'toast'
-        toast.className = 'toast'
-        toast.setAttribute('role', 'status')
-        document.body.appendChild(toast)
-    }
-    toast.textContent = message
-    toast.classList.add('visible')
-    clearTimeout(window.showToast.timer)
-    window.showToast.timer = setTimeout(() => toast.classList.remove('visible'), 3000)
-}
