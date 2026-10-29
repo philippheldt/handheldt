@@ -124,20 +124,19 @@ if (checkoutButton) {
       const data = await response.json();
 
       if (data.url) {
-        // Warenkorb im Browser leeren, da der Kauf jetzt gestartet ist
-        localStorage.removeItem("handheldt_cart");
+        // Warenkorb wird erst auf success.html geleert, damit er bei Abbruch erhalten bleibt
         // Ab zu Stripe!
         window.location.href = data.url;
       } else {
         alert("Fehler: " + (data.error || "Checkout fehlgeschlagen."));
         checkoutButton.disabled = false;
-        checkoutButton.innerText = "Sicher bezahlen mit Stripe";
+        checkoutButton.innerText = "Weiter zur Kasse";
       }
     } catch (error) {
       console.error("Fehler beim Checkout:", error);
       alert("Verbindung zum Server fehlgeschlagen.");
       checkoutButton.disabled = false;
-      checkoutButton.innerText = "Sicher bezahlen mit Stripe";
+      checkoutButton.innerText = "Weiter zur Kasse";
     }
   });
 }

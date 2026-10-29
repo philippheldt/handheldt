@@ -2,7 +2,7 @@ const navBar = `
     <div class="sticky-banner">
         <div class="content-wrapper">
    
-            <b>konstenloser Versand</b> ab 50€ Einkaufswert
+            <b>kostenloser Versand</b> ab 50€ Einkaufswert
        
         </div>
            
@@ -12,10 +12,11 @@ const navBar = `
         <div id="cookie-banner">
         <div>
             <h4>Hinweis zum Datenschutz</h4>
-            <p>Wir nutzen Cookies und ähnliche Technologien, um deine Präferenzen zu speichern, den Erfolg unserer
-                Kampagnen zu messen und anonyme Daten zu analysieren, damit unsere Website noch besser wird. Wenn du auf
-                „Akzeptieren“ klickst, stimmst du der Verwendung aller Cookies zu.</p>
-            <a href="https://handheldt.de/datenschutz.html">Zur Datenschutzerklärung</a> <br>
+            <p>Technisch notwendige Daten (z.&nbsp;B. dein Warenkorb und diese Auswahl) speichern wir lokal in deinem
+                Browser. Unser Shop-System Ecwid kann zusätzlich Cookies für Statistik und Personalisierung setzen –
+                aber nur, wenn du auf „Akzeptieren“ klickst. Deine Auswahl kannst du jederzeit im Footer unter
+                „Cookie-Einstellungen“ ändern.</p>
+            <a href="datenschutz.html">Zur Datenschutzerklärung</a> <br>
             <div class="cookie-buttons">
                 <button class="black" id="decline">Ablehnen</button>
                 <button class="black" id="accept">Akzeptieren</button>
@@ -126,7 +127,10 @@ const footer = `
             <div class="">
                 <a href="impressum.html">Impressum</a>
                 <img src="img/logotype.png" alt="">
-                <a href="datenschutz.html">Datenschutz</a>
+                <span>
+                    <a href="datenschutz.html">Datenschutz</a><br>
+                    <a href="#" onclick="window.openCookieSettings && window.openCookieSettings(); return false;">Cookie-Einstellungen</a>
+                </span>
             </div>
 
         </footer>
