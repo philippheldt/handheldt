@@ -36,10 +36,15 @@ export const handler = async (event, context) => {
       };
     });
 
+    // Zahlarten werden im Stripe-Dashboard gesteuert (kein fest verdrahtetes "card")
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
       line_items: line_items,
       mode: "payment",
+      locale: "de",
+      // Lieferadresse wird für den Versand benötigt
+      shipping_address_collection: {
+        allowed_countries: ["DE"],
+      },
       success_url: `${process.env.URL || "https://bright-taffy-986c8a.netlify.app"}/success.html`,
       cancel_url: `${process.env.URL || "https://bright-taffy-986c8a.netlify.app"}/cancel.html`,
     });
