@@ -88,6 +88,7 @@ window.changeQuantity = function (index, change) {
   }
 
   localStorage.setItem("handheldt_cart", JSON.stringify(cart));
+  if (window.updateCartCount) window.updateCartCount();
   renderCart(); // Ansicht aktualisieren
 };
 
@@ -96,6 +97,7 @@ window.removeFromCart = function (index) {
   let cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
   cart.splice(index, 1);
   localStorage.setItem("handheldt_cart", JSON.stringify(cart));
+  if (window.updateCartCount) window.updateCartCount();
   renderCart(); // Ansicht aktualisieren
 };
 
@@ -141,5 +143,22 @@ if (checkoutButton) {
   });
 }
 
+// Produkte, die es im Shop nicht (mehr) gibt, aus dem Warenkorb entfernen
+async function removeUnavailableItems() {
+  try {
+    const response = await fetch("products.json");
+    const products = await response.json();
+    const availableIds = products.map((p) => p.id);
+    const cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
+    const filtered = cart.filter((item) => availableIds.includes(item.priceId));
+    if (filtered.length !== cart.length) {
+      localStorage.setItem("handheldt_cart", JSON.stringify(filtered));
+      if (window.updateCartCount) window.updateCartCount();
+    }
+  } catch (error) {
+    console.error("Produkte konnten nicht geprüft werden:", error);
+  }
+}
+
 // Beim Laden der Seite ausführen
-renderCart();
+removeUnavailableItems().then(renderCart);

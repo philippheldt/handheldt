@@ -207,6 +207,7 @@ function initBuyButton() {
       }
 
       localStorage.setItem("handheldt_cart", JSON.stringify(cart));
+      if (window.updateCartCount) window.updateCartCount();
       alert(`${currentProduct.title} wurde in den Warenkorb gelegt!`);
     };
   }

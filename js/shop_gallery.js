@@ -7,6 +7,18 @@ async function loadGallery() {
     const galleryContainer = document.getElementById("main-gallery");
     galleryContainer.innerHTML = ""; // Container leeren
 
+    // Keine Produkte hinterlegt: Wartungshinweis statt leerer Galerie
+    if (products.length === 0) {
+      galleryContainer.innerHTML = `
+        <div class="shop-maintenance">
+          <h2>Wartungsarbeiten</h2>
+          <p>Unser Shop wird gerade überarbeitet und ist bald wieder für dich da.
+          Bei Fragen erreichst du uns jederzeit unter <a href="mailto:mail@handheldt.de">mail@handheldt.de</a>.</p>
+        </div>
+      `;
+      return;
+    }
+
     products.forEach((product) => {
       // Erstelle den Link zur Detailseite mit der ID-Injection
       const card = document.createElement("a");

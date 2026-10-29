@@ -9,22 +9,6 @@ const navBar = `
         </div>
     </div>
 
-        <div id="cookie-banner">
-        <div>
-            <h4>Hinweis zum Datenschutz</h4>
-            <p>Technisch notwendige Daten (z.&nbsp;B. dein Warenkorb und diese Auswahl) speichern wir lokal in deinem
-                Browser. Unser Shop-System Ecwid kann zusätzlich Cookies für Statistik und Personalisierung setzen –
-                aber nur, wenn du auf „Akzeptieren“ klickst. Deine Auswahl kannst du jederzeit im Footer unter
-                „Cookie-Einstellungen“ ändern.</p>
-            <a href="datenschutz.html">Zur Datenschutzerklärung</a> <br>
-            <div class="cookie-buttons">
-                <button class="black" id="decline">Ablehnen</button>
-                <button class="black" id="accept">Akzeptieren</button>
-            </div>
-        </div>
-    </div>
-
-
     <noscript>
         <nav>
             <a href="blog.html">Blog</a>
@@ -65,8 +49,9 @@ const navBar = `
             <a class="button-hover nav-wide" href="shop.html">Shop</a>
             <div></div>
             <div></div>
-            <a href="shop.html#!/~/cart">
-            <div class="ec-cart-widget"></div>
+            <a href="cart.html" class="cart-link" aria-label="Warenkorb">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l1 14H5L6 7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+                <span class="cart-count" id="cart-count"></span>
             </a>
             <div></div>
         </nav>
@@ -127,10 +112,7 @@ const footer = `
             <div class="">
                 <a href="impressum.html">Impressum</a>
                 <img src="img/logotype.png" alt="">
-                <span>
-                    <a href="datenschutz.html">Datenschutz</a><br>
-                    <a href="#" onclick="window.openCookieSettings && window.openCookieSettings(); return false;">Cookie-Einstellungen</a>
-                </span>
+                <a href="datenschutz.html">Datenschutz</a>
             </div>
 
         </footer>
@@ -139,6 +121,17 @@ const footer = `
 
 document.body.insertAdjacentHTML('afterbegin', navBar)
 document.body.insertAdjacentHTML('beforeend', footer)
+
+function updateCartCount() {
+    let count = 0
+    try {
+        const cart = JSON.parse(localStorage.getItem('handheldt_cart')) || []
+        count = cart.reduce((sum, item) => sum + item.quantity, 0)
+    } catch (e) {}
+    document.getElementById('cart-count').innerText = count > 0 ? count : ''
+}
+updateCartCount()
+window.updateCartCount = updateCartCount
 
 document
     .getElementById('hamburger-menu')

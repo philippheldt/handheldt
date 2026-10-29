@@ -100,3 +100,9 @@
     gap: 20px;
   }
 }
+
+/* Hinweis, solange keine Produkte im Shop sind */
+.shop-maintenance {
+  grid-column: 1 / -1;
+  max-width: 600px;
+}
