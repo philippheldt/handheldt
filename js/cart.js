@@ -34,10 +34,8 @@ function renderCart() {
     itemElement.style =
       "display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; padding: 20px 0; gap: 15px; flex-wrap: wrap;";
 
-    // Dummy-Preisanzeige (Da wir im LocalStorage nur IDs speichern,
-    // nehmen wir für die Anzeige hier einen Beispielpreis oder den aus deiner JSON.
-    // Tipp: Es empfiehlt sich, beim "In den Warenkorb legen" auch den "price" im Objekt abzuspeichern!)
-    const itemPrice = item.price || 29.9;
+    // Preis wird beim Laden mit Stripe abgeglichen (syncCartWithCatalog)
+    const itemPrice = item.price;
     const itemTotal = itemPrice * item.quantity;
     total += itemTotal;
 
@@ -80,7 +78,7 @@ function renderCart() {
 window.changeQuantity = function (index, change) {
   let cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
 
-  cart[index].quantity += change;
+  cart[index].quantity = Math.min(cart[index].quantity + change, 99);
 
   // Wenn die Anzahl auf 0 sinkt, löschen wir das Produkt ganz
   if (cart[index].quantity <= 0) {
@@ -143,22 +141,33 @@ if (checkoutButton) {
   });
 }
 
-// Produkte, die es im Shop nicht (mehr) gibt, aus dem Warenkorb entfernen
-async function removeUnavailableItems() {
+// Warenkorb mit dem Stripe-Katalog abgleichen: nicht mehr angebotene Produkte entfernen,
+// Preise, Namen und Bilder aktualisieren
+async function syncCartWithCatalog() {
   try {
-    const response = await fetch("products.json");
+    const response = await fetch("/.netlify/functions/products");
+    if (!response.ok) throw new Error(`Status ${response.status}`);
     const products = await response.json();
-    const availableIds = products.map((p) => p.id);
     const cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
-    const filtered = cart.filter((item) => availableIds.includes(item.priceId));
-    if (filtered.length !== cart.length) {
-      localStorage.setItem("handheldt_cart", JSON.stringify(filtered));
-      if (window.updateCartCount) window.updateCartCount();
-    }
+
+    const synced = cart
+      .filter((item) => products.some((p) => p.id === item.productId))
+      .map((item) => {
+        const product = products.find((p) => p.id === item.productId);
+        return {
+          ...item,
+          title: product.title,
+          price: product.price,
+          image: product.images[0] || "img/logo.png",
+        };
+      });
+
+    localStorage.setItem("handheldt_cart", JSON.stringify(synced));
+    if (window.updateCartCount) window.updateCartCount();
   } catch (error) {
     console.error("Produkte konnten nicht geprüft werden:", error);
   }
 }
 
 // Beim Laden der Seite ausführen
-removeUnavailableItems().then(renderCart);
+syncCartWithCatalog().then(renderCart);

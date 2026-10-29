@@ -12,7 +12,9 @@ async function loadProduct() {
   const productId = urlParams.get("id");
 
   try {
-    const response = await fetch("products.json");
+    // Katalog kommt aus Stripe (netlify/functions/products.js)
+    const response = await fetch("/.netlify/functions/products");
+    if (!response.ok) throw new Error(`Status ${response.status}`);
     const products = await response.json();
 
     // Finde Produkt nach ID
@@ -24,7 +26,9 @@ async function loadProduct() {
       document.getElementById("shop-item").innerHTML = "<h2>Produkt nicht gefunden.</h2>";
     }
   } catch (error) {
-    console.error("Fehler beim Laden der JSON:", error);
+    console.error("Fehler beim Laden der Produkte:", error);
+    document.getElementById("shop-item").innerHTML =
+      "<h2>Das Produkt konnte gerade nicht geladen werden. Bitte versuche es später erneut.</h2>";
   }
 }
 
@@ -37,14 +41,10 @@ function renderProduct() {
 
   // Vorrätige Ware: 5 Werktage, auf Bestellung gefertigte Ware: 14 Tage (siehe AGB § 5)
   document.getElementById("delivery-time").innerText =
-    currentProduct.stock === "Auf Lager"
+    currentProduct.inStock
       ? "Auf Lager – Versand innerhalb von 5 Werktagen"
       : "Wird für dich gefertigt – Versand innerhalb von 14 Tagen";
 
-  if (currentProduct.discountPrice > currentProduct.price) {
-    document.getElementById("old-price").innerText =
-      `${currentProduct.discountPrice.toFixed(2)} ${currentProduct.currency}`;
-  }
   // Hauptbild setzen
   updateImg(0);
 
@@ -161,7 +161,7 @@ function renderColorButtons(colors) {
 function updateImg(index) {
   currentImgIndex = index;
   const mainImg = document.getElementById("main-image");
-  mainImg.src = currentProduct.images[currentImgIndex];
+  mainImg.src = currentProduct.images[currentImgIndex] || "img/logo.png";
 }
 
 function changeImage(step) {
@@ -176,97 +176,50 @@ function changeImage(step) {
 // ==========================================
 
 function initBuyButton() {
-  const buyButton = document.querySelector(".product-details button.black");
+  const buyButton = document.getElementById("add-to-cart-btn");
   const quantityInput = document.getElementById("quantity");
+  const cartButton = document.getElementById("go-to-cart-btn");
 
-  // NEU: Wir holen uns den neuen Checkout-Button aus dem HTML
-  const checkoutButton = document.getElementById("go-to-checkout-btn");
+  // In den Warenkorb legen (Preis wird nur zur Anzeige gespeichert,
+  // abgerechnet wird immer der aktuelle Preis aus Stripe)
+  buyButton.onclick = () => {
+    const quantity = Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 99);
+    let cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
 
-  // 1. Logik für den normalen "Jetzt kaufen" Button (In den Warenkorb legen)
-  if (buyButton) {
-    buyButton.onclick = () => {
-      const quantity = parseInt(quantityInput.value) || 1;
-      let cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
-
-      const cartItem = {
-        priceId: currentProduct.id,
-        title: currentProduct.title,
-        quantity: quantity,
-        size: selectedSize,
-        color: selectedColor,
-        variant: selectedVariant,
-        image: currentProduct.images[0],
-      };
-
-      const existingItemIndex = cart.findIndex(
-        (item) =>
-          item.priceId === cartItem.priceId &&
-          item.size === cartItem.size &&
-          item.color === cartItem.color &&
-          item.variant === cartItem.variant,
-      );
-
-      if (existingItemIndex > -1) {
-        cart[existingItemIndex].quantity += quantity;
-      } else {
-        cart.push(cartItem);
-      }
-
-      localStorage.setItem("handheldt_cart", JSON.stringify(cart));
-      if (window.updateCartCount) window.updateCartCount();
-      alert(`${currentProduct.title} wurde in den Warenkorb gelegt!`);
+    const cartItem = {
+      productId: currentProduct.id,
+      title: currentProduct.title,
+      price: currentProduct.price,
+      quantity: quantity,
+      size: selectedSize,
+      color: selectedColor,
+      variant: selectedVariant,
+      image: currentProduct.images[0] || "img/logo.png",
     };
-  }
 
-  // ============================================================
-  // NEU: 2. Logik für den "Zum Warenkorb & Kasse" Button
-  // ============================================================
-  if (checkoutButton) {
-    checkoutButton.onclick = async () => {
-      // Wir holen den aktuellen Warenkorb aus dem Speicher
-      const cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
+    const existingItemIndex = cart.findIndex(
+      (item) =>
+        item.productId === cartItem.productId &&
+        item.size === cartItem.size &&
+        item.color === cartItem.color &&
+        item.variant === cartItem.variant,
+    );
 
-      // Falls der Warenkorb komplett leer ist, warnen wir den Nutzer kurz
-      if (cart.length === 0) {
-        alert("Dein Warenkorb ist noch leer! Füge zuerst ein Produkt hinzu.");
-        return;
-      }
+    if (existingItemIndex > -1) {
+      cart[existingItemIndex].quantity = Math.min(cart[existingItemIndex].quantity + quantity, 99);
+    } else {
+      cart.push(cartItem);
+    }
 
-      try {
-        // Button optisch sperren während des Ladens
-        checkoutButton.disabled = true;
-        checkoutButton.innerText = "Wird zur Kasse weitergeleitet...";
+    localStorage.setItem("handheldt_cart", JSON.stringify(cart));
+    if (window.updateCartCount) window.updateCartCount();
+    alert(`${currentProduct.title} wurde in den Warenkorb gelegt!`);
+  };
 
-        // Wir senden den GESAMTEN Warenkorb an deine Netlify Function
-        const response = await fetch("/.netlify/functions/create-checkout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ items: cart }),
-        });
-
-        const data = await response.json();
-
-        if (data.url) {
-          // WICHTIG: Wir leeren den lokalen Warenkorb, da der Nutzer jetzt bezahlt
-          localStorage.removeItem("handheldt_cart");
-
-          // Ab zu Stripe!
-          window.location.href = data.url;
-        } else {
-          alert("Fehler: " + (data.error || "Checkout konnte nicht geladen werden."));
-          checkoutButton.disabled = false;
-          checkoutButton.innerText = "Zum Warenkorb & Kasse";
-        }
-      } catch (error) {
-        console.error("Fehler beim Checkout:", error);
-        alert("Verbindung zum Server fehlgeschlagen.");
-        checkoutButton.disabled = false;
-        checkoutButton.innerText = "Zum Warenkorb & Kasse";
-      }
-    };
-  }
+  // Zur Kasse geht es immer über den Warenkorb (dort stehen Versandkosten und AGB-Hinweis)
+  cartButton.onclick = () => {
+    window.location.href = "cart.html";
+  };
 }
 
 // Start
