@@ -1,7 +1,13 @@
+// Preis im deutschen Format, z. B. 45 -> "45,00 €"
+function formatPrice(value) {
+  return value.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
+
 async function loadGallery() {
   try {
-    // Lädt die gleiche JSON-Datei wie die Detailseite
-    const response = await fetch("products.json");
+    // Katalog kommt aus Stripe (netlify/functions/products.js)
+    const response = await fetch("/.netlify/functions/products");
+    if (!response.ok) throw new Error(`Status ${response.status}`);
     const products = await response.json();
 
     const galleryContainer = document.getElementById("main-gallery");
@@ -26,7 +32,7 @@ async function loadGallery() {
       card.className = "product-card";
 
       // Das erste Bild (Standard)
-      const img1Src = product.images[0];
+      const img1Src = product.images[0] || "img/logo.png";
 
       // Das zweite Bild (für Hover) - wir prüfen, ob es existiert
       const img2Src = product.images.length > 1 ? product.images[1] : img1Src;
@@ -39,7 +45,7 @@ async function loadGallery() {
             <img src="${img2Src}" alt="${product.title}" class="secondary-img">
         </div>
         <h3>${product.title}</h3>
-        <div class="price">${product.price.toFixed(2)} ${product.currency}</div>
+        <div class="price">${formatPrice(product.price)}</div>
         <small class="price-note">zzgl. Versandkosten, gem. § 19 UStG keine Umsatzsteuer</small>
     `;
 
