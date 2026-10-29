@@ -23,6 +23,39 @@ export const handler = async (event, context) => {
 
   try {
     const { items } = JSON.parse(event.body);
+    const siteUrl = process.env.URL || "https://bright-taffy-986c8a.netlify.app";
+
+    // Nur Produkte zulassen, die aktuell im Shop (products.json) angeboten werden
+    const productsResponse = await fetch(`${siteUrl}/products.json`);
+    const products = await productsResponse.json();
+    const availableIds = products.map((p) => p.id);
+
+    if (products.length === 0) {
+      return {
+        statusCode: 503,
+        headers,
+        body: JSON.stringify({ error: "Der Shop wird gerade gewartet. Bitte versuche es später erneut." }),
+      };
+    }
+
+    const validItems =
+      Array.isArray(items) &&
+      items.length > 0 &&
+      items.every(
+        (item) =>
+          availableIds.includes(item.priceId) &&
+          Number.isInteger(item.quantity) &&
+          item.quantity >= 1 &&
+          item.quantity <= 99,
+      );
+
+    if (!validItems) {
+      return {
+        statusCode: 400,
+        headers,
+        body: JSON.stringify({ error: "Ungültiger Warenkorb." }),
+      };
+    }
 
     const line_items = items.map((item) => {
       return {
@@ -45,8 +78,8 @@ export const handler = async (event, context) => {
       shipping_address_collection: {
         allowed_countries: ["DE"],
       },
-      success_url: `${process.env.URL || "https://bright-taffy-986c8a.netlify.app"}/success.html`,
-      cancel_url: `${process.env.URL || "https://bright-taffy-986c8a.netlify.app"}/cancel.html`,
+      success_url: `${siteUrl}/success.html`,
+      cancel_url: `${siteUrl}/cancel.html`,
     });
 
     return {
