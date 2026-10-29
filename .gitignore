@@ -2,3 +2,5 @@ node_modules/
 # Lokaler Zustand der Netlify-CLI
 netlify/state.json
 .netlify/
+_site/
+.cache/
