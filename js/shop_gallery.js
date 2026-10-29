@@ -40,7 +40,7 @@ async function loadGallery() {
         </div>
         <h3>${product.title}</h3>
         <div class="price">${product.price.toFixed(2)} ${product.currency}</div>
-        <small class="price-note">inkl. MwSt., zzgl. Versandkosten</small>
+        <small class="price-note">zzgl. Versandkosten, gem. § 19 UStG keine Umsatzsteuer</small>
     `;
 
       galleryContainer.appendChild(card);
