@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <meta name="description" content="{{ description }}">
+    {%- if noindex %}
+    <meta name="robots" content="noindex">
+    {%- endif %}
+    {%- set pageUrl = "/" if page.url == "/index.html" else page.url %}
+    <link rel="canonical" href="{{ site.url }}{{ pageUrl }}">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ site.name }}">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="og:url" content="{{ site.url }}{{ pageUrl }}">
+    <meta property="og:image" content="{{ site.url }}{{ ogImage or site.ogImage }}">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link rel="icon" href="/img/favicon_3.png" type="image/png">
+    <link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/css/style.css">
+    {%- for style in styles %}
+    <link rel="stylesheet" href="/css/{{ style }}">
+    {%- endfor %}
+    <script src="/js/site.js" defer></script>
+    {%- for script in scripts %}
+    <script src="/{{ script }}" defer></script>
+    {%- endfor %}
+</head>
+
+<body>
+    {% include "header.njk" %}
+
+    <main id="inhalt">
+{{ content | safe }}
+    </main>
+
+    {% include "footer.njk" %}
+    {%- for script in bodyScripts %}
+    <script src="/{{ script }}"></script>
+    {%- endfor %}
+</body>
+
+</html>

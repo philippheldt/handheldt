@@ -1,0 +1,72 @@
+---
+title: "Produkt | handheldt"
+description: "Handbedrucktes Produkt aus dem handheldt-Shop – im Siebdruck von Hand gefertigt."
+styles: ["fade.css", "shop.css"]
+bodyScripts: ["js/shop.js"]
+sitemapExclude: true
+---
+    <section class="top-distance"></section>
+
+    <section class="white" id="about">
+        <div class="content-wrapper">
+
+            <div class="shop-container" id="shop-item">
+                <div class="product-gallery">
+                    <div class="main-image-container" id="main-img-box">
+                        <img id="main-image" src="img/logo.png" alt="" eleventy:ignore>
+                        <div class="gallery-nav">
+                            <button type="button" class="nav-btn" onclick="changeImage(-1)" aria-label="Vorheriges Bild">&#10094;</button>
+                            <button type="button" class="nav-btn" onclick="changeImage(1)" aria-label="Nächstes Bild">&#10095;</button>
+                        </div>
+                    </div>
+                    <div class="thumbnail-bar" id="thumb-bar">
+                    </div>
+                </div>
+
+                <div class="product-details">
+                    <h1 id="prod-title">Lade Produkt...</h1>
+
+                    <div class="price-row">
+                        <span id="price" class="price"></span>
+                    </div>
+                    <p class="price-note"><small>* zzgl. <a href="agb.html">Versandkosten</a>, gem. § 19 UStG keine
+                            Umsatzsteuer</small></p>
+                    <p id="delivery-time" class="delivery-time"></p>
+
+                    <div class="option-group" id="size-group">
+                        <span class="option-label" id="size-label">Größe auswählen</span>
+                        <div id="size-container" class="size-selector" role="group" aria-labelledby="size-label">
+                        </div>
+                    </div>
+
+                    <div class="option-group" id="color-group">
+                        <span class="option-label" id="color-label">Farbe</span>
+                        <div id="color-container" class="selector-wrapper" role="group" aria-labelledby="color-label"></div>
+                    </div>
+
+                    <div class="option-group" id="variant-group">
+                        <label for="select-variant">Variante</label>
+                        <select id="select-variant"></select>
+                    </div>
+
+                    <div class="option-group" id="quantity-group">
+                        <label for="quantity">Anzahl</label>
+                        <input type="number" id="quantity" value="1" min="1" max="99">
+                    </div>
+
+                    <button type="button" class="black" id="add-to-cart-btn">In den Warenkorb</button>
+                    <button type="button" id="go-to-cart-btn" class="checkout-btn-style">
+                        Zum Warenkorb
+                    </button>
+                </div>
+
+                <div class="product-description">
+                    <h2>Produktbeschreibung</h2>
+                    <p id="prod-desc"></p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="top-distance"></section>

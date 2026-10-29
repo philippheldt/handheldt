@@ -1,0 +1,208 @@
+---
+title: "Textil-Konfigurator – Anfrage | handheldt"
+description: "Stell dein eigenes Textil zusammen und schick uns eine unverbindliche Anfrage."
+styles: ["faq.css", "video-overlay.css", "fade.css", "configurator.css"]
+scripts: ["configurator.js"]
+noindex: true
+---
+    <section class="top-distance"></section>
+    <section class="white screen-hight">
+        <div class="content-wrapper">
+            <h1 class="visually-hidden">Textil-Konfigurator</h1>
+            <div class="two-columns">
+                <div class="preview">
+                    <div class="preview-wrapper">
+                        <div class="background-color"></div>
+                        <img src="img/configurator/config/TSHI.png" class="product-preview" alt="Vorschau deines Textils" eleventy:ignore>
+                    </div>
+                    
+                </div>
+                <div class="preview-placeholder"></div>
+                <form name="konfigurator" action="danke.html" method="POST" netlify-honeypot="bot-field" netlify>
+                    <p hidden><label>Nicht ausfüllen: <input name="bot-field"></label></p>
+                <div class="konfigurator">
+                         <div>
+                        <h2>Produkt</h2>
+                        <div class="radios" id="produktauswahl">
+                            
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Farbe</h2>
+                        <div class="radios" id="farbauswahl">
+                        
+                        </div>
+                    </div>
+                    <h2>Motiv</h2>
+                    <div id="druckbereich-vorne">
+                        <div class="checkbox-container">
+                            <input type="checkbox" name="vorne-option" id="vorne-option" value="vorne">
+                            <div class="checkbox-label">
+                                <h3>Vorne</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>  
+                        </div>
+                      
+                        <div id="vorne-konfiguration">
+                            <div class="size radios"></div>
+                            <div class="position radios"></div>
+                            <div class="farbe radios"></div>
+                        </div>
+                    </div>
+                    <div id="druckbereich-hinten">
+
+                        <div class="checkbox-container">
+                            <input type="checkbox" name="hinten-option" id="hinten-option" value="hinten">
+                            <div class="checkbox-label">
+                                <h3>Hinten</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+
+                        <div id="hinten-konfiguration">
+                            <div class="size radios"></div>
+                            <div class="position radios"></div>
+                            <div class="farbe radios"></div>
+                        </div>
+                    </div>
+                    <div id="druckbereich-sonderwunsch">
+
+                        <div class="checkbox-container">
+                            <input type="checkbox" name="sonderwunsch-option" id="sonderwunsch-option" value="sonderwunsch">
+                            <div class="checkbox-label">
+                                <h3>Sonderwunsch</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+                        <div id="sonderwunsch-konfiguration" style="display: none;">
+                            <div class="size radios">
+                                <h4>Größe</h4><label for="sonderwunsch-Klein" class="radio-item">
+                                    <img src="img/configurator/test-image.png" alt="" eleventy:ignore>
+                                    <div class="label-text">Klein</div>
+                                    <input type="radio" name="sonderwunsch-size" value="sonderwunsch-Klein" id="sonderwunsch-Klein" data-code="SKLE" checked>
+                                </label><label for="sonderwunsch-Mittel" class="radio-item">
+                                    <img src="img/configurator/test-image.png" alt="" eleventy:ignore>
+                                    <div class="label-text">Mittel</div>
+                                    <input type="radio" name="sonderwunsch-size" value="sonderwunsch-Mittel" id="sonderwunsch-Mittel" data-code="SMIT">
+                                </label><label for="sonderwunsch-Groß" class="radio-item">
+                                    <img src="img/configurator/test-image.png" alt="" eleventy:ignore>
+                                    <div class="label-text">Groß</div>
+                                    <input type="radio" name="sonderwunsch-size" value="sonderwunsch-Groß" id="sonderwunsch-Groß" data-code="SGRO">
+                                </label>
+                            </div>
+                            <div class="position radios">
+                                        <h4>Position</h4>
+                                        <input type="text" name="sonderwunsch-text" placeholder="Sonderwunsch" id="back-sonderwunsch-text"
+                                            style="display: block;">
+                                 
+                            </div>
+                            <div class="farbe radios">
+                                  
+                                        <h4>Anzahl der Farben auf dem Motiv</h4>
+                                        <label for="sonderwunsch-1" class="radio-item">
+                                            <img src="img/configurator/test-image.png" alt="" eleventy:ignore>
+                                            <div class="label-text">1</div>
+                                            <input type="radio" name="sonderwunsch-anzahl" value="sonderwunsch-1" id="sonderwunsch-1" data-code="SZ1F" checked>
+                                        </label>
+                                        <label for="sonderwunsch-2" class="radio-item">
+                                            <img src="img/configurator/test-image.png" alt="" eleventy:ignore>
+                                            <div class="label-text">2</div>
+                                            <input type="radio" name="sonderwunsch-anzahl" value="sonderwunsch-2" id="sonderwunsch-2" data-code="SZ2F">
+                                        </label>
+                                        <label for="sonderwunsch-Mehr" class="radio-item">
+                                            <img src="img/configurator/test-image.png" alt="" eleventy:ignore>
+                                            <div class="label-text">Mehr</div>
+                                            <input type="radio" name="sonderwunsch-anzahl" value="sonderwunsch-Mehr" id="sonderwunsch-Mehr" data-code="SZME">
+                                        </label>
+                                 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="uploader">
+                        <p>Falls du Dateien hast, lade deine
+                        sie hier hoch. Auch eine grobe Skizze
+                        hilft uns zu sagen ob es funktioniert.</p>
+                        <button class="black">Hochladen</button>
+                    </div>
+                    <h2>Menge</h2>
+                    <div id="mengenangabe">
+                        <div class="checkbox-container">
+                            <input type="radio" name="mengenauswahl" value="grob" id="mengenauswahl-grob-checkbox" class="cutom-Radio" checked aria-label="Grobe Anzahl">
+                            <div class="checkbox-label">
+                                <h3>Grobe Anzahl</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+                        <div class="radios" id="anzahl-grob">
+                            <input type="number" name="anzahl-grob" id="mengenauswahl-grob" aria-label="Gesamtanzahl" value="1" min="1" max="500">
+                        </div>
+
+                      
+                        <div class="checkbox-container">
+                            <input type="radio" name="mengenauswahl" id="mengenauswahl-genau-checkbox" value="genau" class="cutom-Radio" aria-label="Genaue Anzahl">
+                            <div class="checkbox-label">
+                                <h3>Genaue Anzahl</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+                        
+                        
+                        <div id="anzahl-genau" class="radios" style="display: none;">
+                            <h5>XXS</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XXS" id="anzahl-XXS" aria-label="Anzahl Größe XXS" value="0" min="0" max="100">
+                            <h5>XS</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XS" id="anzahl-XS" aria-label="Anzahl Größe XS" value="0" min="0" max="100">
+                            <h5>S</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-S" id="anzahl-S" aria-label="Anzahl Größe S" value="0" min="0" max="100">
+                            <h5>M</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-M" id="anzahl-M" aria-label="Anzahl Größe M" value="0" min="0" max="100">
+                            <h5>L</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-L" id="anzahl-L" aria-label="Anzahl Größe L" value="0" min="0" max="100">
+                            <h5>XL</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XL" id="anzahl-XL" aria-label="Anzahl Größe XL" value="0" min="0" max="100">
+                            <h5>XXL</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XXL" id="anzahl-XXL" aria-label="Anzahl Größe XXL" value="0" min="0" max="100">
+                            <h5>XXXL</h5>
+                            <input type="number" class="mengenauswahl-genau" name="anzahl-XXXL" id="anzahl-XXXL" aria-label="Anzahl Größe XXXL" value="0" min="0" max="100">
+                        </div>
+                    </div>
+
+                    <div id="lieferdatumauswahl">
+                        <h2>Lieferdatum</h2>
+                          <div class="checkbox-container">
+                            <input type="radio" name="lieferdatumauswahl" id="lieferdatumauswahl-schnell" value="schnell" class="cutom-Radio" checked>
+                            <div class="checkbox-label">
+                                <h3>So bald wie möglich</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                          </div>
+
+                        <div class="checkbox-container">
+                            <input type="radio" name="lieferdatumauswahl" id="lieferdatumauswahl-datum" class="cutom-Radio" value="datum">
+                            <div class="checkbox-label">
+                                <h3>Genaues Datum</h3>
+                                <div class="subtitle"> Untertitel</div>
+                            </div>
+                        </div>
+                        <div class="radios" id="lieferdatum"  style="display: none;">
+                            <input type="date" name="lieferdatum" aria-label="Wunsch-Lieferdatum">
+                        </div>
+                        
+                    </div>
+
+                    <div class="preisrechner">
+                        <div class="content-wrapper">
+                            <div class="preis">
+                                <h2 id="gesamtpreis"></h2>
+                                <div class="subtitle" id="stueckpreis"></div>
+                            </div>
+                            
+                                <button type="submit" class="black">Anfrage senden</button>
+                        </div>
+                      
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
