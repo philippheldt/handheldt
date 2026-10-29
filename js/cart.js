@@ -1,5 +1,10 @@
 // js/cart.js
 
+// Preis im deutschen Format, z. B. 45 -> "45,00 €"
+function formatPrice(value) {
+  return value.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
+
 // 1. Warenkorb auslesen und auf dem Bildschirm anzeigen
 function renderCart() {
   const cartContainer = document.getElementById("cart-container");
@@ -49,7 +54,7 @@ function renderCart() {
             ${item.color ? ` | Farbe: ${item.color}` : ""} 
             ${item.variant ? ` | Variante: ${item.variant}` : ""}
           </small>
-          <span style="font-weight: 600;">${itemPrice.toFixed(2)} €</span>
+          <span style="font-weight: 600;">${formatPrice(itemPrice)}</span>
         </div>
       </div>
 
@@ -60,7 +65,7 @@ function renderCart() {
           <button onclick="changeQuantity(${index}, 1)" style="padding: 5px 12px; background: #f5f5f5; border: none; cursor: pointer; font-weight: bold;">+</button>
         </div>
         
-        <span style="font-weight: bold; min-width: 70px; text-align: right;">${itemTotal.toFixed(2)} €</span>
+        <span style="font-weight: bold; min-width: 70px; text-align: right;">${formatPrice(itemTotal)}</span>
         
         <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #cc0000; cursor: pointer; font-size: 0.9rem; text-decoration: underline;">
           Löschen
@@ -71,7 +76,7 @@ function renderCart() {
     cartContainer.appendChild(itemElement);
   });
 
-  totalPriceElement.innerText = `${total.toFixed(2)} €`;
+  totalPriceElement.innerText = formatPrice(total);
 }
 
 // 2. Funktion zum Ändern der Anzahl (+ / -)

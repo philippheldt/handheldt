@@ -1,3 +1,8 @@
+// Preis im deutschen Format, z. B. 45 -> "45,00 €"
+function formatPrice(value) {
+  return value.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
+
 let currentProduct = null;
 let currentImgIndex = 0;
 
@@ -37,7 +42,7 @@ function renderProduct() {
   document.getElementById("prod-title").innerText = currentProduct.title;
   document.getElementById("prod-desc").innerText = currentProduct.description;
   document.getElementById("price").innerText =
-    `${currentProduct.price.toFixed(2)} ${currentProduct.currency}`;
+    formatPrice(currentProduct.price);
 
   // Vorrätige Ware: 5 Werktage, auf Bestellung gefertigte Ware: 14 Tage (siehe AGB § 5)
   document.getElementById("delivery-time").innerText =

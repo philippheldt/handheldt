@@ -1,3 +1,8 @@
+// Preis im deutschen Format, z. B. 45 -> "45,00 €"
+function formatPrice(value) {
+  return value.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+}
+
 async function loadGallery() {
   try {
     // Katalog kommt aus Stripe (netlify/functions/products.js)
@@ -40,7 +45,7 @@ async function loadGallery() {
             <img src="${img2Src}" alt="${product.title}" class="secondary-img">
         </div>
         <h3>${product.title}</h3>
-        <div class="price">${product.price.toFixed(2)} ${product.currency}</div>
+        <div class="price">${formatPrice(product.price)}</div>
         <small class="price-note">zzgl. Versandkosten, gem. § 19 UStG keine Umsatzsteuer</small>
     `;
 
