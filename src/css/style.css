@@ -734,30 +734,6 @@ button.black:hover {
   margin: 0 auto;
 }
 
-.footer > .content-wrapper > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.footer > .content-wrapper > div img {
-  width: 150px;
-}
-
-.footer > .content-wrapper > div a {
-  color: #ededed;
-  text-decoration: none;
-}
-
-.footer > .content-wrapper > div :nth-child(1),
-.footer > .content-wrapper > div :nth-child(3) {
-  flex-basis: 50%;
-}
-
-.footer > .content-wrapper > div :nth-child(3) {
-  text-align: right;
-}
-
 .form-hint {
   font-size: 0.85rem;
 }
@@ -1237,11 +1213,6 @@ nav a.cart-link {
     box-shadow: 0 0 300px rgba(0, 0, 0, 0.5);
   }
 
-  .footer > .content-wrapper > div img {
-    width: 30px;
-    content: url(../img/logo_white.png);
-  }
-
   .footer > .content-wrapper {
     padding-bottom: 150px;
   }
@@ -1398,21 +1369,71 @@ h1.page-title.white-box {
   padding-right: 0;
 }
 
-@media (max-width: 550px) {
-  /* Footer: Logo oben, Links darunter in zwei Spalten */
-  .footer > .content-wrapper > div {
-    flex-wrap: wrap;
-    row-gap: 1.5rem;
-  }
 
-  .footer > .content-wrapper > div img {
-    order: -1;
-    flex: 0 0 100%;
-    height: 30px;
-    object-fit: contain;
-  }
+/* Footer: Logo und eine Zeile mit den rechtlichen Links */
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
 
-  .footer > .content-wrapper > div > span {
-    flex: 1 1 0;
-  }
+.footer-logo {
+  width: 140px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.footer-links a {
+  color: #d9d8e0;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Übersichtsseite "AGB & Widerruf" */
+.legal-links {
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legal-links a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid #e6e4df;
+  border-radius: var(--standard-radius);
+  background: #fff;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: border-color 0.2s;
+}
+
+.legal-links a:hover {
+  border-color: var(--primary-color);
+}
+
+.legal-link-title {
+  font-weight: 800;
+}
+
+.legal-link-text {
+  color: #6b6b6b;
+  font-size: 0.95rem;
 }
