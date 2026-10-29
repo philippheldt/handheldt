@@ -728,7 +728,8 @@ button.black:hover {
 }
 
 .footer > .content-wrapper {
-  padding: 40px 0;
+  padding-top: 40px;
+  padding-bottom: 40px;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -1360,5 +1361,58 @@ h1.page-title {
 @media (max-width: 550px) {
   h1.page-title {
     font-size: 2rem;
+  }
+}
+
+/* Typografie: lesbarer Zeilenabstand im Fließtext, etwas Luft in mehrzeiligen Überschriften */
+main p,
+main li {
+  line-height: 1.55;
+}
+
+h2,
+h3,
+h1.page-title {
+  line-height: 1.1;
+}
+
+h1.page-title {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 550px) {
+  /* Auf dem Handy sind Abschnittsüberschriften nicht größer als der Seitentitel */
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3.title-split,
+  h2.post-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* Seitentitel bündig mit dem Text darunter (white-box ist hier nur ein unsichtbarer Hintergrund) */
+h1.page-title.white-box {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (max-width: 550px) {
+  /* Footer: Logo oben, Links darunter in zwei Spalten */
+  .footer > .content-wrapper > div {
+    flex-wrap: wrap;
+    row-gap: 1.5rem;
+  }
+
+  .footer > .content-wrapper > div img {
+    order: -1;
+    flex: 0 0 100%;
+    height: 30px;
+    object-fit: contain;
+  }
+
+  .footer > .content-wrapper > div > span {
+    flex: 1 1 0;
   }
 }
