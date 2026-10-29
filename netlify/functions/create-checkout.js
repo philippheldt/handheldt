@@ -57,17 +57,44 @@ export const handler = async (event, context) => {
       };
     }
 
-    const line_items = items.map((item) => {
-      return {
-        price: item.priceId,
-        quantity: item.quantity,
-        adjustable_quantity: {
-          enabled: true,
-          minimum: 0,
-          maximum: 99,
+    // Menge ist im Checkout fest, damit die Versandkosten zum Warenwert passen
+    const line_items = items.map((item) => ({
+      price: item.priceId,
+      quantity: item.quantity,
+    }));
+
+    // Versandkosten laut AGB § 3: 4,90 € unter 50 € Warenwert, darüber kostenlos
+    const subtotal = items.reduce((sum, item) => {
+      const product = products.find((p) => p.id === item.priceId);
+      return sum + product.price * item.quantity;
+    }, 0);
+    const shippingAmount = subtotal >= 50 ? 0 : 490;
+
+    // Lieferzeit laut AGB § 5: vorrätig 5 Werktage, sonst 14 Tage
+    const allInStock = items.every(
+      (item) => products.find((p) => p.id === item.priceId).stock === "Auf Lager",
+    );
+    const deliveryEstimate = allInStock
+      ? { minimum: { unit: "business_day", value: 1 }, maximum: { unit: "business_day", value: 5 } }
+      : { minimum: { unit: "day", value: 1 }, maximum: { unit: "day", value: 14 } };
+
+    const shipping_options = [
+      {
+        shipping_rate_data: {
+          display_name: "DHL Versand",
+          type: "fixed_amount",
+          fixed_amount: { amount: shippingAmount, currency: "eur" },
+          delivery_estimate: deliveryEstimate,
         },
-      };
-    });
+      },
+      {
+        shipping_rate_data: {
+          display_name: "Abholung in Teningen (nach Absprache)",
+          type: "fixed_amount",
+          fixed_amount: { amount: 0, currency: "eur" },
+        },
+      },
+    ];
 
     // Zahlarten werden im Stripe-Dashboard gesteuert (kein fest verdrahtetes "card")
     const session = await stripe.checkout.sessions.create({
@@ -77,6 +104,12 @@ export const handler = async (event, context) => {
       // Lieferadresse wird für den Versand benötigt
       shipping_address_collection: {
         allowed_countries: ["DE"],
+      },
+      shipping_options: shipping_options,
+      custom_text: {
+        submit: {
+          message: "Es gelten die AGB von handheldt (handheldt.de/agb.html). Infos zum Widerrufsrecht: handheldt.de/widerruf.html",
+        },
       },
       success_url: `${siteUrl}/success.html`,
       cancel_url: `${siteUrl}/cancel.html`,

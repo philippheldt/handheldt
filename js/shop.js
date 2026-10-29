@@ -35,6 +35,12 @@ function renderProduct() {
   document.getElementById("price").innerText =
     `${currentProduct.price.toFixed(2)} ${currentProduct.currency}`;
 
+  // Vorrätige Ware: 5 Werktage, auf Bestellung gefertigte Ware: 14 Tage (siehe AGB § 5)
+  document.getElementById("delivery-time").innerText =
+    currentProduct.stock === "Auf Lager"
+      ? "Auf Lager – Versand innerhalb von 5 Werktagen"
+      : "Wird für dich gefertigt – Versand innerhalb von 14 Tagen";
+
   if (currentProduct.discountPrice > currentProduct.price) {
     document.getElementById("old-price").innerText =
       `${currentProduct.discountPrice.toFixed(2)} ${currentProduct.currency}`;
