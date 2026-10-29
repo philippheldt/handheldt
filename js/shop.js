@@ -42,7 +42,7 @@ function renderProduct() {
   document.getElementById("prod-title").innerText = currentProduct.title;
   document.getElementById("prod-desc").innerText = currentProduct.description;
   document.getElementById("price").innerText =
-    formatPrice(currentProduct.price);
+    `${formatPrice(currentProduct.price)}*`;
 
   // Vorrätige Ware: 5 Werktage, auf Bestellung gefertigte Ware: 14 Tage (siehe AGB § 5)
   document.getElementById("delivery-time").innerText =
