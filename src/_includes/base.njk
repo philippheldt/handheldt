@@ -24,10 +24,12 @@
     <link rel="icon" href="/img/favicon_3.png" type="image/png">
     <link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/cart.css">
     {%- for style in styles %}
     <link rel="stylesheet" href="/css/{{ style }}">
     {%- endfor %}
     <script src="/js/site.js" defer></script>
+    <script src="/js/cart.js" defer></script>
     {%- for script in scripts %}
     <script src="/{{ script }}" defer></script>
     {%- endfor %}
@@ -41,6 +43,12 @@
     </main>
 
     {% include "footer.njk" %}
+
+    <div class="cart-drawer" id="cart-drawer" hidden>
+        <div class="cart-backdrop" data-action="close"></div>
+        <aside class="cart-panel cart-panel--drawer" data-cart="drawer" role="dialog" aria-modal="true"
+            aria-labelledby="cart-drawer-title" tabindex="-1"></aside>
+    </div>
     {%- for script in bodyScripts %}
     <script src="/{{ script }}"></script>
     {%- endfor %}

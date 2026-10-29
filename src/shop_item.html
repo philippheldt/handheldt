@@ -7,65 +7,104 @@ sitemapExclude: true
 ---
     <section class="top-distance"></section>
 
-    <section class="white" id="about">
-        <div class="content-wrapper">
+    <section class="white">
+        <div class="content-wrapper product-page">
+            <a class="back-link" href="shop.html">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Zurück zum Shop
+            </a>
 
-            <div class="shop-container" id="shop-item">
+            <div class="product" id="shop-item">
                 <div class="product-gallery">
-                    <div class="main-image-container" id="main-img-box">
+                    <div class="main-image-container">
                         <img id="main-image" src="img/logo.png" alt="" eleventy:ignore>
-                        <div class="gallery-nav">
-                            <button type="button" class="nav-btn" onclick="changeImage(-1)" aria-label="Vorheriges Bild">&#10094;</button>
-                            <button type="button" class="nav-btn" onclick="changeImage(1)" aria-label="Nächstes Bild">&#10095;</button>
+                        <div class="gallery-nav" id="gallery-nav">
+                            <button type="button" class="nav-btn" onclick="changeImage(-1)" aria-label="Vorheriges Bild">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <button type="button" class="nav-btn" onclick="changeImage(1)" aria-label="Nächstes Bild">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
                         </div>
                     </div>
-                    <div class="thumbnail-bar" id="thumb-bar">
-                    </div>
+                    <div class="thumbnail-bar" id="thumb-bar"></div>
                 </div>
 
                 <div class="product-details">
-                    <h1 id="prod-title">Lade Produkt...</h1>
+                    <h1 id="prod-title" class="product-title">Produkt wird geladen …</h1>
 
-                    <div class="price-row">
-                        <span id="price" class="price"></span>
-                    </div>
+                    <p class="product-price"><span id="price"></span></p>
                     <p class="price-note"><small>* zzgl. <a href="agb.html">Versandkosten</a>, gem. § 19 UStG keine
                             Umsatzsteuer</small></p>
-                    <p id="delivery-time" class="delivery-time"></p>
+
+                    <p id="delivery-time" class="stock-badge" hidden></p>
 
                     <div class="option-group" id="size-group">
-                        <span class="option-label" id="size-label">Größe auswählen</span>
-                        <div id="size-container" class="size-selector" role="group" aria-labelledby="size-label">
+                        <div class="option-head">
+                            <span class="option-label" id="size-label">Größe</span>
+                            <span class="option-value" id="size-value"></span>
                         </div>
+                        <div id="size-container" class="option-chips" role="group" aria-labelledby="size-label"></div>
                     </div>
 
                     <div class="option-group" id="color-group">
-                        <span class="option-label" id="color-label">Farbe</span>
-                        <div id="color-container" class="selector-wrapper" role="group" aria-labelledby="color-label"></div>
+                        <div class="option-head">
+                            <span class="option-label" id="color-label">Farbe</span>
+                            <span class="option-value" id="color-value"></span>
+                        </div>
+                        <div id="color-container" class="option-chips" role="group" aria-labelledby="color-label"></div>
                     </div>
 
                     <div class="option-group" id="variant-group">
-                        <label for="select-variant">Variante</label>
+                        <label class="option-label" for="select-variant">Variante</label>
                         <select id="select-variant"></select>
                     </div>
 
-                    <div class="option-group" id="quantity-group">
-                        <label for="quantity">Anzahl</label>
-                        <input type="number" id="quantity" value="1" min="1" max="99">
+                    <div class="buy-row">
+                        <div class="quantity-control" role="group" aria-label="Anzahl">
+                            <button type="button" data-quantity-step="-1" aria-label="Anzahl verringern">−</button>
+                            <input type="number" id="quantity" value="1" min="1" max="99" aria-label="Anzahl">
+                            <button type="button" data-quantity-step="1" aria-label="Anzahl erhöhen">+</button>
+                        </div>
+                        <button type="button" class="black add-to-cart" id="add-to-cart-btn">In den Warenkorb</button>
                     </div>
 
-                    <button type="button" class="black" id="add-to-cart-btn">In den Warenkorb</button>
-                    <button type="button" id="go-to-cart-btn" class="checkout-btn-style">
-                        Zum Warenkorb
-                    </button>
-                </div>
+                    <ul class="product-perks">
+                        <li>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6a1.5 1.5 0 0 1 3 0v8c0 3.9-2.6 6.5-6 6.5-2.4 0-4-1.1-5.3-3.2L4 14.5a1.5 1.5 0 0 1 2.4-1.7L8 14.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Von Hand im Siebdruck bedruckt
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7M7.5 18.5a1.5 1.5 0 1 0 0-.01M17.5 18.5a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                            Kostenloser Versand ab 50&nbsp;€
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z M12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                            Kostenlose Abholung in Teningen möglich
+                        </li>
+                    </ul>
 
-                <div class="product-description">
-                    <h2>Produktbeschreibung</h2>
-                    <p id="prod-desc"></p>
+                    <div class="product-info">
+                        <details class="product-accordion" id="description-accordion" open>
+                            <summary>Beschreibung</summary>
+                            <p id="prod-desc"></p>
+                        </details>
+                        <details class="product-accordion">
+                            <summary>Versand &amp; Lieferung</summary>
+                            <p>Wir versenden innerhalb Deutschlands mit DHL. Unter 50&nbsp;€ Warenwert kostet der Versand
+                                4,90&nbsp;€, ab 50&nbsp;€ ist er kostenlos. Vorrätige Ware verschicken wir innerhalb von
+                                5 Werktagen, Ware, die wir für dich anfertigen, innerhalb von 14 Tagen. Du kannst deine
+                                Bestellung auch kostenlos bei uns in Teningen abholen.</p>
+                        </details>
+                        <details class="product-accordion">
+                            <summary>Rückgabe</summary>
+                            <p>Du kannst deine Bestellung innerhalb von 14 Tagen ohne Angabe von Gründen widerrufen.
+                                Ausgenommen sind Produkte, die nach deinen persönlichen Vorgaben angefertigt werden.
+                                Alle Details findest du in der <a href="widerruf.html">Widerrufsbelehrung</a>.</p>
+                        </details>
+                    </div>
                 </div>
             </div>
-
         </div>
     </section>
 

@@ -1185,18 +1185,6 @@ nav a.cart-link {
 }
 
 @media (max-width: 550px) {
-  /* Shop-spezifische Anpassung für kleine Handys */
-  .thumbnail-bar {
-    gap: 5px;
-  }
-  .buy-button {
-    width: 100%; /* Button über ganze Breite für bessere Daumen-Bedienung */
-    padding: 20px;
-  }
-  .nav-btn {
-    padding: 10px 5px; /* Kleinere Buttons im Bild */
-  }
-
   .vorteile {
     grid-template-columns: 1fr;
   }
@@ -1346,26 +1334,6 @@ summary:focus-visible {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
-}
-
-/* Kurzer Hinweis unten am Bildschirm (z. B. "In den Warenkorb gelegt") */
-.toast {
-  position: fixed;
-  left: 50%;
-  bottom: 30px;
-  transform: translate(-50%, 20px);
-  background: var(--primary-color);
-  color: var(--secondary-color);
-  padding: 0.9rem 1.4rem;
-  border-radius: var(--standard-radius);
-  opacity: 0;
-  transition: all 0.3s;
-  z-index: 9999;
-}
-
-.toast.visible {
-  opacity: 1;
-  transform: translate(-50%, 0);
 }
 
 /* Zwischenüberschriften auf Textseiten (Impressum, Datenschutz, AGB …) */

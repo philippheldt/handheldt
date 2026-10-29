@@ -1,3 +1,5 @@
+// js/shop.js – Produktseite (shop_item.html?id=prod_…)
+
 // Preis im deutschen Format, z. B. 45 -> "45,00 €"
 function formatPrice(value) {
   return value.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
@@ -6,249 +8,206 @@ function formatPrice(value) {
 let currentProduct = null;
 let currentImgIndex = 0;
 
-// NEU: Hier merken wir uns, was der Nutzer ausgewählt hat
+// Auswahl des Nutzers
 let selectedSize = null;
 let selectedColor = null;
 let selectedVariant = null;
 
-// 1. Daten laden
+// 1. Produkt aus dem Stripe-Katalog laden (netlify/functions/products.js)
 async function loadProduct() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const productId = urlParams.get("id");
+  const productId = new URLSearchParams(window.location.search).get("id");
 
   try {
-    // Katalog kommt aus Stripe (netlify/functions/products.js)
     const response = await fetch("/.netlify/functions/products");
     if (!response.ok) throw new Error(`Status ${response.status}`);
     const products = await response.json();
 
-    // Finde Produkt nach ID
     currentProduct = products.find((p) => p.id === productId);
 
     if (currentProduct) {
       renderProduct();
     } else {
-      document.getElementById("shop-item").innerHTML = "<h2>Produkt nicht gefunden.</h2>";
+      showMessage("Dieses Produkt gibt es leider nicht (mehr).");
     }
   } catch (error) {
     console.error("Fehler beim Laden der Produkte:", error);
-    document.getElementById("shop-item").innerHTML =
-      "<h2>Das Produkt konnte gerade nicht geladen werden. Bitte versuche es später erneut.</h2>";
+    showMessage("Das Produkt konnte gerade nicht geladen werden. Bitte versuche es später erneut.");
   }
 }
 
-// 2. Produkt in HTML rendern
+function showMessage(text) {
+  document.getElementById("shop-item").innerHTML = `
+    <div class="product-message">
+      <h1 class="page-title">${text}</h1>
+      <a href="shop.html" class="black-button">Zum Shop</a>
+    </div>`;
+}
+
+// 2. Produkt darstellen
 function renderProduct() {
-  document.getElementById("prod-title").innerText = currentProduct.title;
   document.title = `${currentProduct.title} | handheldt`;
-  document.getElementById("prod-desc").innerText = currentProduct.description;
-  document.getElementById("price").innerText =
-    `${formatPrice(currentProduct.price)}*`;
+  document.getElementById("prod-title").innerText = currentProduct.title;
+  document.getElementById("price").innerText = `${formatPrice(currentProduct.price)}*`;
 
-  // Vorrätige Ware: 5 Werktage, auf Bestellung gefertigte Ware: 14 Tage (siehe AGB § 5)
-  document.getElementById("delivery-time").innerText =
-    currentProduct.inStock
-      ? "Auf Lager – Versand innerhalb von 5 Werktagen"
-      : "Wird für dich gefertigt – Versand innerhalb von 14 Tagen";
+  const description = document.getElementById("prod-desc");
+  if (currentProduct.description) {
+    description.innerText = currentProduct.description;
+  } else {
+    document.getElementById("description-accordion").hidden = true;
+  }
 
-  // Hauptbild setzen
-  updateImg(0);
+  // Lieferzeit laut AGB § 5: vorrätig 5 Werktage, auf Bestellung gefertigt 14 Tage
+  const stock = document.getElementById("delivery-time");
+  stock.innerText = currentProduct.inStock
+    ? "Auf Lager – Versand in 5 Werktagen"
+    : "Wird für dich gefertigt – Versand in 14 Tagen";
+  stock.classList.toggle("stock-badge--made-to-order", !currentProduct.inStock);
+  stock.hidden = false;
 
-  // Thumbnails generieren
+  renderGallery();
+
+  if (currentProduct.sizes.length > 0) {
+    selectedSize = currentProduct.sizes[0];
+    renderChips("size", currentProduct.sizes.map((size) => ({ value: size, label: size })), (value) => {
+      selectedSize = value;
+    });
+  } else {
+    document.getElementById("size-group").hidden = true;
+  }
+
+  if (currentProduct.colors.length > 0) {
+    selectedColor = currentProduct.colors[0].name;
+    renderChips(
+      "color",
+      currentProduct.colors.map((color) => ({ value: color.name, label: color.name, hex: color.hex })),
+      (value) => {
+        selectedColor = value;
+      },
+    );
+  } else {
+    document.getElementById("color-group").hidden = true;
+  }
+
+  if (currentProduct.variants.length > 0) {
+    selectedVariant = currentProduct.variants[0];
+    const select = document.getElementById("select-variant");
+    currentProduct.variants.forEach((variant) => select.add(new Option(variant, variant)));
+    select.addEventListener("change", (e) => (selectedVariant = e.target.value));
+  } else {
+    document.getElementById("variant-group").hidden = true;
+  }
+
+  initBuyRow();
+}
+
+// Auswahl-Buttons für Größe und Farbe; die aktuelle Auswahl steht neben der Überschrift
+function renderChips(type, options, onSelect) {
+  const container = document.getElementById(`${type}-container`);
+  const valueLabel = document.getElementById(`${type}-value`);
+  container.innerHTML = "";
+  valueLabel.innerText = options[0].label;
+
+  options.forEach((option, index) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = `chip${index === 0 ? " active" : ""}`;
+    chip.setAttribute("aria-pressed", index === 0);
+
+    if (option.hex) {
+      const dot = document.createElement("span");
+      dot.className = "chip-swatch";
+      dot.style.backgroundColor = option.hex;
+      chip.appendChild(dot);
+    }
+    chip.appendChild(document.createTextNode(option.label));
+
+    chip.onclick = () => {
+      container.querySelectorAll(".chip").forEach((c) => {
+        c.classList.remove("active");
+        c.setAttribute("aria-pressed", false);
+      });
+      chip.classList.add("active");
+      chip.setAttribute("aria-pressed", true);
+      valueLabel.innerText = option.label;
+      onSelect(option.value);
+    };
+
+    container.appendChild(chip);
+  });
+}
+
+// 3. Bildergalerie
+function renderGallery() {
+  const images = currentProduct.images;
   const thumbBar = document.getElementById("thumb-bar");
-  currentProduct.images.forEach((imgSrc, index) => {
+  thumbBar.innerHTML = "";
+
+  // Bei nur einem Bild braucht es weder Pfeile noch Vorschaubilder
+  document.getElementById("gallery-nav").hidden = images.length < 2;
+  thumbBar.hidden = images.length < 2;
+
+  images.forEach((imgSrc, index) => {
     const thumb = document.createElement("button");
     thumb.type = "button";
     thumb.className = "thumb-button";
     thumb.setAttribute("aria-label", `Bild ${index + 1} anzeigen`);
-    thumb.onmouseover = () => updateImg(index);
     thumb.onclick = () => updateImg(index);
 
     const img = document.createElement("img");
     img.src = imgSrc;
     img.alt = "";
-    img.classList.add("thumb");
+    img.className = "thumb";
 
     thumb.appendChild(img);
     thumbBar.appendChild(thumb);
   });
 
-  // Dropdowns füllen
-  if (currentProduct.sizes.length > 0) {
-    // Standardmäßig die erste Größe auswählen
-    selectedSize = currentProduct.sizes[0];
-    renderSizeButtons(currentProduct.sizes);
-  } else {
-    document.getElementById("size-group").style.display = "none";
-  }
-
-  if (currentProduct.colors.length > 0) {
-    // Standardmäßig die erste Farbe auswählen
-    selectedColor = currentProduct.colors[0].name;
-    renderColorButtons(currentProduct.colors);
-  } else {
-    document.getElementById("color-group").style.display = "none";
-  }
-
-  if (currentProduct.variants.length > 0) {
-    // Standardmäßig die erste Variante auswählen
-    selectedVariant = currentProduct.variants[0];
-    fillDropdown("select-variant", currentProduct.variants);
-
-    // Event Listener für das Dropdown, wenn sich die Variante ändert
-    document.getElementById("select-variant").addEventListener("change", (e) => {
-      selectedVariant = e.target.value;
-    });
-  } else {
-    document.getElementById("variant-group").style.display = "none";
-  }
-
-  // NEU: "Jetzt kaufen"-Button aktivieren
-  initBuyButton();
-}
-
-function fillDropdown(id, dataArray) {
-  const select = document.getElementById(id);
-  dataArray.forEach((item) => {
-    const opt = document.createElement("option");
-    opt.value = item;
-    opt.innerText = item;
-    select.appendChild(opt);
-  });
-}
-
-function renderSizeButtons(sizes) {
-  const container = document.getElementById("size-container");
-  container.innerHTML = "";
-
-  sizes.forEach((size, index) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = size;
-    btn.className = "size-btn";
-    btn.setAttribute("aria-pressed", index === 0);
-
-    if (index === 0) btn.classList.add("active");
-
-    btn.onclick = function () {
-      document.querySelectorAll(".size-btn").forEach((b) => {
-        b.classList.remove("active");
-        b.setAttribute("aria-pressed", false);
-      });
-      this.classList.add("active");
-      this.setAttribute("aria-pressed", true);
-
-      // NEU: Auswahl speichern
-      selectedSize = size;
-    };
-
-    container.appendChild(btn);
-  });
-}
-
-function renderColorButtons(colors) {
-  const container = document.getElementById("color-container");
-  container.innerHTML = "";
-
-  colors.forEach((color, i) => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = `color-btn ${i === 0 ? "active" : ""}`;
-    btn.setAttribute("aria-pressed", i === 0);
-
-    const dot = document.createElement("span");
-    dot.className = "color-preview";
-    dot.style.backgroundColor = color.hex;
-
-    const text = document.createTextNode(color.name);
-
-    btn.appendChild(dot);
-    btn.appendChild(text);
-
-    btn.onclick = () => {
-      document.querySelectorAll(".color-btn").forEach((b) => {
-        b.classList.remove("active");
-        b.setAttribute("aria-pressed", false);
-      });
-      btn.classList.add("active");
-      btn.setAttribute("aria-pressed", true);
-
-      // NEU: Auswahl speichern
-      selectedColor = color.name;
-
-      if (color.image_index !== undefined) {
-        updateImg(color.image_index);
-      }
-    };
-
-    container.appendChild(btn);
-  });
+  updateImg(0);
 }
 
 function updateImg(index) {
   currentImgIndex = index;
   const mainImg = document.getElementById("main-image");
-  mainImg.src = currentProduct.images[currentImgIndex] || "img/logo.png";
-  mainImg.alt = `${currentProduct.title} – Bild ${currentImgIndex + 1}`;
+  mainImg.src = currentProduct.images[index] || "img/logo.png";
+  mainImg.alt = `${currentProduct.title} – Bild ${index + 1}`;
+
+  document.querySelectorAll(".thumb-button").forEach((thumb, i) => {
+    thumb.classList.toggle("active", i === index);
+    thumb.setAttribute("aria-current", i === index);
+  });
 }
 
 function changeImage(step) {
-  let newIndex = currentImgIndex + step;
-  if (newIndex >= currentProduct.images.length) newIndex = 0;
-  if (newIndex < 0) newIndex = currentProduct.images.length - 1;
-  updateImg(newIndex);
+  const count = currentProduct.images.length;
+  updateImg((currentImgIndex + step + count) % count);
 }
 
-// ==========================================
-// AB HIER NEU: WARENKORB LOGIK VIA LOCALSTORAGE
-// ==========================================
-
-function initBuyButton() {
-  const buyButton = document.getElementById("add-to-cart-btn");
+// 4. Menge und "In den Warenkorb"
+function initBuyRow() {
   const quantityInput = document.getElementById("quantity");
-  const cartButton = document.getElementById("go-to-cart-btn");
+  const clampQuantity = () => Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 99);
 
-  // In den Warenkorb legen (Preis wird nur zur Anzeige gespeichert,
-  // abgerechnet wird immer der aktuelle Preis aus Stripe)
-  buyButton.onclick = () => {
-    const quantity = Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 99);
-    let cart = JSON.parse(localStorage.getItem("handheldt_cart")) || [];
+  document.querySelectorAll("[data-quantity-step]").forEach((button) => {
+    button.onclick = () => {
+      quantityInput.value = Math.min(Math.max(clampQuantity() + Number(button.dataset.quantityStep), 1), 99);
+    };
+  });
+  quantityInput.addEventListener("change", () => (quantityInput.value = clampQuantity()));
 
-    const cartItem = {
+  // Der Preis wird nur zur Anzeige gespeichert, abgerechnet wird immer der aktuelle Preis aus Stripe
+  document.getElementById("add-to-cart-btn").onclick = () => {
+    window.handheldtCart.add({
       productId: currentProduct.id,
       title: currentProduct.title,
       price: currentProduct.price,
-      quantity: quantity,
+      quantity: clampQuantity(),
       size: selectedSize,
       color: selectedColor,
       variant: selectedVariant,
       image: currentProduct.images[0] || "img/logo.png",
-    };
-
-    const existingItemIndex = cart.findIndex(
-      (item) =>
-        item.productId === cartItem.productId &&
-        item.size === cartItem.size &&
-        item.color === cartItem.color &&
-        item.variant === cartItem.variant,
-    );
-
-    if (existingItemIndex > -1) {
-      cart[existingItemIndex].quantity = Math.min(cart[existingItemIndex].quantity + quantity, 99);
-    } else {
-      cart.push(cartItem);
-    }
-
-    localStorage.setItem("handheldt_cart", JSON.stringify(cart));
-    if (window.updateCartCount) window.updateCartCount();
-    window.showToast(`${currentProduct.title} liegt jetzt im Warenkorb.`);
-  };
-
-  // Zur Kasse geht es immer über den Warenkorb (dort stehen Versandkosten und AGB-Hinweis)
-  cartButton.onclick = () => {
-    window.location.href = "cart.html";
+    });
+    quantityInput.value = 1;
   };
 }
 
-// Start
 loadProduct();
