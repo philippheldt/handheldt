@@ -46,7 +46,6 @@ async function loadGallery() {
         </div>
         <h3>${product.title}</h3>
         <div class="price">${formatPrice(product.price)}</div>
-        <small class="price-note">zzgl. Versandkosten, gem. § 19 UStG keine Umsatzsteuer</small>
     `;
 
       galleryContainer.appendChild(card);
