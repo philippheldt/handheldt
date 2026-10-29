@@ -1437,3 +1437,32 @@ h1.page-title.white-box {
   color: #6b6b6b;
   font-size: 0.95rem;
 }
+
+/* Formularfelder mit 16px: darunter zoomt iOS beim Antippen automatisch hinein */
+input,
+textarea,
+select {
+  font-size: 1rem;
+}
+
+@media (max-width: 550px) {
+  /* Auf dem Handy mehr Platz für den Text: schmalere Seitenränder,
+     Karten über Bildern so breit wie der Inhalt */
+  .content-wrapper,
+  .wider-content-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .overlay-frame {
+    width: 100%;
+    transform: none;
+    margin: -40px auto 0;
+  }
+
+  .blue-frame,
+  .dark-blue-frame,
+  .yellow-frame {
+    padding: 28px 22px;
+  }
+}
