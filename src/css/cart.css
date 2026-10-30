@@ -88,7 +88,8 @@ body.cart-open {
 
 .shipping-progress {
   padding: 1rem 1.5rem;
-  background: var(--accent-color);
+  background: var(--primary-color);
+  color: var(--secondary-color);
 }
 
 .shipping-progress p {
@@ -100,14 +101,14 @@ body.cart-open {
   height: 6px;
   overflow: hidden;
   border-radius: 3px;
-  background: rgba(12, 11, 33, 0.1);
+  background: rgba(248, 247, 244, 0.2);
 }
 
 .shipping-progress-bar span {
   display: block;
   height: 100%;
   border-radius: 3px;
-  background: var(--primary-color);
+  background: var(--secondary-color);
   transition: width 0.4s ease;
 }
 
