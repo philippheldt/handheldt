@@ -1,8 +1,9 @@
 ---
 title: "handheldt – Siebdruck und handbedruckte Textilien in Kleinauflagen"
 description: "Handbedruckte, faire Textilien mit eigenen Designs – für Jugendarbeit, Events, Bands und besondere Anlässe. Siebdruck ohne Mindestmenge, mit Liebe zum Detail."
-styles: ["faq.css", "video-overlay.css", "fade.css"]
+styles: ["faq.css", "video-overlay.css", "fade.css", "shop_gallery.css"]
 scripts: ["js/video_replay.js"]
+bodyScripts: ["js/shop_gallery.js"]
 ---
     <section class="white">
         <div>
@@ -26,11 +27,12 @@ scripts: ["js/video_replay.js"]
 
     <section class="white">
         <div class="content-wrapper vertical-distance">
-            <h2 class="yellow-underline">Shop </h2>
-            <p>Unser neuer Shop ist fast fertig – gerade laufen noch Wartungsarbeiten. Schau bald wieder
-                vorbei!</p>
-            <br>
-            <a href="shop.html" class="black-button">zum Shop</a>
+            <h2 class="yellow-underline">Shop</h2>
+            <div class="product-grid product-grid--preview" data-product-gallery data-limit="4"
+                data-variant="preview" aria-live="polite"></div>
+            <div class="shop-preview-action">
+                <a href="shop.html" class="black-button">Zum Shop</a>
+            </div>
         </div>
 
     </section>
