@@ -64,6 +64,12 @@ function renderProduct() {
   stock.classList.toggle("stock-badge--made-to-order", !currentProduct.inStock);
   stock.hidden = false;
 
+  // Versandfreie Produkte (z. B. Postkarten): allein bestellt kostenlos, sonst gilt die normale Pauschale
+  if (currentProduct.freeShipping) {
+    document.getElementById("shipping-note").innerHTML =
+      'allein bestellt versandkostenfrei, sonst zzgl. <a href="agb.html">Versandkosten</a>';
+  }
+
   renderGallery();
 
   if (currentProduct.sizes.length > 0) {
@@ -205,6 +211,7 @@ function initBuyRow() {
       color: selectedColor,
       variant: selectedVariant,
       image: currentProduct.images[0] || "img/logo.png",
+      freeShipping: currentProduct.freeShipping,
     });
     quantityInput.value = 1;
   };

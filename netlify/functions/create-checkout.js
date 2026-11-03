@@ -81,9 +81,11 @@ export const handler = async (event) => {
       };
     });
 
-    // Versandkosten laut AGB § 3: 4,90 € unter 50 € Warenwert, darüber kostenlos
+    // Versandkosten laut AGB § 3: 4,90 € unter 50 € Warenwert, darüber kostenlos.
+    // Enthält die Bestellung nur versandfreie Produkte (z. B. Postkarten), ist der Versand immer kostenlos.
     const subtotal = items.reduce((sum, item, index) => sum + products[index].unitAmount * item.quantity, 0);
-    const shippingAmount = subtotal >= 5000 ? 0 : 490;
+    const onlyFreeShipping = products.every((product) => product.freeShipping);
+    const shippingAmount = onlyFreeShipping || subtotal >= 5000 ? 0 : 490;
 
     // Lieferzeit laut AGB § 5: vorrätig 5 Werktage, sonst 14 Tage
     const allInStock = products.every((product) => product.inStock);
@@ -94,7 +96,7 @@ export const handler = async (event) => {
     const shipping_options = [
       {
         shipping_rate_data: {
-          display_name: "DHL Versand",
+          display_name: onlyFreeShipping ? "Versand per Post" : "DHL Versand",
           type: "fixed_amount",
           fixed_amount: { amount: shippingAmount, currency: "eur" },
           delivery_estimate: deliveryEstimate,

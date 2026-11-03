@@ -24,6 +24,7 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `varianten` | `Slim Fit, Regular Fit` | Auswahlliste „Variante“ |
 | `lager` | `nein` | `nein` = wird nach Bestellung gefertigt (Lieferzeit 14 Tage). Ohne Angabe oder `ja` = vorrätig (5 Werktage) |
 | `sortierung` | `1` | Reihenfolge im Shop (kleinere Zahl = weiter vorne) |
+| `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
 Alle Felder sind optional. Ohne `groessen`, `farben` oder `varianten` wird die
 jeweilige Auswahl auf der Produktseite ausgeblendet.
@@ -49,7 +50,8 @@ durchgestrichen zeigst, muss der durchgestrichene Preis der niedrigste Preis der
 
 Jede Bestellung erscheint in Stripe unter **Zahlungen**. Größe, Farbe und Variante stehen
 direkt am Artikel (z. B. „Adore Him Hoodie – Größe M · Farbe Schwarz“), die Lieferadresse
-und die gewählte Versandart (DHL oder Abholung in Teningen) in den Zahlungsdetails.
+und die gewählte Versandart (DHL, Post bei reinen Postkarten-Bestellungen oder Abholung in
+Teningen) in den Zahlungsdetails.
 
 Hinweis: Stripe kann dabei für die bestellten Artikel interne Produkte ohne Standardpreis
 anlegen. Diese tauchen nicht im Shop auf und können ignoriert werden.

@@ -37,6 +37,8 @@ function toShopProduct(product) {
     variants: parseList(meta.varianten),
     // "lager: nein" = wird nach Bestellung gefertigt (14 Tage), sonst vorrätig (5 Werktage)
     inStock: (meta.lager || "ja").toLowerCase() !== "nein",
+    // "versandfrei: ja" = z. B. Postkarten; allein bestellt kostenlos, gemischt zählen sie zum Warenwert
+    freeShipping: (meta.versandfrei || "").toLowerCase() === "ja",
     sort: Number(meta.sortierung) || 999,
   };
 }

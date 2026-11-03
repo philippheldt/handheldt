@@ -51,7 +51,13 @@
         .filter((item) => products.some((p) => p.id === item.productId))
         .map((item) => {
           const product = products.find((p) => p.id === item.productId);
-          return { ...item, title: product.title, price: product.price, image: product.images[0] || "img/logo.png" };
+          return {
+            ...item,
+            title: product.title,
+            price: product.price,
+            image: product.images[0] || "img/logo.png",
+            freeShipping: product.freeShipping,
+          };
         });
 
       catalogSynced = true;
@@ -91,7 +97,13 @@
       .join("");
   }
 
-  function renderShippingProgress(subtotal) {
+  function renderShippingProgress(subtotal, onlyFreeShipping) {
+    if (onlyFreeShipping) {
+      return `
+        <div class="shipping-progress shipping-progress--done">
+          <p>Diese Produkte verschicken wir <b>kostenlos</b>.</p>
+        </div>`;
+    }
     if (subtotal >= FREE_SHIPPING_FROM) {
       return `
         <div class="shipping-progress shipping-progress--done">
@@ -115,7 +127,9 @@
     const cart = readCart();
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const shipping = subtotal >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
+    // Nur versandfreie Produkte (z. B. Postkarten): immer kostenlos, sonst 4,90 € bis 50 €
+    const onlyFreeShipping = cart.length > 0 && cart.every((item) => item.freeShipping);
+    const shipping = onlyFreeShipping || subtotal >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
 
     const header = isDrawer
       ? `
@@ -140,12 +154,12 @@
 
     root.innerHTML = `
       ${header}
-      ${renderShippingProgress(subtotal)}
+      ${renderShippingProgress(subtotal, onlyFreeShipping)}
       <ul class="cart-items">${renderItems(cart)}</ul>
       <div class="cart-footer">
         <dl class="cart-summary-rows">
           <div><dt>Zwischensumme</dt><dd>${formatPrice(subtotal)}</dd></div>
-          <div><dt>Versand (DHL)</dt><dd>${shipping === 0 ? "kostenlos" : formatPrice(shipping)}</dd></div>
+          <div><dt>Versand ${onlyFreeShipping ? "(Post)" : "(DHL)"}</dt><dd>${shipping === 0 ? "kostenlos" : formatPrice(shipping)}</dd></div>
           <div class="cart-summary-total"><dt>Gesamt</dt><dd>${formatPrice(subtotal + shipping)}</dd></div>
         </dl>
         <p class="cart-note">Abholung in Teningen kannst du an der Kasse kostenlos wählen. Gemäß § 19 UStG wird
