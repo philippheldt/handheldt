@@ -24,6 +24,7 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `varianten` | `Slim Fit, Regular Fit` | Auswahlliste „Variante“ |
 | `lager` | `nein` | `nein` = wird nach Bestellung gefertigt (Lieferzeit 14 Tage). Ohne Angabe oder `ja` = vorrätig (5 Werktage) |
 | `sortierung` | `1` | Reihenfolge im Shop (kleinere Zahl = weiter vorne) |
+| `vorbestellung` | `2026-12-15` oder `15.12.2026` | Vorbestellung: Versand erst ab diesem Datum statt in 5 bzw. 14 Tagen. Ist das Datum erreicht, gilt das Produkt automatisch wieder als normal lieferbar |
 | `bildordner` | `hoodie` | Weitere Produktbilder aus dem Ordner `src/img/produkte/hoodie/` (siehe unten) |
 | `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
@@ -47,6 +48,19 @@ erscheint in der Shop-Übersicht beim Drüberfahren.
 
 Die Bilder werden beim Build automatisch verkleinert. Bitte trotzdem nicht größer als
 etwa 2400 px Breite und als JPG hochladen.
+
+## Vorbestellungen
+
+Mit dem Metadatum `vorbestellung` (z. B. `15.12.2026`) wird ein Produkt zur Vorbestellung:
+
+- Produktseite: Hinweis „Vorbestellung – Versand ab 15. Dezember 2026“, Button „Vorbestellen“
+- Shop-Übersicht: Kennzeichnung „Vorbestellung“ auf dem Produktbild
+- Warenkorb und Kasse: Hinweis mit dem Versanddatum; in Stripe steht es an der Bestellposition
+  und als Metadatum `vorbestellung` an der Zahlung
+
+Bezahlt wird sofort. Enthält eine Bestellung Vorbestellungen, wird sie gesammelt ab dem
+spätesten Vorbestell-Datum verschickt (so steht es auch in den AGB). Ab dem Datum selbst
+verschwindet der Hinweis automatisch – das Metadatum kann danach gelöscht werden.
 
 ## Produkt aus dem Shop nehmen
 

@@ -59,6 +59,7 @@ function renderCard(product) {
 
   card.innerHTML = `
     <div class="card-image-wrapper">
+      ${product.preorderDate ? '<span class="card-badge">Vorbestellung</span>' : ""}
       <img src="${escapeHtml(img1Src)}" alt="" class="primary-img" loading="lazy">
       <img src="${escapeHtml(img2Src)}" alt="" class="secondary-img" loading="lazy">
     </div>

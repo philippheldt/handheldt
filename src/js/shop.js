@@ -25,6 +25,11 @@ function withFolderImages(product, folders) {
   };
 }
 
+// "2026-12-15" -> "15. Dezember 2026"
+function formatLongDate(isoDate) {
+  return new Date(`${isoDate}T12:00:00`).toLocaleDateString("de-DE", { day: "numeric", month: "long", year: "numeric" });
+}
+
 let currentProduct = null;
 let currentImgIndex = 0;
 
@@ -77,12 +82,18 @@ function renderProduct() {
     document.getElementById("description-accordion").hidden = true;
   }
 
-  // Lieferzeit laut AGB § 5: vorrätig 5 Werktage, auf Bestellung gefertigt 14 Tage
+  // Lieferzeit laut AGB § 5: Vorbestellung ab Datum, sonst vorrätig 5 Werktage bzw. gefertigt 14 Tage
   const stock = document.getElementById("delivery-time");
-  stock.innerText = currentProduct.inStock
-    ? "Auf Lager – Versand in 5 Werktagen"
-    : "Wird für dich gefertigt – Versand in 14 Tagen";
-  stock.classList.toggle("stock-badge--made-to-order", !currentProduct.inStock);
+  if (currentProduct.preorderDate) {
+    stock.innerText = `Vorbestellung – Versand ab ${formatLongDate(currentProduct.preorderDate)}`;
+    stock.classList.add("stock-badge--preorder");
+    document.getElementById("add-to-cart-btn").innerText = "Vorbestellen";
+  } else {
+    stock.innerText = currentProduct.inStock
+      ? "Auf Lager – Versand in 5 Werktagen"
+      : "Wird für dich gefertigt – Versand in 14 Tagen";
+    stock.classList.toggle("stock-badge--made-to-order", !currentProduct.inStock);
+  }
   stock.hidden = false;
 
   // Versandfreie Produkte (z. B. Postkarten): allein bestellt kostenlos, sonst gilt die normale Pauschale
@@ -261,6 +272,7 @@ function initBuyRow() {
       variant: selectedVariant,
       image: currentProduct.images[0] || "img/logo.png",
       freeShipping: currentProduct.freeShipping,
+      preorderDate: currentProduct.preorderDate,
     });
     quantityInput.value = 1;
   };

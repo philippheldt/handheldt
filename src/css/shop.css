@@ -193,6 +193,11 @@
   color: #7a4a0c;
 }
 
+.stock-badge--preorder {
+  background: #e3e7f6;
+  color: #26306b;
+}
+
 .stock-badge[hidden] {
   display: none;
 }
