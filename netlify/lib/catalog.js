@@ -20,6 +20,20 @@ function parseColors(value) {
   });
 }
 
+// "vorbestellung: 2026-12-15" oder "15.12.2026": Versand erst ab diesem Datum.
+// Liegt das Datum nicht mehr in der Zukunft, gilt das Produkt wieder als normal lieferbar.
+function parsePreorderDate(value) {
+  if (!value) return null;
+  const text = value.trim();
+  const iso = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  const german = text.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if (!iso && !german) return null;
+  const [year, month, day] = iso ? iso.slice(1) : [german[3], german[2], german[1]];
+  const date = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  const today = new Date().toISOString().slice(0, 10);
+  return date > today ? date : null;
+}
+
 function toShopProduct(product) {
   const price = product.default_price;
   const meta = product.metadata || {};
@@ -37,6 +51,11 @@ function toShopProduct(product) {
     variants: parseList(meta.varianten),
     // "lager: nein" = wird nach Bestellung gefertigt (14 Tage), sonst vorrätig (5 Werktage)
     inStock: (meta.lager || "ja").toLowerCase() !== "nein",
+    // "versandfrei: ja" = z. B. Postkarten; allein bestellt kostenlos, gemischt zählen sie zum Warenwert
+    freeShipping: (meta.versandfrei || "").toLowerCase() === "ja",
+    // Weitere Bilder liegen in src/img/produkte/<bildordner>/ (Stripe erlaubt im Dashboard nur ein Bild)
+    imageFolder: (meta.bildordner || "").trim(),
+    preorderDate: parsePreorderDate(meta.vorbestellung),
     sort: Number(meta.sortierung) || 999,
   };
 }

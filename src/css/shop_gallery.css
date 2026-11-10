@@ -140,3 +140,17 @@
   margin: 0 auto;
   text-align: center;
 }
+
+/* Hinweis "Vorbestellung" auf der Produktkarte */
+.card-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 3;
+  padding: 0.25rem 0.6rem;
+  border-radius: 2rem;
+  background: var(--primary-color);
+  color: var(--secondary-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+}

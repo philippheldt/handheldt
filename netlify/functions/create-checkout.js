@@ -7,6 +7,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const headers = { "Content-Type": "application/json" };
 
+// "2026-12-15" -> "15.12.2026"
+function formatDate(isoDate) {
+  const [year, month, day] = isoDate.split("-");
+  return `${day}.${month}.${year}`;
+}
+
 function errorResponse(statusCode, message) {
   return { statusCode, headers, body: JSON.stringify({ error: message }) };
 }
@@ -59,6 +65,7 @@ export const handler = async (event) => {
         item.size && `Größe ${item.size}`,
         item.color && `Farbe ${item.color}`,
         item.variant && item.variant,
+        product.preorderDate && `Vorbestellung – Versand ab ${formatDate(product.preorderDate)}`,
       ].filter(Boolean);
 
       return {
@@ -81,20 +88,37 @@ export const handler = async (event) => {
       };
     });
 
-    // Versandkosten laut AGB § 3: 4,90 € unter 50 € Warenwert, darüber kostenlos
+    // Versandkosten laut AGB § 3: 4,90 € unter 50 € Warenwert, darüber kostenlos.
+    // Enthält die Bestellung nur versandfreie Produkte (z. B. Postkarten), ist der Versand immer kostenlos.
     const subtotal = items.reduce((sum, item, index) => sum + products[index].unitAmount * item.quantity, 0);
-    const shippingAmount = subtotal >= 5000 ? 0 : 490;
+    const onlyFreeShipping = products.every((product) => product.freeShipping);
+    const shippingAmount = onlyFreeShipping || subtotal >= 5000 ? 0 : 490;
 
-    // Lieferzeit laut AGB § 5: vorrätig 5 Werktage, sonst 14 Tage
+    // Lieferzeit laut AGB § 5: vorrätig 5 Werktage, sonst 14 Tage.
+    // Mit Vorbestellungen geht die ganze Bestellung gemeinsam ab dem spätesten Vorbestell-Datum raus.
     const allInStock = products.every((product) => product.inStock);
-    const deliveryEstimate = allInStock
-      ? { minimum: { unit: "business_day", value: 1 }, maximum: { unit: "business_day", value: 5 } }
-      : { minimum: { unit: "day", value: 1 }, maximum: { unit: "day", value: 14 } };
+    const preorderDate = products
+      .map((product) => product.preorderDate)
+      .filter(Boolean)
+      .sort()
+      .pop();
+    let deliveryEstimate;
+    if (preorderDate) {
+      const daysUntil = Math.max(1, Math.ceil((Date.parse(preorderDate) - Date.now()) / 86400000));
+      deliveryEstimate = {
+        minimum: { unit: "day", value: daysUntil },
+        maximum: { unit: "day", value: daysUntil + 5 },
+      };
+    } else {
+      deliveryEstimate = allInStock
+        ? { minimum: { unit: "business_day", value: 1 }, maximum: { unit: "business_day", value: 5 } }
+        : { minimum: { unit: "day", value: 1 }, maximum: { unit: "day", value: 14 } };
+    }
 
     const shipping_options = [
       {
         shipping_rate_data: {
-          display_name: "DHL Versand",
+          display_name: onlyFreeShipping ? "Versand per Post" : "DHL Versand",
           type: "fixed_amount",
           fixed_amount: { amount: shippingAmount, currency: "eur" },
           delivery_estimate: deliveryEstimate,
@@ -119,7 +143,13 @@ export const handler = async (event) => {
         allowed_countries: ["DE"],
       },
       shipping_options: shipping_options,
+      ...(preorderDate && { metadata: { vorbestellung: preorderDate } }),
       custom_text: {
+        ...(preorderDate && {
+          shipping_address: {
+            message: `Deine Bestellung enthält Vorbestellungen und wird gesammelt ab dem ${formatDate(preorderDate)} verschickt.`,
+          },
+        }),
         submit: {
           message: "Es gelten die AGB von handheldt (handheldt.de/agb.html). Infos zum Widerrufsrecht: handheldt.de/widerruf.html",
         },

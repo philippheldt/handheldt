@@ -13,6 +13,26 @@ function escapeHtml(text) {
   return String(text ?? "").replace(/[&<>"']/g, (char) => `&#${char.charCodeAt(0)};`);
 }
 
+// Zusätzliche Produktbilder aus src/img/produkte/<bildordner>/ (Liste wird beim Build erzeugt)
+async function loadProductImageFolders() {
+  try {
+    const response = await fetch("/img/produkte/bilder.json");
+    return response.ok ? await response.json() : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+// Stripe-Bild(er) zuerst, danach die Bilder aus dem Bildordner
+function withFolderImages(product, folders) {
+  const extra = (product.imageFolder && folders[product.imageFolder]) || [];
+  return {
+    ...product,
+    images: [...product.images, ...extra.map((image) => image.src)],
+    thumbs: [...product.images, ...extra.map((image) => image.thumb)],
+  };
+}
+
 function renderEmpty(gallery) {
   if (gallery.dataset.variant === "preview") {
     gallery.innerHTML = `
@@ -39,6 +59,7 @@ function renderCard(product) {
 
   card.innerHTML = `
     <div class="card-image-wrapper">
+      ${product.preorderDate ? '<span class="card-badge">Vorbestellung</span>' : ""}
       <img src="${escapeHtml(img1Src)}" alt="" class="primary-img" loading="lazy">
       <img src="${escapeHtml(img2Src)}" alt="" class="secondary-img" loading="lazy">
     </div>
@@ -55,7 +76,8 @@ async function loadGalleries() {
     // Katalog kommt aus Stripe (netlify/functions/products.js)
     const response = await fetch("/.netlify/functions/products");
     if (!response.ok) throw new Error(`Status ${response.status}`);
-    const products = await response.json();
+    const [catalog, folders] = await Promise.all([response.json(), loadProductImageFolders()]);
+    const products = catalog.map((product) => withFolderImages(product, folders));
 
     galleries.forEach((gallery) => {
       gallery.innerHTML = "";
