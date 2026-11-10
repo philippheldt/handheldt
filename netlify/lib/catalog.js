@@ -60,6 +60,37 @@ function parsePreorderDate(value) {
   return date > today ? date : null;
 }
 
+// Bestand: "20" = insgesamt, "S:5, M:10, L:0" = je Größe.
+// Kein Eintrag = unbegrenzt; Größen, die nicht genannt sind, ebenfalls unbegrenzt.
+export function parseStock(value) {
+  const text = (value || "").trim();
+  if (!text) return null;
+  if (/^\d+$/.test(text)) return { total: Number(text), bySize: null };
+
+  const bySize = {};
+  parseList(text).forEach((entry) => {
+    const [size, amount] = entry.split(":").map((part) => part.trim());
+    if (size && /^\d+$/.test(amount || "")) bySize[size] = Number(amount);
+  });
+  return Object.keys(bySize).length > 0 ? { total: null, bySize } : null;
+}
+
+// Bestand zurück in die Schreibweise der Metadaten ("12" bzw. "S:4, M:9")
+export function formatStock(stock) {
+  if (stock.total !== null) return String(stock.total);
+  return Object.entries(stock.bySize)
+    .map(([size, amount]) => `${size}:${amount}`)
+    .join(", ");
+}
+
+// Verfügbare Stückzahl für eine Größe (Infinity = unbegrenzt)
+export function availableFor(product, size) {
+  const stock = product.stock;
+  if (!stock) return Infinity;
+  if (stock.total !== null) return stock.total;
+  return size in stock.bySize ? stock.bySize[size] : Infinity;
+}
+
 function toShopProduct(product) {
   const price = product.default_price;
   const meta = product.metadata || {};
@@ -90,8 +121,17 @@ function toShopProduct(product) {
     preorderDate: parsePreorderDate(meta.vorbestellung),
     // Herstellungs-Hinweis auf der Produktseite: leer = Siebdruck-Standardtext, "nein" = ausblenden
     production: (meta.herstellung || "").trim(),
+    stock: parseStock(meta.bestand),
     sort: Number(meta.sortierung) || 999,
   };
+}
+
+// Ausverkauft: Gesamtbestand 0 oder alle Größen mit Bestand 0
+function isSoldOut(product) {
+  if (!product.stock) return false;
+  if (product.stock.total !== null) return product.stock.total <= 0;
+  if (product.sizes.length === 0) return false;
+  return product.sizes.every((size) => availableFor(product, size) <= 0);
 }
 
 export async function loadCatalog(stripe) {
@@ -113,5 +153,6 @@ export async function loadCatalog(stripe) {
       );
     })
     .map(toShopProduct)
+    .map((product) => ({ ...product, soldOut: isSoldOut(product) }))
     .sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title, "de"));
 }
