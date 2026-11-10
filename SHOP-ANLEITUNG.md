@@ -54,11 +54,19 @@ Bei Größen, Farben und Varianten kann an jede Option ein Aufpreis gehängt wer
 Im Stripe-Dashboard lässt sich nur ein Bild hochladen. Weitere Bilder (beliebig viele)
 kommen in einen eigenen Ordner im Repository:
 
-1. Auf GitHub im Repository zu `src/img/produkte/` gehen.
-2. **Add file → Upload files** und die Bilder hochladen. Im Feld oben den Pfad um einen
-   neuen Ordnernamen ergänzen, z. B. `hoodie/` (nur Kleinbuchstaben, keine Leerzeichen).
-3. Commit erstellen. Netlify baut die Seite automatisch neu (ca. 1–2 Minuten).
-4. In Stripe beim Produkt das Metadatum `bildordner` = `hoodie` eintragen.
+1. Auf dem Computer einen Ordner anlegen, z. B. `hoodie` (nur Kleinbuchstaben, Zahlen und
+   Bindestriche), und die Bilder hineinlegen.
+2. Auf GitHub im Repository zu `src/img/produkte/` gehen.
+3. **Add file → Upload files** und den **ganzen Ordner** (nicht nur die Bilder) in das
+   Upload-Feld ziehen. GitHub übernimmt den Ordner. Das geht im Browser am Computer.
+4. Unten **Commit changes** klicken. Netlify baut die Seite automatisch neu (ca. 1–2 Minuten).
+5. In Stripe beim Produkt das Metadatum `bildordner` = `hoodie` eintragen.
+
+`bildordner` ist **nur der Ordnername**, kein Pfad: Für `src/img/produkte/hoodie/` steht in
+Stripe einfach `hoodie` – ohne Schrägstriche, genau so geschrieben wie der Ordner.
+
+Weitere Bilder später ergänzen: in den Ordner `src/img/produkte/hoodie/` wechseln und dort
+**Add file → Upload files** nutzen.
 
 Reihenfolge: zuerst das Bild aus Stripe, dann die Bilder aus dem Ordner sortiert nach
 Dateiname. Am einfachsten nummerieren: `01.jpg`, `02.jpg`, … `14.jpg`. Das zweite Bild
