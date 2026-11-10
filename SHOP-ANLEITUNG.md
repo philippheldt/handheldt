@@ -32,6 +32,23 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 Alle Felder sind optional. Ohne `groessen`, `farben` oder `varianten` wird die
 jeweilige Auswahl auf der Produktseite ausgeblendet.
 
+## Optionen mit Aufpreis
+
+Bei Größen, Farben und Varianten kann an jede Option ein Aufpreis gehängt werden:
+
+| Schlüssel | Beispiel |
+| --- | --- |
+| `groessen` | `S, M, L, XL, XXL:+2, 3XL:+3` |
+| `farben` | `Natur:#f3eee4, Schwarz:#111111:+1,50` |
+| `varianten` | `Ohne Rückenprint, Mit Rückenprint:+5` |
+
+- Optionen ohne `:+…` kosten nichts extra. Aufpreise mit Komma oder Punkt (`+2,50` oder `+2.50`).
+- Nach dem Komma zwischen den Optionen bitte ein Leerzeichen lassen.
+- Produktseite: Aufpreis steht an der Option, der Preis oben passt sich an.
+- Shop-Übersicht: Produkte mit Aufpreisen zeigen „ab“ und den Grundpreis.
+- Abgerechnet wird Grundpreis + Aufpreis; in Stripe steht an der Position z. B.
+  „Größe XXL (+2,00 €) · Mit Rückenprint (+5,00 €)“.
+
 ## Mehr als ein Bild pro Produkt
 
 Im Stripe-Dashboard lässt sich nur ein Bild hochladen. Weitere Bilder (beliebig viele)

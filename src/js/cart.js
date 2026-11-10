@@ -60,8 +60,14 @@
           return {
             ...item,
             title: product.title,
-            price: product.price,
-            image: product.images[0] || "img/logo.png",
+            // Grundpreis + Aufpreise der gewählten Optionen (wie im Checkout)
+            price:
+              product.price +
+              ((product.surcharges?.size?.[item.size] || 0) +
+                (product.surcharges?.color?.[item.color] || 0) +
+                (product.surcharges?.variant?.[item.variant] || 0)) /
+                100,
+            image: product.images[0] || "",
             freeShipping: product.freeShipping,
             preorderDate: product.preorderDate,
           };
@@ -82,7 +88,7 @@
         const options = [item.size && `Größe ${item.size}`, item.color, item.variant].filter(Boolean).join(" · ");
         return `
           <li class="cart-item">
-            <img class="cart-item-image" src="${escapeHtml(item.image)}" alt="">
+            ${item.image ? `<img class="cart-item-image" src="${escapeHtml(item.image)}" alt="">` : '<div class="cart-item-image"></div>'}
             <div class="cart-item-body">
               <div class="cart-item-top">
                 <h3 class="cart-item-title">${escapeHtml(item.title)}</h3>

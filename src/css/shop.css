@@ -37,7 +37,24 @@
   overflow: hidden;
   aspect-ratio: 4 / 5;
   border-radius: var(--standard-radius);
-  background: #ecebe7;
+  background: #e2e0da;
+}
+
+/* Solange noch kein Bild da ist: neutrale Fläche, die sanft pulsiert */
+.main-image-container:has(#main-image[hidden]) {
+  animation: image-loading 1.4s ease-in-out infinite;
+}
+
+@keyframes image-loading {
+  50% {
+    background: #ecebe6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-image-container:has(#main-image[hidden]) {
+    animation: none;
+  }
 }
 
 .main-image-container img {
@@ -406,5 +423,16 @@ select {
 }
 
 .product-perks li[hidden] {
+  display: none;
+}
+
+/* Aufpreis an einer Option, z. B. "XXL +2,00 €" */
+.chip-surcharge {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+#main-image[hidden] {
   display: none;
 }

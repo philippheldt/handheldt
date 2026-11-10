@@ -3,21 +3,47 @@
 // Name, Beschreibung, Bilder und Standardpreis am Produkt, Zusatzangaben als Metadaten
 // (siehe SHOP-ANLEITUNG.md).
 
-// Kommaliste aus den Metadaten in ein Array umwandeln ("S, M, L" -> ["S", "M", "L"])
+// Kommaliste aus den Metadaten in ein Array umwandeln ("S, M, L" -> ["S", "M", "L"]).
+// Dezimalkommas in Aufpreisen ("+2,50") werden vorher zu Punkten, damit sie nicht trennen.
 function parseList(value) {
   if (!value) return [];
   return value
+    .replace(/(\+\s*\d+),(\d{1,2})/g, "$1.$2")
     .split(",")
     .map((entry) => entry.trim())
     .filter(Boolean);
 }
 
-// Farben im Format "Schwarz:#000000, Weiß:#ffffff"
-function parseColors(value) {
-  return parseList(value).map((entry) => {
-    const [name, hex] = entry.split(":").map((part) => part.trim());
-    return { name, hex: hex || "#cccccc" };
+// Aufpreis "+2", "+2.50" oder "+2,50 €" -> Cent (sonst null)
+function parseSurcharge(part) {
+  const match = part.match(/^\+\s*(\d+(?:[.,]\d{1,2})?)\s*€?$/);
+  return match ? Math.round(parseFloat(match[1].replace(",", ".")) * 100) : null;
+}
+
+// Optionen mit optionalem Aufpreis: "S, M, XXL:+2" -> Namen + Aufpreise in Cent
+function parseOptions(value) {
+  const names = [];
+  const surcharges = {};
+  parseList(value).forEach((entry) => {
+    const [name, ...rest] = entry.split(":").map((part) => part.trim());
+    names.push(name);
+    const surcharge = rest.map(parseSurcharge).find((amount) => amount !== null);
+    if (surcharge) surcharges[name] = surcharge;
   });
+  return { names, surcharges };
+}
+
+// Farben im Format "Schwarz:#000000, Weiß:#ffffff:+1,50"
+function parseColors(value) {
+  const colors = [];
+  const surcharges = {};
+  parseList(value).forEach((entry) => {
+    const [name, ...rest] = entry.split(":").map((part) => part.trim());
+    colors.push({ name, hex: rest.find((part) => part.startsWith("#")) || "#cccccc" });
+    const surcharge = rest.map(parseSurcharge).find((amount) => amount !== null);
+    if (surcharge) surcharges[name] = surcharge;
+  });
+  return { colors, surcharges };
 }
 
 // "vorbestellung: 2026-12-15" oder "15.12.2026": Versand erst ab diesem Datum.
@@ -37,6 +63,9 @@ function parsePreorderDate(value) {
 function toShopProduct(product) {
   const price = product.default_price;
   const meta = product.metadata || {};
+  const sizes = parseOptions(meta.groessen);
+  const colors = parseColors(meta.farben);
+  const variants = parseOptions(meta.varianten);
 
   return {
     id: product.id,
@@ -46,9 +75,12 @@ function toShopProduct(product) {
     unitAmount: price.unit_amount,
     currency: "€",
     images: product.images,
-    sizes: parseList(meta.groessen),
-    colors: parseColors(meta.farben),
-    variants: parseList(meta.varianten),
+    sizes: sizes.names,
+    colors: colors.colors,
+    variants: variants.names,
+    // Aufpreise je Option in Cent, z. B. { size: { XXL: 200 }, color: {}, variant: {} }
+    surcharges: { size: sizes.surcharges, color: colors.surcharges, variant: variants.surcharges },
+    hasSurcharges: [sizes, colors, variants].some((option) => Object.keys(option.surcharges).length > 0),
     // "lager: nein" = wird nach Bestellung gefertigt (14 Tage), sonst vorrätig (5 Werktage)
     inStock: (meta.lager || "ja").toLowerCase() !== "nein",
     // "versandfrei: ja" = z. B. Postkarten; allein bestellt kostenlos, gemischt zählen sie zum Warenwert

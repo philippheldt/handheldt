@@ -137,7 +137,7 @@ body.cart-open {
   height: 104px;
   object-fit: cover;
   border-radius: var(--standard-radius);
-  background: #ecebe7;
+  background: #e2e0da;
 }
 
 .cart-item-body {
