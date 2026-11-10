@@ -436,3 +436,34 @@ select {
 #main-image[hidden] {
   display: none;
 }
+
+/* Bestand */
+.chip.sold-out {
+  opacity: 0.45;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.chip.sold-out:hover {
+  border-color: #c9c7c1;
+}
+
+.stock-badge--soldout {
+  background: #ecebe7;
+  color: #55545e;
+}
+
+.stock-hint {
+  margin: -0.5rem 0 0;
+  color: #7a4a0c;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.add-to-cart:disabled,
+.add-to-cart:disabled:hover {
+  background: #b9b7b0;
+  border-color: #b9b7b0;
+  color: #fff;
+  cursor: not-allowed;
+}

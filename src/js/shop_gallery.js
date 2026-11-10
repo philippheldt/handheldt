@@ -51,7 +51,7 @@ function renderEmpty(gallery) {
 function renderCard(product) {
   const card = document.createElement("a");
   card.href = `shop_item.html?id=${encodeURIComponent(product.id)}`;
-  card.className = "product-card";
+  card.className = `product-card${product.soldOut ? " product-card--soldout" : ""}`;
 
   // Zweites Bild erscheint beim Hovern (falls vorhanden)
   // Ohne Bild bleibt die neutrale Fläche des Bildrahmens sichtbar
@@ -64,7 +64,13 @@ function renderCard(product) {
 
   card.innerHTML = `
     <div class="card-image-wrapper">
-      ${product.preorderDate ? '<span class="card-badge">Vorbestellung</span>' : ""}
+      ${
+        product.soldOut
+          ? '<span class="card-badge">Ausverkauft</span>'
+          : product.preorderDate
+            ? '<span class="card-badge">Vorbestellung</span>'
+            : ""
+      }
       ${images}
     </div>
     <h3>${escapeHtml(product.title)}</h3>

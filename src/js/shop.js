@@ -118,14 +118,22 @@ function renderProduct() {
   renderGallery();
 
   if (currentProduct.sizes.length > 0) {
-    selectedSize = currentProduct.sizes[0];
+    // Ausverkaufte Größen sind gesperrt; vorausgewählt wird die erste verfügbare
+    selectedSize = currentProduct.sizes.find((size) => availableStock(size) > 0) || currentProduct.sizes[0];
     renderChips(
       "size",
-      currentProduct.sizes.map((size) => ({ value: size, label: size, surcharge: currentProduct.surcharges.size[size] })),
+      currentProduct.sizes.map((size) => ({
+        value: size,
+        label: size,
+        surcharge: currentProduct.surcharges.size[size],
+        disabled: availableStock(size) <= 0,
+      })),
       (value) => {
         selectedSize = value;
         updatePrice();
+        updateAvailability();
       },
+      selectedSize,
     );
   } else {
     document.getElementById("size-group").hidden = true;
@@ -180,17 +188,22 @@ function updatePrice() {
 }
 
 // Auswahl-Buttons für Größe und Farbe; die aktuelle Auswahl steht neben der Überschrift
-function renderChips(type, options, onSelect) {
+function renderChips(type, options, onSelect, selectedValue = options[0].value) {
   const container = document.getElementById(`${type}-container`);
   const valueLabel = document.getElementById(`${type}-value`);
   container.innerHTML = "";
-  valueLabel.innerText = options[0].label;
+  valueLabel.innerText = options.find((option) => option.value === selectedValue).label;
 
-  options.forEach((option, index) => {
+  options.forEach((option) => {
+    const isSelected = option.value === selectedValue;
     const chip = document.createElement("button");
     chip.type = "button";
-    chip.className = `chip${index === 0 ? " active" : ""}`;
-    chip.setAttribute("aria-pressed", index === 0);
+    chip.className = `chip${isSelected ? " active" : ""}${option.disabled ? " sold-out" : ""}`;
+    chip.setAttribute("aria-pressed", isSelected);
+    if (option.disabled) {
+      chip.disabled = true;
+      chip.setAttribute("aria-label", `${option.label} – ausverkauft`);
+    }
 
     if (option.hex) {
       const dot = document.createElement("span");
@@ -299,15 +312,53 @@ function changeImage(step) {
 }
 
 // 4. Menge und "In den Warenkorb"
+// Verfügbare Stückzahl laut Bestand (Infinity = unbegrenzt; nicht genannte Größen ebenfalls)
+function availableStock(size = selectedSize) {
+  const stock = currentProduct.stock;
+  if (!stock) return Infinity;
+  if (stock.total !== null) return stock.total;
+  return size in stock.bySize ? stock.bySize[size] : Infinity;
+}
+
+// Button, Mengenauswahl und Hinweis an den Bestand der gewählten Größe anpassen
+function updateAvailability() {
+  const available = availableStock();
+  const soldOut = currentProduct.soldOut || available <= 0;
+  const button = document.getElementById("add-to-cart-btn");
+  const hint = document.getElementById("stock-hint");
+  const quantityInput = document.getElementById("quantity");
+
+  button.disabled = soldOut;
+  button.innerText = soldOut ? "Ausverkauft" : currentProduct.preorderDate ? "Vorbestellen" : "In den Warenkorb";
+  document.querySelectorAll("[data-quantity-step]").forEach((b) => (b.disabled = soldOut));
+  quantityInput.disabled = soldOut;
+  quantityInput.max = Math.min(99, available);
+  if (!soldOut && Number(quantityInput.value) > available) quantityInput.value = available;
+
+  if (currentProduct.soldOut) {
+    const badge = document.getElementById("delivery-time");
+    badge.innerText = "Ausverkauft";
+    badge.className = "stock-badge stock-badge--soldout";
+  }
+
+  hint.hidden = soldOut || available > 5;
+  hint.innerText = available === 1 ? "Nur noch 1 Stück verfügbar" : `Nur noch ${available} Stück verfügbar`;
+}
+
 function initBuyRow() {
   const quantityInput = document.getElementById("quantity");
-  const clampQuantity = () => Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 99);
+  const clampQuantity = () => Math.min(Math.max(parseInt(quantityInput.value) || 1, 1), 99, availableStock());
 
   document.querySelectorAll("[data-quantity-step]").forEach((button) => {
     button.onclick = () => {
-      quantityInput.value = Math.min(Math.max(clampQuantity() + Number(button.dataset.quantityStep), 1), 99);
+      quantityInput.value = Math.min(
+        Math.max(clampQuantity() + Number(button.dataset.quantityStep), 1),
+        99,
+        availableStock(),
+      );
     };
   });
+  updateAvailability();
   quantityInput.addEventListener("change", () => (quantityInput.value = clampQuantity()));
 
   // Der Preis wird nur zur Anzeige gespeichert, abgerechnet wird immer der aktuelle Preis aus Stripe
@@ -323,6 +374,8 @@ function initBuyRow() {
       image: currentProduct.images[0] || "",
       freeShipping: currentProduct.freeShipping,
       preorderDate: currentProduct.preorderDate,
+      // Für den Warenkorb: mehr als verfügbar lässt sich nicht hineinlegen (null = unbegrenzt)
+      available: Number.isFinite(availableStock()) ? availableStock() : null,
     });
     quantityInput.value = 1;
   };
