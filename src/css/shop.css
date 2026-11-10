@@ -408,3 +408,10 @@ select {
 .product-perks li[hidden] {
   display: none;
 }
+
+/* Aufpreis an einer Option, z. B. "XXL +2,00 €" */
+.chip-surcharge {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.7;
+}

@@ -64,7 +64,7 @@ function renderCard(product) {
       <img src="${escapeHtml(img2Src)}" alt="" class="secondary-img" loading="lazy">
     </div>
     <h3>${escapeHtml(product.title)}</h3>
-    <div class="price">${formatPrice(product.price)}</div>`;
+    <div class="price">${product.hasSurcharges ? "ab " : ""}${formatPrice(product.price)}</div>`;
   return card;
 }
 

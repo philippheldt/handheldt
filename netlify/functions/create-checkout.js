@@ -13,6 +13,17 @@ function formatDate(isoDate) {
   return `${day}.${month}.${year}`;
 }
 
+// 200 -> "+2,00 €"
+function formatSurcharge(cents) {
+  return `+${(cents / 100).toFixed(2).replace(".", ",")} €`;
+}
+
+// Aufpreise der gewählten Optionen in Cent (aus den Stripe-Metadaten, nie aus dem Browser)
+function surchargeFor(product, item) {
+  const { size, color, variant } = product.surcharges;
+  return (size[item.size] || 0) + (color[item.color] || 0) + (variant[item.variant] || 0);
+}
+
 function errorResponse(statusCode, message) {
   return { statusCode, headers, body: JSON.stringify({ error: message }) };
 }
@@ -61,10 +72,12 @@ export const handler = async (event) => {
     // damit sie an der Kasse, auf dem Beleg und im Dashboard sichtbar sind
     const line_items = items.map((item, index) => {
       const product = products[index];
+      const { size, color, variant } = product.surcharges;
+      const withSurcharge = (label, amount) => (amount ? `${label} (${formatSurcharge(amount)})` : label);
       const options = [
-        item.size && `Größe ${item.size}`,
-        item.color && `Farbe ${item.color}`,
-        item.variant && item.variant,
+        item.size && withSurcharge(`Größe ${item.size}`, size[item.size]),
+        item.color && withSurcharge(`Farbe ${item.color}`, color[item.color]),
+        item.variant && withSurcharge(item.variant, variant[item.variant]),
         product.preorderDate && `Vorbestellung – Versand ab ${formatDate(product.preorderDate)}`,
       ].filter(Boolean);
 
@@ -72,7 +85,7 @@ export const handler = async (event) => {
         quantity: item.quantity,
         price_data: {
           currency: "eur",
-          unit_amount: product.unitAmount,
+          unit_amount: product.unitAmount + surchargeFor(product, item),
           product_data: {
             name: product.title,
             ...(options.length > 0 && { description: options.join(" · ") }),
@@ -90,7 +103,10 @@ export const handler = async (event) => {
 
     // Versandkosten laut AGB § 3: 4,90 € unter 50 € Warenwert, darüber kostenlos.
     // Enthält die Bestellung nur versandfreie Produkte (z. B. Postkarten), ist der Versand immer kostenlos.
-    const subtotal = items.reduce((sum, item, index) => sum + products[index].unitAmount * item.quantity, 0);
+    const subtotal = items.reduce(
+      (sum, item, index) => sum + (products[index].unitAmount + surchargeFor(products[index], item)) * item.quantity,
+      0,
+    );
     const onlyFreeShipping = products.every((product) => product.freeShipping);
     const shippingAmount = onlyFreeShipping || subtotal >= 5000 ? 0 : 490;
 

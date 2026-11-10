@@ -30,6 +30,11 @@ function formatLongDate(isoDate) {
   return new Date(`${isoDate}T12:00:00`).toLocaleDateString("de-DE", { day: "numeric", month: "long", year: "numeric" });
 }
 
+// 200 (Cent) -> "+2,00 €"
+function formatSurcharge(cents) {
+  return `+${formatPrice(cents / 100)}`;
+}
+
 let currentProduct = null;
 let currentImgIndex = 0;
 
@@ -73,7 +78,7 @@ function showMessage(text) {
 function renderProduct() {
   document.title = `${currentProduct.title} | handheldt`;
   document.getElementById("prod-title").innerText = currentProduct.title;
-  document.getElementById("price").innerText = `${formatPrice(currentProduct.price)}*`;
+  updatePrice();
 
   const description = document.getElementById("prod-desc");
   if (currentProduct.description) {
@@ -114,9 +119,14 @@ function renderProduct() {
 
   if (currentProduct.sizes.length > 0) {
     selectedSize = currentProduct.sizes[0];
-    renderChips("size", currentProduct.sizes.map((size) => ({ value: size, label: size })), (value) => {
-      selectedSize = value;
-    });
+    renderChips(
+      "size",
+      currentProduct.sizes.map((size) => ({ value: size, label: size, surcharge: currentProduct.surcharges.size[size] })),
+      (value) => {
+        selectedSize = value;
+        updatePrice();
+      },
+    );
   } else {
     document.getElementById("size-group").hidden = true;
   }
@@ -125,9 +135,15 @@ function renderProduct() {
     selectedColor = currentProduct.colors[0].name;
     renderChips(
       "color",
-      currentProduct.colors.map((color) => ({ value: color.name, label: color.name, hex: color.hex })),
+      currentProduct.colors.map((color) => ({
+        value: color.name,
+        label: color.name,
+        hex: color.hex,
+        surcharge: currentProduct.surcharges.color[color.name],
+      })),
       (value) => {
         selectedColor = value;
+        updatePrice();
       },
     );
   } else {
@@ -137,13 +153,30 @@ function renderProduct() {
   if (currentProduct.variants.length > 0) {
     selectedVariant = currentProduct.variants[0];
     const select = document.getElementById("select-variant");
-    currentProduct.variants.forEach((variant) => select.add(new Option(variant, variant)));
-    select.addEventListener("change", (e) => (selectedVariant = e.target.value));
+    currentProduct.variants.forEach((variant) => {
+      const surcharge = currentProduct.surcharges.variant[variant];
+      select.add(new Option(surcharge ? `${variant} (${formatSurcharge(surcharge)})` : variant, variant));
+    });
+    select.addEventListener("change", (e) => {
+      selectedVariant = e.target.value;
+      updatePrice();
+    });
   } else {
     document.getElementById("variant-group").hidden = true;
   }
 
   initBuyRow();
+}
+
+// Preis inkl. Aufpreisen der gewählten Optionen (abgerechnet wird serverseitig mit den Stripe-Daten)
+function selectedPrice() {
+  const { size, color, variant } = currentProduct.surcharges;
+  const extra = (size[selectedSize] || 0) + (color[selectedColor] || 0) + (variant[selectedVariant] || 0);
+  return currentProduct.price + extra / 100;
+}
+
+function updatePrice() {
+  document.getElementById("price").innerText = `${formatPrice(selectedPrice())}*`;
 }
 
 // Auswahl-Buttons für Größe und Farbe; die aktuelle Auswahl steht neben der Überschrift
@@ -166,6 +199,12 @@ function renderChips(type, options, onSelect) {
       chip.appendChild(dot);
     }
     chip.appendChild(document.createTextNode(option.label));
+    if (option.surcharge) {
+      const extra = document.createElement("span");
+      extra.className = "chip-surcharge";
+      extra.innerText = formatSurcharge(option.surcharge);
+      chip.appendChild(extra);
+    }
 
     chip.onclick = () => {
       container.querySelectorAll(".chip").forEach((c) => {
@@ -273,7 +312,7 @@ function initBuyRow() {
     window.handheldtCart.add({
       productId: currentProduct.id,
       title: currentProduct.title,
-      price: currentProduct.price,
+      price: selectedPrice(),
       quantity: clampQuantity(),
       size: selectedSize,
       color: selectedColor,

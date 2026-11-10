@@ -60,7 +60,13 @@
           return {
             ...item,
             title: product.title,
-            price: product.price,
+            // Grundpreis + Aufpreise der gewählten Optionen (wie im Checkout)
+            price:
+              product.price +
+              ((product.surcharges?.size?.[item.size] || 0) +
+                (product.surcharges?.color?.[item.color] || 0) +
+                (product.surcharges?.variant?.[item.variant] || 0)) /
+                100,
             image: product.images[0] || "img/logo.png",
             freeShipping: product.freeShipping,
             preorderDate: product.preorderDate,
