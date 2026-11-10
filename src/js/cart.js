@@ -28,6 +28,13 @@
     return `${day}.${month}.${year}`;
   }
 
+  function stockFor(product, size) {
+    const stock = product.stock;
+    if (!stock) return null;
+    if (stock.total !== null) return stock.total;
+    return size in stock.bySize ? stock.bySize[size] : null;
+  }
+
   function readCart() {
     try {
       return JSON.parse(localStorage.getItem(CART_KEY)) || [];
@@ -70,6 +77,9 @@
             image: product.images[0] || "",
             freeShipping: product.freeShipping,
             preorderDate: product.preorderDate,
+            // Bestand der gewählten Größe (null = unbegrenzt); Menge höchstens so groß wie verfügbar
+            available: stockFor(product, item.size),
+            quantity: Math.min(item.quantity, Math.max(1, stockFor(product, item.size) ?? 99)),
           };
         });
 
@@ -95,6 +105,7 @@
                 <span class="cart-item-total">${formatPrice(item.price * item.quantity)}</span>
               </div>
               ${options ? `<p class="cart-item-options">${escapeHtml(options)}</p>` : ""}
+              ${item.available === 0 ? '<p class="cart-item-soldout">Ausverkauft – bitte entfernen</p>' : ""}
               ${item.preorderDate ? `<p class="cart-item-preorder">Vorbestellung · Versand ab ${formatDate(item.preorderDate)}</p>` : ""}
               <div class="cart-item-bottom">
                 <div class="quantity-control quantity-control--small" role="group" aria-label="Anzahl ${escapeHtml(item.title)}">
@@ -201,7 +212,7 @@
   function changeQuantity(index, change) {
     const cart = readCart();
     if (!cart[index]) return;
-    cart[index].quantity = Math.min(cart[index].quantity + change, 99);
+    cart[index].quantity = Math.min(cart[index].quantity + change, 99, cart[index].available ?? 99);
     if (cart[index].quantity <= 0) cart.splice(index, 1);
     writeCart(cart);
   }
@@ -318,10 +329,12 @@
           entry.color === item.color &&
           entry.variant === item.variant,
       );
+      const max = Math.min(99, item.available ?? 99);
       if (existing) {
-        existing.quantity = Math.min(existing.quantity + item.quantity, 99);
+        existing.quantity = Math.min(existing.quantity + item.quantity, max);
+        existing.available = item.available;
       } else {
-        cart.push(item);
+        cart.push({ ...item, quantity: Math.min(item.quantity, max) });
       }
       writeCart(cart);
       openDrawer();

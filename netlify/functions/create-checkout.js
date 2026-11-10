@@ -1,6 +1,6 @@
 // netlify/functions/create-checkout.js
 import Stripe from "stripe";
-import { loadCatalog } from "../lib/catalog.js";
+import { availableFor, loadCatalog } from "../lib/catalog.js";
 
 // Initialisiere Stripe mit dem Key aus den Umgebungsvariablen
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -66,6 +66,28 @@ export const handler = async (event) => {
     const products = items.map((item) => validateItem(item, catalog));
     if (products.includes(null)) {
       return errorResponse(400, "Ungültiger Warenkorb.");
+    }
+
+    // Bestand prüfen: gleiche Produkte/Größen über alle Positionen zusammenzählen
+    const requested = new Map();
+    items.forEach((item, index) => {
+      const product = products[index];
+      const key = product.stock?.total !== null ? product.id : `${product.id}|${item.size}`;
+      const entry = requested.get(key) || { product, size: item.size, quantity: 0 };
+      entry.quantity += item.quantity;
+      requested.set(key, entry);
+    });
+    for (const { product, size, quantity } of requested.values()) {
+      const available = availableFor(product, size);
+      if (quantity > available) {
+        const label = product.stock.total === null && size ? `„${product.title}“ in Größe ${size}` : `„${product.title}“`;
+        return errorResponse(
+          409,
+          available > 0
+            ? `Von ${label} sind nur noch ${available} Stück verfügbar. Bitte passe die Menge an.`
+            : `${label.charAt(0).toUpperCase() + label.slice(1)} ist leider ausverkauft. Bitte entferne es aus dem Warenkorb.`,
+        );
+      }
     }
 
     // Preis kommt immer aus Stripe, Größe/Farbe/Variante stehen am Artikel,
@@ -151,6 +173,8 @@ export const handler = async (event) => {
 
     // Zahlarten werden im Stripe-Dashboard gesteuert (kein fest verdrahtetes "card")
     const session = await stripe.checkout.sessions.create({
+      // Kasse verfällt nach gut 30 Minuten (Minimum bei Stripe), damit Bestände nicht lange blockiert wirken
+      expires_at: Math.floor(Date.now() / 1000) + 31 * 60,
       line_items: line_items,
       mode: "payment",
       locale: "de",

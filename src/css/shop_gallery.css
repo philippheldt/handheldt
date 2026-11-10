@@ -154,3 +154,7 @@
   font-size: 0.75rem;
   font-weight: 600;
 }
+
+.product-card--soldout .card-image-wrapper img {
+  opacity: 0.55;
+}
