@@ -39,6 +39,8 @@ function toShopProduct(product) {
     inStock: (meta.lager || "ja").toLowerCase() !== "nein",
     // "versandfrei: ja" = z. B. Postkarten; allein bestellt kostenlos, gemischt zählen sie zum Warenwert
     freeShipping: (meta.versandfrei || "").toLowerCase() === "ja",
+    // Weitere Bilder liegen in src/img/produkte/<bildordner>/ (Stripe erlaubt im Dashboard nur ein Bild)
+    imageFolder: (meta.bildordner || "").trim(),
     sort: Number(meta.sortierung) || 999,
   };
 }

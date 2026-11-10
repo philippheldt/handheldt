@@ -5,6 +5,26 @@ function formatPrice(value) {
   return value.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
 }
 
+// Zusätzliche Produktbilder aus src/img/produkte/<bildordner>/ (Liste wird beim Build erzeugt)
+async function loadProductImageFolders() {
+  try {
+    const response = await fetch("/img/produkte/bilder.json");
+    return response.ok ? await response.json() : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+// Stripe-Bild(er) zuerst, danach die Bilder aus dem Bildordner
+function withFolderImages(product, folders) {
+  const extra = (product.imageFolder && folders[product.imageFolder]) || [];
+  return {
+    ...product,
+    images: [...product.images, ...extra.map((image) => image.src)],
+    thumbs: [...product.images, ...extra.map((image) => image.thumb)],
+  };
+}
+
 let currentProduct = null;
 let currentImgIndex = 0;
 
@@ -20,9 +40,10 @@ async function loadProduct() {
   try {
     const response = await fetch("/.netlify/functions/products");
     if (!response.ok) throw new Error(`Status ${response.status}`);
-    const products = await response.json();
+    const [products, folders] = await Promise.all([response.json(), loadProductImageFolders()]);
 
-    currentProduct = products.find((p) => p.id === productId);
+    const product = products.find((p) => p.id === productId);
+    currentProduct = product ? withFolderImages(product, folders) : null;
 
     if (currentProduct) {
       renderProduct();
@@ -143,7 +164,25 @@ function renderChips(type, options, onSelect) {
 }
 
 // 3. Bildergalerie
+
+// Auf dem Handy durch die Bilder wischen
+let swipeReady = false;
+function initSwipe() {
+  if (swipeReady) return;
+  swipeReady = true;
+  const box = document.querySelector(".main-image-container");
+  let startX = null;
+  box.addEventListener("touchstart", (e) => (startX = e.touches[0].clientX), { passive: true });
+  box.addEventListener("touchend", (e) => {
+    if (startX === null || currentProduct.images.length < 2) return;
+    const deltaX = e.changedTouches[0].clientX - startX;
+    if (Math.abs(deltaX) > 40) changeImage(deltaX < 0 ? 1 : -1);
+    startX = null;
+  });
+}
 function renderGallery() {
+  initSwipe();
+
   const images = currentProduct.images;
   const thumbBar = document.getElementById("thumb-bar");
   thumbBar.innerHTML = "";
@@ -152,7 +191,7 @@ function renderGallery() {
   document.getElementById("gallery-nav").hidden = images.length < 2;
   thumbBar.hidden = images.length < 2;
 
-  images.forEach((imgSrc, index) => {
+  currentProduct.thumbs.forEach((imgSrc, index) => {
     const thumb = document.createElement("button");
     thumb.type = "button";
     thumb.className = "thumb-button";
@@ -181,6 +220,16 @@ function updateImg(index) {
     thumb.classList.toggle("active", i === index);
     thumb.setAttribute("aria-current", i === index);
   });
+
+  // Aktives Vorschaubild in der Leiste sichtbar halten (ohne die Seite zu scrollen)
+  const bar = document.getElementById("thumb-bar");
+  const active = bar.children[index];
+  if (active) {
+    const left = active.offsetLeft - bar.offsetLeft;
+    if (left < bar.scrollLeft || left + active.offsetWidth > bar.scrollLeft + bar.clientWidth) {
+      bar.scrollTo({ left: left - bar.clientWidth / 2 + active.offsetWidth / 2, behavior: "smooth" });
+    }
+  }
 }
 
 function changeImage(step) {

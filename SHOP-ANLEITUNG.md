@@ -24,10 +24,29 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `varianten` | `Slim Fit, Regular Fit` | Auswahlliste „Variante“ |
 | `lager` | `nein` | `nein` = wird nach Bestellung gefertigt (Lieferzeit 14 Tage). Ohne Angabe oder `ja` = vorrätig (5 Werktage) |
 | `sortierung` | `1` | Reihenfolge im Shop (kleinere Zahl = weiter vorne) |
+| `bildordner` | `hoodie` | Weitere Produktbilder aus dem Ordner `src/img/produkte/hoodie/` (siehe unten) |
 | `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
 Alle Felder sind optional. Ohne `groessen`, `farben` oder `varianten` wird die
 jeweilige Auswahl auf der Produktseite ausgeblendet.
+
+## Mehr als ein Bild pro Produkt
+
+Im Stripe-Dashboard lässt sich nur ein Bild hochladen. Weitere Bilder (beliebig viele)
+kommen in einen eigenen Ordner im Repository:
+
+1. Auf GitHub im Repository zu `src/img/produkte/` gehen.
+2. **Add file → Upload files** und die Bilder hochladen. Im Feld oben den Pfad um einen
+   neuen Ordnernamen ergänzen, z. B. `hoodie/` (nur Kleinbuchstaben, keine Leerzeichen).
+3. Commit erstellen. Netlify baut die Seite automatisch neu (ca. 1–2 Minuten).
+4. In Stripe beim Produkt das Metadatum `bildordner` = `hoodie` eintragen.
+
+Reihenfolge: zuerst das Bild aus Stripe, dann die Bilder aus dem Ordner sortiert nach
+Dateiname. Am einfachsten nummerieren: `01.jpg`, `02.jpg`, … `14.jpg`. Das zweite Bild
+erscheint in der Shop-Übersicht beim Drüberfahren.
+
+Die Bilder werden beim Build automatisch verkleinert. Bitte trotzdem nicht größer als
+etwa 2400 px Breite und als JPG hochladen.
 
 ## Produkt aus dem Shop nehmen
 

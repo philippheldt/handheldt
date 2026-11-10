@@ -93,11 +93,15 @@
   opacity: 1;
 }
 
+/* Vorschaubilder als waagerecht scrollbare Leiste (auch bei vielen Bildern) */
 .thumbnail-bar {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
   gap: 0.6rem;
   margin-top: 0.75rem;
+  padding-bottom: 0.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
 }
 
 .thumbnail-bar[hidden] {
@@ -105,6 +109,8 @@
 }
 
 .thumb-button {
+  flex: 0 0 calc((100% - 2.4rem) / 5);
+  scroll-snap-align: start;
   overflow: hidden;
   width: 100%;
   padding: 0;
