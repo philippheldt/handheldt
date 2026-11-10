@@ -56,6 +56,8 @@ function toShopProduct(product) {
     // Weitere Bilder liegen in src/img/produkte/<bildordner>/ (Stripe erlaubt im Dashboard nur ein Bild)
     imageFolder: (meta.bildordner || "").trim(),
     preorderDate: parsePreorderDate(meta.vorbestellung),
+    // Herstellungs-Hinweis auf der Produktseite: leer = Siebdruck-Standardtext, "nein" = ausblenden
+    production: (meta.herstellung || "").trim(),
     sort: Number(meta.sortierung) || 999,
   };
 }

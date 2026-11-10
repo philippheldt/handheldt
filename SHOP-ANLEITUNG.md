@@ -25,6 +25,7 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `lager` | `nein` | `nein` = wird nach Bestellung gefertigt (Lieferzeit 14 Tage). Ohne Angabe oder `ja` = vorrätig (5 Werktage) |
 | `sortierung` | `1` | Reihenfolge im Shop (kleinere Zahl = weiter vorne) |
 | `vorbestellung` | `2026-12-15` oder `15.12.2026` | Vorbestellung: Versand erst ab diesem Datum statt in 5 bzw. 14 Tagen. Ist das Datum erreicht, gilt das Produkt automatisch wieder als normal lieferbar |
+| `herstellung` | `Im Digitaldruck gedruckt` oder `nein` | Ersetzt auf der Produktseite den Hinweis „Von Hand im Siebdruck bedruckt“; `nein` blendet ihn aus. Leer lassen = Siebdruck-Text |
 | `bildordner` | `hoodie` | Weitere Produktbilder aus dem Ordner `src/img/produkte/hoodie/` (siehe unten) |
 | `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
