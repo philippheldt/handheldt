@@ -96,6 +96,14 @@ function renderProduct() {
   }
   stock.hidden = false;
 
+  // Herstellungs-Hinweis: Standard "Von Hand im Siebdruck bedruckt", eigener Text oder ausgeblendet
+  const production = (currentProduct.production || "").trim();
+  if (production.toLowerCase() === "nein") {
+    document.getElementById("perk-production").hidden = true;
+  } else if (production) {
+    document.getElementById("perk-production-text").innerText = production;
+  }
+
   // Versandfreie Produkte (z. B. Postkarten): allein bestellt kostenlos, sonst gilt die normale Pauschale
   if (currentProduct.freeShipping) {
     document.getElementById("shipping-note").innerHTML =

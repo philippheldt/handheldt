@@ -766,13 +766,28 @@ button.black:hover {
   height: 26px;
 }
 
+/* Anzahl im Warenkorb: beiger Punkt oben rechts am Symbol */
 .cart-count {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -20%);
+  top: 0;
+  right: -2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: var(--darker-accent-color);
+  color: var(--primary-color);
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.cart-count:empty {
+  display: none;
 }
 
 nav a.cart-link {

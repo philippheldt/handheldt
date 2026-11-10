@@ -404,3 +404,7 @@ select {
     width: 2rem;
   }
 }
+
+.product-perks li[hidden] {
+  display: none;
+}
