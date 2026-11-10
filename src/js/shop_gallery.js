@@ -54,14 +54,18 @@ function renderCard(product) {
   card.className = "product-card";
 
   // Zweites Bild erscheint beim Hovern (falls vorhanden)
-  const img1Src = product.images[0] || "img/logo.png";
+  // Ohne Bild bleibt die neutrale Fläche des Bildrahmens sichtbar
+  const img1Src = product.images[0];
   const img2Src = product.images.length > 1 ? product.images[1] : img1Src;
+  const images = img1Src
+    ? `<img src="${escapeHtml(img1Src)}" alt="" class="primary-img" loading="lazy">
+      <img src="${escapeHtml(img2Src)}" alt="" class="secondary-img" loading="lazy">`
+    : "";
 
   card.innerHTML = `
     <div class="card-image-wrapper">
       ${product.preorderDate ? '<span class="card-badge">Vorbestellung</span>' : ""}
-      <img src="${escapeHtml(img1Src)}" alt="" class="primary-img" loading="lazy">
-      <img src="${escapeHtml(img2Src)}" alt="" class="secondary-img" loading="lazy">
+      ${images}
     </div>
     <h3>${escapeHtml(product.title)}</h3>
     <div class="price">${product.hasSurcharges ? "ab " : ""}${formatPrice(product.price)}</div>`;

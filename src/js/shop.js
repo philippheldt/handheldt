@@ -271,7 +271,10 @@ function renderGallery() {
 function updateImg(index) {
   currentImgIndex = index;
   const mainImg = document.getElementById("main-image");
-  mainImg.src = currentProduct.images[index] || "img/logo.png";
+  // Ohne Bild bleibt die neutrale Fläche des Containers sichtbar
+  const src = currentProduct.images[index];
+  if (src) mainImg.src = src;
+  mainImg.hidden = !src;
   mainImg.alt = `${currentProduct.title} – Bild ${index + 1}`;
 
   document.querySelectorAll(".thumb-button").forEach((thumb, i) => {
@@ -317,7 +320,7 @@ function initBuyRow() {
       size: selectedSize,
       color: selectedColor,
       variant: selectedVariant,
-      image: currentProduct.images[0] || "img/logo.png",
+      image: currentProduct.images[0] || "",
       freeShipping: currentProduct.freeShipping,
       preorderDate: currentProduct.preorderDate,
     });
