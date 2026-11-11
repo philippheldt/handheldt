@@ -186,3 +186,10 @@ anlegen. Diese tauchen nicht im Shop auf und können ignoriert werden.
 - **Stripe-Webhook** für den Bestand einrichten (siehe „Bestand / Kontingente“).
 - **Stripe → Einstellungen → E-Mails:** Belege für erfolgreiche Zahlungen aktivieren
   (die AGB versprechen eine Bestellbestätigung per E-Mail).
+
+## Mindestbestellwert
+
+Bestellungen sind erst ab **2,50 € Warenwert** (ohne Versand) möglich. Darunter zeigt der
+Warenkorb, wie viel noch fehlt, und der Kasse-Button ist gesperrt; die Kasse prüft es
+zusätzlich. Der Betrag steht in den AGB (§ 3 Abs. 5). Zum Ändern bitte Bescheid geben – er
+steht in `netlify/functions/create-checkout.js`, `src/js/cart.js`, den AGB und der Produktseite.
