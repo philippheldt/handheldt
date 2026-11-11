@@ -3,9 +3,9 @@
   "druck": {
     "sieb": 20,
     "proStueck": {
-      "Klein": 1,
-      "Mittel": 2,
-      "Groß": 3
+      "Klein": 2,
+      "Mittel": 3,
+      "Groß": 4
     },
     "proZusatzfarbe": 1,
     "farben": {
