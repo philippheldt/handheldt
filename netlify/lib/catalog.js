@@ -60,35 +60,44 @@ function parsePreorderDate(value) {
   return date > today ? date : null;
 }
 
-// Bestand: "20" = insgesamt, "S:5, M:10, L:0" = je Größe.
-// Kein Eintrag = unbegrenzt; Größen, die nicht genannt sind, ebenfalls unbegrenzt.
+// Bestand: "20" = insgesamt, "S:5, M:10, L:0" = je Größe, "Blau:3, Rot:0" = je Farbe/Variante.
+// Kein Eintrag = unbegrenzt; Optionen, die nicht genannt sind, ebenfalls unbegrenzt.
 export function parseStock(value) {
   const text = (value || "").trim();
   if (!text) return null;
-  if (/^\d+$/.test(text)) return { total: Number(text), bySize: null };
+  if (/^\d+$/.test(text)) return { total: Number(text), byOption: null };
 
-  const bySize = {};
+  const byOption = {};
   parseList(text).forEach((entry) => {
-    const [size, amount] = entry.split(":").map((part) => part.trim());
-    if (size && /^\d+$/.test(amount || "")) bySize[size] = Number(amount);
+    const separator = entry.lastIndexOf(":");
+    const name = entry.slice(0, separator).trim();
+    const amount = entry.slice(separator + 1).trim();
+    if (separator > 0 && name && /^\d+$/.test(amount)) byOption[name] = Number(amount);
   });
-  return Object.keys(bySize).length > 0 ? { total: null, bySize } : null;
+  return Object.keys(byOption).length > 0 ? { total: null, byOption } : null;
 }
 
 // Bestand zurück in die Schreibweise der Metadaten ("12" bzw. "S:4, M:9")
 export function formatStock(stock) {
   if (stock.total !== null) return String(stock.total);
-  return Object.entries(stock.bySize)
-    .map(([size, amount]) => `${size}:${amount}`)
+  return Object.entries(stock.byOption)
+    .map(([name, amount]) => `${name}:${amount}`)
     .join(", ");
 }
 
-// Verfügbare Stückzahl für eine Größe (Infinity = unbegrenzt)
-export function availableFor(product, size) {
+// Welche gewählte Option (Größe, Farbe oder Variante) hat einen eigenen Bestand? (null = keine)
+export function stockOptionFor(stock, choice) {
+  if (!stock || stock.total !== null) return null;
+  return [choice.size, choice.color, choice.variant].find((value) => value && value in stock.byOption) || null;
+}
+
+// Verfügbare Stückzahl für eine Auswahl { size, color, variant } (Infinity = unbegrenzt)
+export function availableFor(product, choice = {}) {
   const stock = product.stock;
   if (!stock) return Infinity;
   if (stock.total !== null) return stock.total;
-  return size in stock.bySize ? stock.bySize[size] : Infinity;
+  const option = stockOptionFor(stock, choice);
+  return option ? stock.byOption[option] : Infinity;
 }
 
 function toShopProduct(product) {
@@ -122,16 +131,27 @@ function toShopProduct(product) {
     // Herstellungs-Hinweis auf der Produktseite: leer = Siebdruck-Standardtext, "nein" = ausblenden
     production: (meta.herstellung || "").trim(),
     stock: parseStock(meta.bestand),
+    categories: parseCategories(meta.kategorie),
+    // Für die Sortierung "Neu": Zeitpunkt, an dem das Produkt in Stripe angelegt wurde
+    created: product.created || 0,
     sort: Number(meta.sortierung) || 999,
   };
 }
 
-// Ausverkauft: Gesamtbestand 0 oder alle Größen mit Bestand 0
+// Ausverkauft: Gesamtbestand 0 oder alle Größen (bzw. Farben, Varianten) mit Bestand 0
 function isSoldOut(product) {
-  if (!product.stock) return false;
-  if (product.stock.total !== null) return product.stock.total <= 0;
-  if (product.sizes.length === 0) return false;
-  return product.sizes.every((size) => availableFor(product, size) <= 0);
+  const stock = product.stock;
+  if (!stock) return false;
+  if (stock.total !== null) return stock.total <= 0;
+  const optionLists = [product.sizes, product.colors.map((color) => color.name), product.variants];
+  return optionLists.some(
+    (names) => names.length > 0 && names.every((name) => name in stock.byOption && stock.byOption[name] <= 0),
+  );
+}
+
+// Kategorien: "Postkarten" oder mehrere "Postkarten, Weihnachten"
+function parseCategories(value) {
+  return parseList(value);
 }
 
 export async function loadCatalog(stripe) {

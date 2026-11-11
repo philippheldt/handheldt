@@ -1,6 +1,6 @@
 // netlify/functions/create-checkout.js
 import Stripe from "stripe";
-import { availableFor, loadCatalog } from "../lib/catalog.js";
+import { availableFor, loadCatalog, stockOptionFor } from "../lib/catalog.js";
 
 // Initialisiere Stripe mit dem Key aus den Umgebungsvariablen
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -24,22 +24,38 @@ function surchargeFor(product, item) {
   return (size[item.size] || 0) + (color[item.color] || 0) + (variant[item.variant] || 0);
 }
 
-function errorResponse(statusCode, message) {
-  return { statusCode, headers, body: JSON.stringify({ error: message }) };
+// "index" zeigt dem Warenkorb, welche Position betroffen ist
+function errorResponse(statusCode, message, index) {
+  return { statusCode, headers, body: JSON.stringify({ error: message, ...(index !== undefined && { index }) }) };
 }
 
-// Prüft eine Warenkorb-Position gegen den Katalog und gibt das Produkt zurück (oder null)
+// Name für Fehlermeldungen: „Der Fels | Postkarte“ (Blau)
+function itemLabel(title, option) {
+  return `„${title}“${option ? ` (${option})` : ""}`;
+}
+
+// Prüft eine Warenkorb-Position gegen den Katalog.
+// Ergebnis: { product } oder { error } mit einer verständlichen Meldung für den Warenkorb.
 function validateItem(item, catalog) {
+  const title = typeof item.title === "string" ? item.title.slice(0, 80) : "Ein Produkt";
   const product = catalog.find((p) => p.id === item.productId);
-  if (!product) return null;
-  if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99) return null;
+  if (!product) {
+    return { error: `${itemLabel(title)} gibt es leider nicht mehr. Bitte entferne es aus dem Warenkorb.` };
+  }
+  if (!Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 99) {
+    return { error: `Die Menge von ${itemLabel(product.title)} ist ungültig. Bitte passe sie an.` };
+  }
 
-  // Auswahl muss zu den Optionen des Produkts passen (falls es welche gibt)
-  if (product.sizes.length > 0 && !product.sizes.includes(item.size)) return null;
-  if (product.colors.length > 0 && !product.colors.some((c) => c.name === item.color)) return null;
-  if (product.variants.length > 0 && !product.variants.includes(item.variant)) return null;
+  // Auswahl muss zu den aktuellen Optionen des Produkts passen (falls es welche gibt)
+  const unavailable = (value) =>
+    `${itemLabel(product.title, value)} gibt es in dieser Ausführung nicht mehr. Bitte entferne es und wähle neu.`;
+  if (product.sizes.length > 0 && !product.sizes.includes(item.size)) return { error: unavailable(item.size) };
+  if (product.colors.length > 0 && !product.colors.some((c) => c.name === item.color)) {
+    return { error: unavailable(item.color) };
+  }
+  if (product.variants.length > 0 && !product.variants.includes(item.variant)) return { error: unavailable(item.variant) };
 
-  return product;
+  return { product };
 }
 
 export const handler = async (event) => {
@@ -63,29 +79,33 @@ export const handler = async (event) => {
       return errorResponse(400, "Ungültiger Warenkorb.");
     }
 
-    const products = items.map((item) => validateItem(item, catalog));
-    if (products.includes(null)) {
-      return errorResponse(400, "Ungültiger Warenkorb.");
+    const products = [];
+    for (const [index, item] of items.entries()) {
+      const result = validateItem(item || {}, catalog);
+      if (result.error) return errorResponse(400, result.error, index);
+      products.push(result.product);
     }
 
-    // Bestand prüfen: gleiche Produkte/Größen über alle Positionen zusammenzählen
+    // Bestand prüfen: gleiche Produkte bzw. Größen/Farben/Varianten über alle Positionen zusammenzählen
     const requested = new Map();
     items.forEach((item, index) => {
       const product = products[index];
-      const key = product.stock?.total !== null ? product.id : `${product.id}|${item.size}`;
-      const entry = requested.get(key) || { product, size: item.size, quantity: 0 };
+      const option = stockOptionFor(product.stock, item);
+      const key = `${product.id}|${option || ""}`;
+      const entry = requested.get(key) || { product, item, option, index, quantity: 0 };
       entry.quantity += item.quantity;
       requested.set(key, entry);
     });
-    for (const { product, size, quantity } of requested.values()) {
-      const available = availableFor(product, size);
+    for (const { product, item, option, index, quantity } of requested.values()) {
+      const available = availableFor(product, item);
       if (quantity > available) {
-        const label = product.stock.total === null && size ? `„${product.title}“ in Größe ${size}` : `„${product.title}“`;
+        const label = itemLabel(product.title, option);
         return errorResponse(
           409,
           available > 0
-            ? `Von ${label} sind nur noch ${available} Stück verfügbar. Bitte passe die Menge an.`
-            : `${label.charAt(0).toUpperCase() + label.slice(1)} ist leider ausverkauft. Bitte entferne es aus dem Warenkorb.`,
+            ? `Von ${label} ${available === 1 ? "ist" : "sind"} nur noch ${available} Stück verfügbar. Bitte passe die Menge an.`
+            : `${label} ist leider ausverkauft. Bitte entferne es aus dem Warenkorb.`,
+          index,
         );
       }
     }

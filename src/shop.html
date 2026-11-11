@@ -10,6 +10,22 @@ bodyScripts: ["js/shop_gallery.js"]
 <section class="white" id="about">
     <div class="content-wrapper">
         <h1 class="visually-hidden">Shop</h1>
+        <div class="shop-toolbar" data-shop-filter hidden>
+            <div class="filter-categories" data-filter-categories role="group" aria-label="Nach Kategorie filtern"></div>
+            <div class="shop-sort">
+                <span class="shop-count" data-filter-count aria-live="polite"></span>
+                <label class="visually-hidden" for="shop-category">Kategorie</label>
+                <select id="shop-category" data-filter-category-select hidden></select>
+                <label class="visually-hidden" for="shop-sort">Sortieren</label>
+                <select id="shop-sort" data-filter-sort>
+                    <option value="empfohlen">Empfohlen</option>
+                    <option value="neu">Neu</option>
+                    <option value="preis-auf">Preis aufsteigend</option>
+                    <option value="preis-ab">Preis absteigend</option>
+                    <option value="az">A–Z</option>
+                </select>
+            </div>
+        </div>
         <div class="product-grid" id="main-gallery" data-product-gallery>
         </div>
 
