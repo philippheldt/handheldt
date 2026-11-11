@@ -149,6 +149,7 @@
 
 .home-shop {
   padding-top: 3rem;
+  padding-bottom: 4rem;
 }
 
 .home-section-head {
@@ -177,32 +178,6 @@
   .product-grid--row {
     grid-template-columns: repeat(3, 1fr);
   }
-}
-
-/* ---------- Vertrauensleiste ---------- */
-
-.trust-bar {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin: 3rem 0 1rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--standard-radius);
-  background: #fff;
-  list-style: none;
-}
-
-.trust-bar li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-}
-
-.trust-bar svg {
-  flex-shrink: 0;
-  width: 26px;
-  height: 26px;
 }
 
 /* ---------- Handy ---------- */
@@ -283,17 +258,6 @@
 
   .home-shop {
     padding-top: 2.25rem;
-  }
-
-  .trust-bar {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-    margin-top: 2rem;
-    padding: 1rem 1.25rem;
-  }
-
-  .trust-bar li {
-    justify-content: flex-start;
-    font-size: 0.95rem;
+    padding-bottom: 2.5rem;
   }
 }

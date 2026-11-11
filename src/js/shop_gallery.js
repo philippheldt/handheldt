@@ -169,14 +169,14 @@
 
   // ---------- Startseite: Kategorie-Kacheln und „Neu im Shop“ ----------
 
-  // Je Kategorie eine Kachel; Bild = erstes Produkt der Kategorie mit Bild (lieferbare zuerst)
+  // Je Kategorie eine Kachel; Bild = neuestes lieferbares Produkt der Kategorie mit Bild
   function renderCategoryTiles(products) {
     const box = document.querySelector("[data-category-tiles]");
     if (!box) return;
     const categories = [...new Set(products.flatMap((product) => product.categories || []))];
     if (categories.length < 2) return;
 
-    const ordered = [...products].sort((a, b) => Number(a.soldOut) - Number(b.soldOut));
+    const ordered = [...products].sort((a, b) => Number(a.soldOut) - Number(b.soldOut) || SORTERS.neu(a, b));
     box.innerHTML = categories
       .slice(0, 6)
       .map((name) => {
