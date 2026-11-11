@@ -46,16 +46,22 @@ function parseColors(value) {
   return { colors, surcharges };
 }
 
-// "vorbestellung: 2026-12-15" oder "15.12.2026": Versand erst ab diesem Datum.
-// Liegt das Datum nicht mehr in der Zukunft, gilt das Produkt wieder als normal lieferbar.
-function parsePreorderDate(value) {
+// Datum "2026-12-15" oder "15.12.2026" -> "2026-12-15" (sonst null)
+function parseDate(value) {
   if (!value) return null;
   const text = value.trim();
   const iso = text.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
   const german = text.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
   if (!iso && !german) return null;
   const [year, month, day] = iso ? iso.slice(1) : [german[3], german[2], german[1]];
-  const date = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+}
+
+// "vorbestellung: 2026-12-15" oder "15.12.2026": Versand erst ab diesem Datum.
+// Liegt das Datum nicht mehr in der Zukunft, gilt das Produkt wieder als normal lieferbar.
+function parsePreorderDate(value) {
+  const date = parseDate(value);
+  if (!date) return null;
   const today = new Date().toISOString().slice(0, 10);
   return date > today ? date : null;
 }
@@ -132,8 +138,8 @@ function toShopProduct(product) {
     production: (meta.herstellung || "").trim(),
     stock: parseStock(meta.bestand),
     categories: parseCategories(meta.kategorie),
-    // Für die Sortierung "Neu": Zeitpunkt, an dem das Produkt in Stripe angelegt wurde
-    created: product.created || 0,
+    // Für die Sortierung "Neu": Metadatum "neu_seit" (Datum), sonst Anlegezeitpunkt in Stripe (Sekunden)
+    created: parseDate(meta.neu_seit) ? Date.parse(parseDate(meta.neu_seit)) / 1000 : product.created || 0,
     sort: Number(meta.sortierung) || 999,
   };
 }

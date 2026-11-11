@@ -1,40 +1,46 @@
 ---
 title: "handheldt – Siebdruck und handbedruckte Textilien in Kleinauflagen"
 description: "Handbedruckte, faire Textilien mit eigenen Designs – für Jugendarbeit, Events, Bands und besondere Anlässe. Siebdruck ohne Mindestmenge, mit Liebe zum Detail."
-styles: ["faq.css", "video-overlay.css", "fade.css", "shop_gallery.css"]
+styles: ["faq.css", "video-overlay.css", "fade.css", "shop_gallery.css", "home.css"]
 scripts: ["js/video_replay.js"]
 bodyScripts: ["js/shop_gallery.js"]
 ---
-    <section class="white">
-        <div>
-            <div class="video-teaser-frame">
-                <video playsinline autoplay loop muted poster="img/screenprint.jpg">
-                    <source src="img/header_video.mp4" type="video/mp4" />
-                </video>
-                <div class="black-video-overlay"></div>
-                <div class="title-text header-text">
-                    <h1 class="header-heading"><img class="header-logo" src="img/logotype_only.png"
-                            alt="handheldt – Siebdruck und handbedruckte Textilien" loading="eager" fetchpriority="high"></h1>
-                    <p>🤚🏼 gemacht mit 🤍: <br> Bedruckte Textilien und mehr</p>
+    <!-- Einstieg: kurz sagen, was es hier gibt, und direkt in den Shop führen.
+         Der Bereich ist bewusst nicht bildschirmfüllend, damit darunter schon Produkte zu sehen sind. -->
+    <section class="home-hero">
+        <div class="home-hero-frame">
+            <video playsinline autoplay loop muted poster="img/screenprint.jpg" aria-hidden="true">
+                <source src="img/header_video.mp4" type="video/mp4" />
+            </video>
+            <div class="home-hero-overlay"></div>
+            <div class="home-hero-text">
+                <p class="home-hero-kicker">handheldt · handgemacht mit Herz</p>
+                <h1>Shirts, Hoodies, Papeterie und mehr</h1>
+                <div class="home-hero-actions">
+                    <a href="shop.html" class="hero-button hero-button--primary">Zum Shop</a>
+                    <a href="#eigenes-design" class="hero-button">Eigenes Design drucken</a>
                 </div>
-                <!-- <video playsinline autoplay loop muted poster="img/screenprint.jpg">
-
-                    <source src="img/header_video.mp4" type="video/mp4" />
-                </video> -->
             </div>
         </div>
     </section>
 
-    <section class="white">
-        <div class="content-wrapper vertical-distance">
-            <h2 class="yellow-underline">Shop</h2>
-            <div class="product-grid product-grid--preview" data-product-gallery data-limit="4"
-                data-variant="preview" aria-live="polite"></div>
-            <div class="shop-preview-action">
-                <a href="shop.html" class="black-button">Zum Shop</a>
-            </div>
+    <!-- Kategorien als Kacheln (aus dem Stripe-Katalog, Bild = erstes Produkt der Kategorie) -->
+    <section class="white home-categories" data-category-section hidden>
+        <div class="content-wrapper">
+            <h2 class="visually-hidden">Kategorien</h2>
+            <div class="category-tiles" data-category-tiles></div>
         </div>
+    </section>
 
+    <section class="white">
+        <div class="content-wrapper home-shop">
+            <div class="home-section-head">
+                <h2>Neu im Shop</h2>
+                <a href="shop.html" class="home-section-link">Alle Produkte</a>
+            </div>
+            <div class="product-grid product-grid--preview product-grid--row" data-product-gallery data-limit="8"
+                data-sort="neu" data-variant="preview" aria-live="polite"></div>
+        </div>
     </section>
 
     <section class="image-section">
@@ -42,7 +48,7 @@ bodyScripts: ["js/shop_gallery.js"]
     </section>
 
 
-    <section class="white">
+    <section class="white" id="eigenes-design">
         <div class="content-wrapper">
             <header class="two-column screen-hight">
                 <div class="title-text blue-frame">

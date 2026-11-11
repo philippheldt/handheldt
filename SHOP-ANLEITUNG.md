@@ -24,6 +24,7 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `varianten` | `Slim Fit, Regular Fit` | Auswahlliste „Variante“ |
 | `lager` | `nein` | `nein` = wird nach Bestellung gefertigt (Lieferzeit 14 Tage). Ohne Angabe oder `ja` = vorrätig (5 Werktage) |
 | `kategorie` | `Postkarten` oder `Postkarten, Weihnachten` | Kategorie(n) für den Filter in der Shop-Übersicht und für „Das könnte dir gefallen“ (siehe unten) |
+| `neu_seit` | `2026-11-01` oder `01.11.2026` | Für „Neu“ (Shop-Sortierung, „Neu im Shop“ auf der Startseite, Bild der Kategorie-Kachel). Ohne Angabe zählt, wann das Produkt in Stripe angelegt wurde |
 | `sortierung` | `1` | Reihenfolge im Shop bei „Empfohlen“ (kleinere Zahl = weiter vorne) |
 | `vorbestellung` | `2026-12-15` oder `15.12.2026` | Vorbestellung: Versand erst ab diesem Datum statt in 5 bzw. 14 Tagen. Ist das Datum erreicht, gilt das Produkt automatisch wieder als normal lieferbar |
 | `herstellung` | `Im Digitaldruck gedruckt` oder `nein` | Ersetzt auf der Produktseite den Hinweis „Von Hand im Siebdruck bedruckt“; `nein` blendet ihn aus. Leer lassen = Siebdruck-Text |
@@ -100,7 +101,7 @@ Für Test- und Live-Modus gibt es jeweils einen eigenen Webhook und ein eigenes 
   Auf die Schreibweise achten – `Postkarte` und `Postkarten` wären zwei Kategorien.
 - Die Shop-Übersicht zeigt oben die Kategorien als Filter (erst ab zwei Kategorien; bis zu
   3 als Buttons, ab 4 als Auswahlliste „Alle Kategorien“, damit es übersichtlich bleibt) und
-  eine Sortierung: Empfohlen (`sortierung`), Neu (zuletzt in Stripe angelegt), Preis, A–Z.
+  eine Sortierung: Empfohlen (`sortierung`), Neu (`neu_seit`, sonst zuletzt in Stripe angelegt), Preis, A–Z.
   Ausverkauftes steht immer am Ende.
 - Unter jedem Produkt stehen bis zu 4 Vorschläge, zuerst aus derselben Kategorie, danach
   aufgefüllt mit weiteren Produkten. Ausverkauftes wird nie vorgeschlagen.
@@ -193,3 +194,11 @@ Bestellungen sind erst ab **2,50 € Warenwert** (ohne Versand) möglich. Darunt
 Warenkorb, wie viel noch fehlt, und der Kasse-Button ist gesperrt; die Kasse prüft es
 zusätzlich. Der Betrag steht in den AGB (§ 3 Abs. 5). Zum Ändern bitte Bescheid geben – er
 steht in `netlify/functions/create-checkout.js`, `src/js/cart.js`, den AGB und der Produktseite.
+
+## Startseite
+
+- **Kategorie-Kacheln:** je Kategorie eine Kachel (höchstens 6), Bild ist das neueste
+  lieferbare Produkt der Kategorie.
+- **Neu im Shop:** die 8 neuesten lieferbaren Produkte.
+- „Neu“ richtet sich nach `neu_seit`, sonst danach, wann das Produkt in Stripe angelegt wurde.
+  Wer die Reihenfolge festlegen will, trägt bei den Produkten einfach ein Datum in `neu_seit` ein.
