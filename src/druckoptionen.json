@@ -95,8 +95,8 @@
       "code": "HOOD",
       "name": "Hoodie",
       "textil": [
-        25,
-        40
+        30,
+        45
       ],
       "groessen": "erwachsene",
       "farben": {
@@ -135,8 +135,8 @@
       "code": "SWEA",
       "name": "Sweater",
       "textil": [
-        20,
-        32
+        25,
+        35
       ],
       "groessen": "erwachsene",
       "farben": {
