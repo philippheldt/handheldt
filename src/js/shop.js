@@ -113,20 +113,21 @@ function renderProduct() {
   if (currentProduct.freeShipping) {
     document.getElementById("shipping-note").innerHTML =
       'allein bestellt versandkostenfrei, sonst zzgl. <a href="agb.html">Versandkosten</a>';
+    document.getElementById("perk-shipping-text").innerText = "Allein bestellt versandkostenfrei";
   }
 
   renderGallery();
 
   if (currentProduct.sizes.length > 0) {
     // Ausverkaufte Größen sind gesperrt; vorausgewählt wird die erste verfügbare
-    selectedSize = currentProduct.sizes.find((size) => availableStock(size) > 0) || currentProduct.sizes[0];
+    selectedSize = currentProduct.sizes.find((size) => optionStock(size) > 0) || currentProduct.sizes[0];
     renderChips(
       "size",
       currentProduct.sizes.map((size) => ({
         value: size,
         label: size,
         surcharge: currentProduct.surcharges.size[size],
-        disabled: availableStock(size) <= 0,
+        disabled: optionStock(size) <= 0,
       })),
       (value) => {
         selectedSize = value;
@@ -140,7 +141,9 @@ function renderProduct() {
   }
 
   if (currentProduct.colors.length > 0) {
-    selectedColor = currentProduct.colors[0].name;
+    // Ausverkaufte Farben sind gesperrt; vorausgewählt wird die erste verfügbare
+    const colorNames = currentProduct.colors.map((color) => color.name);
+    selectedColor = colorNames.find((name) => optionStock(name) > 0) || colorNames[0];
     renderChips(
       "color",
       currentProduct.colors.map((color) => ({
@@ -148,26 +151,36 @@ function renderProduct() {
         label: color.name,
         hex: color.hex,
         surcharge: currentProduct.surcharges.color[color.name],
+        disabled: optionStock(color.name) <= 0,
       })),
       (value) => {
         selectedColor = value;
         updatePrice();
+        updateAvailability();
       },
+      selectedColor,
     );
   } else {
     document.getElementById("color-group").hidden = true;
   }
 
   if (currentProduct.variants.length > 0) {
-    selectedVariant = currentProduct.variants[0];
+    selectedVariant = currentProduct.variants.find((variant) => optionStock(variant) > 0) || currentProduct.variants[0];
     const select = document.getElementById("select-variant");
     currentProduct.variants.forEach((variant) => {
       const surcharge = currentProduct.surcharges.variant[variant];
-      select.add(new Option(surcharge ? `${variant} (${formatSurcharge(surcharge)})` : variant, variant));
+      const soldOut = optionStock(variant) <= 0;
+      const label = [variant, surcharge && `(${formatSurcharge(surcharge)})`, soldOut && "– ausverkauft"]
+        .filter(Boolean)
+        .join(" ");
+      const option = new Option(label, variant, false, variant === selectedVariant);
+      option.disabled = soldOut;
+      select.add(option);
     });
     select.addEventListener("change", (e) => {
       selectedVariant = e.target.value;
       updatePrice();
+      updateAvailability();
     });
   } else {
     document.getElementById("variant-group").hidden = true;
@@ -312,12 +325,21 @@ function changeImage(step) {
 }
 
 // 4. Menge und "In den Warenkorb"
-// Verfügbare Stückzahl laut Bestand (Infinity = unbegrenzt; nicht genannte Größen ebenfalls)
-function availableStock(size = selectedSize) {
+// Verfügbare Stückzahl laut Bestand (Infinity = unbegrenzt).
+// Bestand gibt es insgesamt oder je Größe, Farbe bzw. Variante; nicht genannte Optionen sind unbegrenzt.
+function availableStock(choice = { size: selectedSize, color: selectedColor, variant: selectedVariant }) {
   const stock = currentProduct.stock;
   if (!stock) return Infinity;
   if (stock.total !== null) return stock.total;
-  return size in stock.bySize ? stock.bySize[size] : Infinity;
+  const option = [choice.size, choice.color, choice.variant].find((value) => value && value in stock.byOption);
+  return option ? stock.byOption[option] : Infinity;
+}
+
+// Bestand einer einzelnen Option (für ausgegraute Größen/Farben/Varianten)
+function optionStock(value) {
+  const stock = currentProduct.stock;
+  if (!stock || stock.total !== null || !(value in stock.byOption)) return Infinity;
+  return stock.byOption[value];
 }
 
 // Button, Mengenauswahl und Hinweis an den Bestand der gewählten Größe anpassen
