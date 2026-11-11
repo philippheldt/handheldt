@@ -90,12 +90,16 @@
     az: (a, b) => a.title.localeCompare(b.title, "de"),
   };
 
+  // Bis zu so vielen Kategorien als Buttons, darüber als Auswahlliste (bleibt übersichtlich)
+  const MAX_CATEGORY_CHIPS = 5;
+
   function initFilter(gallery, products) {
     const toolbar = document.querySelector("[data-shop-filter]");
     if (!toolbar) return renderCards(gallery, products);
 
     const chipBox = toolbar.querySelector("[data-filter-categories]");
     const sortSelect = toolbar.querySelector("[data-filter-sort]");
+    const categorySelect = toolbar.querySelector("[data-filter-category-select]");
     const counter = toolbar.querySelector("[data-filter-count]");
 
     // Kategorien in der Reihenfolge, in der sie im Katalog zuerst vorkommen
@@ -117,6 +121,7 @@
       chipBox.querySelectorAll(".filter-chip").forEach((chip) => {
         chip.setAttribute("aria-pressed", chip.dataset.category === category);
       });
+      if (categorySelect) categorySelect.value = category;
 
       const next = new URLSearchParams();
       if (category) next.set("kategorie", category);
@@ -126,7 +131,16 @@
     }
 
     // Nur eine Kategorie (oder keine) -> Filter ausblenden, Sortierung bleibt
-    if (categories.length > 1) {
+    if (categories.length > MAX_CATEGORY_CHIPS && categorySelect) {
+      // Viele Kategorien: Auswahlliste neben der Sortierung statt einer langen Button-Reihe
+      chipBox.hidden = true;
+      ["", ...categories].forEach((name) => categorySelect.add(new Option(name || "Alle Kategorien", name)));
+      categorySelect.hidden = false;
+      categorySelect.addEventListener("change", () => {
+        category = categorySelect.value;
+        update();
+      });
+    } else if (categories.length > 1) {
       chipBox.innerHTML = ["", ...categories]
         .map(
           (name) =>
