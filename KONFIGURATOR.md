@@ -6,8 +6,9 @@ Die Seite `configurator.html` hat zwei Wege:
 - **Noch keine Ahnung? Kurz beschreiben:** nur Beschreibung, ungefähre Menge, Termin, Datei und Kontakt.
   Direktlink: `configurator.html#schnellanfrage`.
 
-Beide Anfragen landen in Netlify unter **Forms** (`konfigurator` bzw. `schnellanfrage`), samt hochgeladener Datei
-(max. 8 MB). Beim Konfigurator steht im Feld `konfiguration` eine lesbare Zusammenfassung, z. B.:
+Beide Anfragen landen in Netlify unter **Forms** (`konfigurator` bzw. `schnellanfrage`). Dateien laden Kunden
+über den pCloud-Upload-Link hoch (Anfragelink, Limit 100 MB, in `src/configurator.html`); im Formular kreuzen sie
+„Ich habe Dateien hochgeladen“ an und sollen ihren Namen in den Dateinamen schreiben. Beim Konfigurator steht im Feld `konfiguration` eine lesbare Zusammenfassung, z. B.:
 
 ```
 Produkt: T-Shirt
@@ -15,7 +16,8 @@ Farbe: Burgundy
 Vorne: Mittel, Mitte, 2 Farben
 Hinten: Groß, Mitte, 1 Farbe
 Menge: 20 Stück (M: 12, L: 8)
-Preisschätzung: ca. 340 € – 480 € (17 € – 24 €/Stück, zzgl. Versand)
+Preisschätzung: ca. 344 € – 488 € (17 € – 24 €/Stück, zzgl. Versand)
+Dateien: bei pCloud hochgeladen
 ```
 
 ## Preise und Produkte ändern

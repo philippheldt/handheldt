@@ -430,9 +430,17 @@
   resize: vertical;
 }
 
-.config-page input[type="file"] {
-  font: inherit;
+.upload-label {
   font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.upload-button {
+  margin: 0.2rem 0 0;
+}
+
+.upload-box .field-hint {
+  margin: 0 0 0.4rem;
 }
 
 .config-page input:focus,
@@ -573,4 +581,8 @@
   .quick-form button[type="submit"] {
     width: 100%;
   }
+}
+
+.upload-box .toggle-row {
+  font-weight: 400;
 }

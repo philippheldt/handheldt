@@ -24,7 +24,7 @@ noindex: true
         <!-- ===================== Konfigurator ===================== -->
         <div id="panel-konfigurator" role="tabpanel" aria-labelledby="tab-konfigurator">
             <form name="konfigurator" class="config-layout" action="danke.html" method="POST"
-                enctype="multipart/form-data" netlify-honeypot="bot-field" netlify data-config-form>
+                netlify-honeypot="bot-field" netlify data-config-form>
                 <input type="hidden" name="form-name" value="konfigurator">
                 <p hidden><label>Nicht ausfüllen: <input name="bot-field"></label></p>
                 <!-- Wird vor dem Absenden aus der Auswahl befüllt (lesbare Zusammenfassung für die E-Mail) -->
@@ -101,11 +101,15 @@ noindex: true
 
                     <fieldset class="config-step">
                         <legend><span class="step-number">6</span> Motiv &amp; Nachricht</legend>
-                        <div class="config-field">
-                            <label for="motiv-datei">Motiv oder Skizze <span class="optional">(optional, max. 8 MB)</span></label>
-                            <input type="file" id="motiv-datei" name="motiv" accept="image/*,.pdf,.ai,.svg,.eps"
-                                data-file-input>
-                            <p class="field-hint">Auch eine grobe Skizze oder ein Handyfoto hilft uns.</p>
+                        <div class="config-field upload-box">
+                            <span class="upload-label">Motiv, Skizze oder Handyfoto <span class="optional">(optional)</span></span>
+                            <a class="black-button upload-button" href="https://e.pcloud.com/#/puplink?code=ViG7ZDb7iE950kqQES93bkLUCAbdukB1V" target="_blank" rel="noopener">Dateien hochladen</a>
+                            <p class="field-hint">Öffnet unseren Upload bei pCloud in einem neuen Tab (bis 100 MB).
+                                Bitte schreib deinen Namen in den Dateinamen, damit wir die Dateien zuordnen können.</p>
+                            <label class="toggle-row">
+                                <input type="checkbox" id="k-dateien" name="dateien-hochgeladen" value="ja">
+                                <span>Ich habe Dateien hochgeladen</span>
+                            </label>
                         </div>
                         <div class="config-field">
                             <label for="nachricht">Nachricht <span class="optional">(optional)</span></label>
@@ -145,7 +149,7 @@ noindex: true
         <!-- ===================== Schnellanfrage ===================== -->
         <div id="panel-schnell" role="tabpanel" aria-labelledby="tab-schnell" hidden>
             <form name="schnellanfrage" class="quick-form" action="danke.html" method="POST"
-                enctype="multipart/form-data" netlify-honeypot="bot-field" netlify>
+                netlify-honeypot="bot-field" netlify>
                 <input type="hidden" name="form-name" value="schnellanfrage">
                 <p hidden><label>Nicht ausfüllen: <input name="bot-field"></label></p>
 
@@ -166,10 +170,16 @@ noindex: true
                         <input type="date" id="s-termin" name="wunschtermin">
                     </div>
                 </div>
-                <div class="config-field">
-                    <label for="s-datei">Idee, Skizze oder Logo <span class="optional">(optional, max. 8 MB)</span></label>
-                    <input type="file" id="s-datei" name="motiv" accept="image/*,.pdf,.ai,.svg,.eps" data-file-input>
-                </div>
+                <div class="config-field upload-box">
+                            <span class="upload-label">Idee, Skizze oder Logo <span class="optional">(optional)</span></span>
+                            <a class="black-button upload-button" href="https://e.pcloud.com/#/puplink?code=ViG7ZDb7iE950kqQES93bkLUCAbdukB1V" target="_blank" rel="noopener">Dateien hochladen</a>
+                            <p class="field-hint">Öffnet unseren Upload bei pCloud in einem neuen Tab (bis 100 MB).
+                                Bitte schreib deinen Namen in den Dateinamen, damit wir die Dateien zuordnen können.</p>
+                            <label class="toggle-row">
+                                <input type="checkbox" id="s-dateien" name="dateien-hochgeladen" value="ja">
+                                <span>Ich habe Dateien hochgeladen</span>
+                            </label>
+                        </div>
                 <div class="contact-grid">
                     <div class="config-field">
                         <label for="s-name">Name</label>

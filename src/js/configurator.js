@@ -25,7 +25,6 @@
   // So viele Farben sind sofort sichtbar, der Rest per „Alle Farben zeigen“
   const VISIBLE_COLORS = 12;
   const PRINT_SIZES = ["Klein", "Mittel", "Groß"];
-  const MAX_FILE_MB = 8;
 
   let data = null;
   const state = {
@@ -289,6 +288,7 @@
       lines.push(`Menge: ca. ${price.qty} Stück`);
     }
     lines.push(`Preisschätzung: ${price.text}`);
+    lines.push(`Dateien: ${$("#k-dateien").checked ? "bei pCloud hochgeladen" : "keine"}`);
     return lines.join("\n");
   }
 
@@ -353,7 +353,6 @@
       $("[data-sizes]").hidden = !target.checked;
       $("[data-total-field]").hidden = target.checked;
     }
-    if (target.matches("[data-file-input]")) checkFile(target);
     updatePrice();
   });
 
@@ -368,18 +367,6 @@
     if (!event.target.matches("[data-show-colors]")) return;
     state.showAllColors = !state.showAllColors;
     renderColors();
-  });
-
-  // Dateien über 8 MB nimmt Netlify nicht an
-  function checkFile(input) {
-    const file = input.files[0];
-    input.setCustomValidity(
-      file && file.size > MAX_FILE_MB * 1024 * 1024 ? `Die Datei ist zu groß (max. ${MAX_FILE_MB} MB).` : "",
-    );
-    input.reportValidity();
-  }
-  document.querySelectorAll("#panel-schnell [data-file-input]").forEach((input) => {
-    input.addEventListener("change", () => checkFile(input));
   });
 
   form.addEventListener("submit", () => {
