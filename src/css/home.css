@@ -86,8 +86,8 @@
 }
 
 .hero-button--primary:hover {
-  background: var(--accent-color);
-  border-color: var(--accent-color);
+  background: #e2dfd7;
+  border-color: #e2dfd7;
   color: var(--primary-color);
 }
 

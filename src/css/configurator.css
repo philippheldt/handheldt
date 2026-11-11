@@ -1,305 +1,588 @@
-:root {
-    --primary-color: #0c0b21;
-    --secondary-color: #f8f7f4;
-    --accent-color: #FFECD0;
-    --darker-accent-color: #ffe2bf;
-    --accent-color-blue: #dddddd;
-    --standard-radius: 0.3rem;
+/* Textil-Konfigurator (configurator.html) */
+
+.config-page {
+  padding-top: 1rem;
 }
 
+/* ---------- Reiter ---------- */
 
-.two-columns {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
+.config-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
 }
 
-.radio-item{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: var(--standard-radius);
-    padding: 10px;
-    width: 25.1%;
-    background-color: var(--secondary-color);
-    border: solid #0c0b2100 1px;
-    cursor: pointer;
-    margin: 0;
+.config-tabs [role="tab"] {
+  width: auto;
+  height: 44px;
+  margin: 0;
+  padding: 0 1.2rem;
+  border: 1px solid #c9c7c1;
+  border-radius: 2rem;
+  background: transparent;
+  color: var(--primary-color);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-.radio-item img{
-    width: 100%;
-    opacity: 0.5;
-    transition: opacity 0.2s ease;
+.config-tabs [role="tab"]:hover {
+  border-color: var(--primary-color);
 }
 
-.color-preview {
-    width: 100%;
-    aspect-ratio: 1/1;
-    border-radius: var(--standard-radius);
-    background-color: #000;
+.config-tabs [role="tab"][aria-selected="true"] {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: var(--secondary-color);
 }
 
-.radio-item.color .label-text {
-    text-align: center;
-    margin-top: 10px;
-    height: 35px;
+[role="tabpanel"][hidden] {
+  display: none;
 }
 
+/* ---------- Aufbau: Vorschau + Preis links (mitlaufend), Schritte rechts ---------- */
 
-
-.radio-item:has(input[type="radio"]:checked) {
-    border: solid #0c0b21 1px;
-    transition: border 0.1s ease;
+.config-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 3rem;
+  align-items: start;
 }
 
-
-.radio-item .label-text {
-    color: #0c0b2179;
-    font-size: 0.8rem;
-    transition: color 0.1s ease;
+.config-aside {
+  position: sticky;
+  top: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.radio-item:has(input[type="radio"]:checked) .label-text {
-    color: var(--primary-color);
+.config-preview {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--standard-radius);
+  background: #fff;
 }
 
-.radio-item:has(input[type="radio"]:checked) img {
-    opacity: 1;
+/* Farbfläche liegt hinter dem Bild; das Bild ist weiß mit transparenter Textil-Form */
+.config-preview-color {
+  position: absolute;
+  inset: 2%;
+  transition: background-color 0.2s;
 }
 
-.radio-item:hover img {
-    opacity: 1;
+.config-preview-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-.radio-item:hover .label-text {
-    color: var(--primary-color);
+.config-preview-image[hidden] {
+  display: none;
 }
 
-.radio-item:hover {
-    border: solid #0c0b212e 1px;
+/* Ohne Vorschaubild: Name des Produkts auf der Farbfläche */
+.config-preview-label {
+  position: relative;
+  padding: 0.4rem 0.9rem;
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.85);
+  font-weight: 700;
 }
 
-.radio-item input[type="radio"] {
-    display: none;
+.config-preview-label:empty {
+  display: none;
 }
 
-/* select .radio-item parent elemnt */
-
-div:has(> .radio-item) {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    /* justify-content: space-between; */
-    gap: 10px;
-    flex-wrap: wrap;
+.config-price {
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--standard-radius);
+  background: #fff;
 }
 
-.konfigurator h2 {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin: 50px 0 20px 0; 
+.config-price p {
+  margin: 0;
 }
 
-.radios{
-    box-sizing: border-box;
-    background-color: #fff;
-    border-radius: var(--standard-radius);
-    padding: 20px;
-    width: 100%;
-    margin: 3px 0;
+.config-price-label {
+  color: #6b6b6b;
+  font-size: 0.85rem;
 }
 
-.radios h4 {
-    /* make flex go across the whole line */
-    width: 100%;
-    margin: 5px 0;
+.config-price-total {
+  margin: 0.15rem 0 0.25rem !important;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
-
-.cutom-Radio {
-        appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 1px solid #ccc;
-            border-radius: 100%;
-            background-color: #f0f0f0;
-            display: inline-block;
-            position: relative;
-            cursor: pointer;
+.config-price-piece,
+.config-price-setup {
+  font-size: 0.95rem;
 }
 
-.cutom-Radio:checked {
-    background-color: black;
-    border-color: black;
+.config-price-setup {
+  color: #6b6b6b;
 }
 
-
-.radios input[type="text"],
-.radios input[type="number"],
-.radios input[type="date"]{
-    width: 100%;
-    height: 40px;
-    background-color: var(--secondary-color);
-    margin: 0px;
-    box-sizing: border-box;
-    border: 1px #0c0b214b  solid;
-    padding: 0rem 1rem;
-    border-radius: var(--standard-radius);
-    font-family: "Plus Jakarta Sans", sans-serif;
-    outline: none;
+.config-price-tip {
+  margin-top: 0.75rem !important;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--standard-radius);
+  background: var(--accent-color);
+  color: #7a4a0c;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
-input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #ccc;
-    border-radius: 0.1rem;
-    background-color: #f0f0f0;
-    display: inline-block;
-    position: relative;
-    cursor: pointer;
+.config-price-tip[hidden] {
+  display: none;
 }
 
-/* Checked state */
-input[type="checkbox"]:checked {
-    background-color: black;
-    border-color: black;
+.config-price-note {
+  margin-top: 0.75rem !important;
+  color: #6b6b6b;
+  font-size: 0.8rem;
+  line-height: 1.45;
 }
 
-.checkbox-container{
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 50px 0 20px 0;
+/* ---------- Schritte ---------- */
 
-    background-color: #fff;
-        border-radius: var(--standard-radius);
-        padding: 20px;
-        width: 100%;
-        margin: 20px 0 3px 0;
+.config-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.checkbox-container h3 {
-    font-size: 1.2rem;
-   margin:  0;
-
+.config-step {
+  margin: 0;
+  padding: 1.5rem;
+  border: none;
+  border-radius: var(--standard-radius);
+  background: #fff;
 }
 
-.checkbox-container .subtitle {
-    font-size: 0.8rem;
-    color: #0c0b2179;
+/* Legende innerhalb des Kastens (statt auf dem Rahmen), alles danach beginnt darunter */
+.config-step legend {
+  float: left;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
-.checkbox-label{
-    margin: 0 0 0 10px;
+.config-step > legend ~ * {
+  clear: both;
 }
 
-.uploader{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 20px;
-    justify-content: space-between;
-    margin: 20px 0 20px 0;
+.step-number {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: var(--secondary-color);
+  font-size: 0.85rem;
 }
 
-.uploader p {
-    color: #0c0b2179;
-    font-size: smaller;
+.step-value {
+  color: #6b6b6b;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
-
-
-/* Konfigurator Preview Section */
-
-.preview {
-    position: fixed;
-    width: 800px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
+.step-hint,
+.field-hint {
+  margin: 0 0 1rem;
+  color: #6b6b6b;
+  font-size: 0.9rem;
 }
 
-.preview-wrapper{
-    width: 45%;
-    display: grid;
+.field-hint {
+  margin: 0.4rem 0 0;
+}
+
+/* Produktkarten */
+.choice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.choice-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #c9c7c1;
+  border-radius: var(--standard-radius);
+  cursor: pointer;
+}
+
+.choice-card span {
+  font-weight: 700;
+}
+
+.choice-card small {
+  color: #6b6b6b;
+}
+
+.choice-card:hover,
+.choice-card:has(input:checked) {
+  border-color: var(--primary-color);
+}
+
+.choice-card:has(input:checked) {
+  box-shadow: inset 0 0 0 1px var(--primary-color);
+}
+
+.choice-card input,
+.swatch input,
+.chip-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.choice-card:has(input:focus-visible),
+.swatch:has(input:focus-visible),
+.chip-option:has(input:focus-visible) {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Farben */
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 0.75rem 0.5rem;
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+.swatch-dot {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(12, 11, 33, 0.15);
+  border-radius: 50%;
+}
+
+.swatch:has(input:checked) .swatch-dot {
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 5px var(--primary-color);
+}
+
+.swatch-name {
+  color: #6b6b6b;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.swatch:has(input:checked) .swatch-name {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+[data-show-colors] {
+  margin-top: 1rem;
+}
+
+/* Druckseiten */
+.print-area {
+  padding: 1rem 0;
+  border-top: 1px solid #e6e4df;
+}
+
+.print-area:last-child {
+  padding-bottom: 0;
+}
+
+.print-area-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.print-area-options[hidden] {
+  display: none;
+}
+
+.option-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-option span {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 1rem;
+  border: 1px solid #c9c7c1;
+  border-radius: var(--standard-radius);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.chip-option:hover span {
+  border-color: var(--primary-color);
+}
+
+.chip-option input:checked + span {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.toggle-row[hidden] {
+  display: none;
+}
+
+.toggle-row input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--primary-color);
+}
+
+/* Felder */
+.config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.config-field:last-child {
+  margin-bottom: 0;
+}
+
+.config-field[hidden],
+.config-step [hidden] {
+  display: none;
+}
+
+.config-field label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.optional {
+  color: #6b6b6b;
+  font-weight: 400;
+}
+
+.config-page input[type="text"],
+.config-page input[type="email"],
+.config-page input[type="tel"],
+.config-page input[type="number"],
+.config-page input[type="date"],
+.config-page textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid #c9c7c1;
+  border-radius: var(--standard-radius);
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  font: inherit;
+  font-size: 16px; /* verhindert Zoom auf dem Handy */
+}
+
+.config-page textarea {
+  resize: vertical;
+}
+
+.upload-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.upload-button {
+  margin: 0.2rem 0 0;
+}
+
+.upload-box .field-hint {
+  margin: 0 0 0.4rem;
+}
+
+.config-page input:focus,
+.config-page textarea:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 1px;
+}
+
+.area-note {
+  margin-top: 0.25rem !important;
+}
+
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.size-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1rem;
+}
+
+.contact-grid .config-field:last-child {
+  margin-bottom: 1rem;
+}
+
+.config-submit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.config-submit p {
+  margin: 0;
+  font-weight: 600;
+}
+
+.config-submit button,
+.quick-form button[type="submit"] {
+  width: auto;
+  margin: 0;
+  padding: 1rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+/* Schnellanfrage */
+.quick-form {
+  max-width: 720px;
+  padding: 1.5rem;
+  border-radius: var(--standard-radius);
+  background: #fff;
+}
+
+.quick-form .field-hint {
+  margin-bottom: 1.25rem;
+}
+
+/* ---------- Handy und Tablet ---------- */
+
+@media (max-width: 870px) {
+  .config-layout {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
 
-}
-
-.preview img{
-    grid-area: 1/1 ;
-    width: 100%;
-    border-radius: var(--standard-radius);
-}
-
-.background-color {
-    grid-area: 1/1;
-    background-color: var(--primary-color);
-    width: 95%;
-    aspect-ratio: 1/1;
-    margin: 5px;
-}
-
-#anzahl-genau {
-    display: grid;
-    gap: 10px;
-    grid-template-columns: 1fr 1fr;
-    padding-left: 70px;
-}
-
-
-/* PREISRECHNER */
-
-.preisrechner {
-    position: fixed;
-    left: 10px;
-    bottom: 10px;
-    right: 10px;
-background-color: var(--secondary-color);
-box-shadow: 0px 0px 100px 0px #0000001a;
-z-index: 1000000;
-    padding: 40px;
-    border-radius: var(--standard-radius);
-}
-
-.preisrechner .content-wrapper{
-    display: flex;
+  /* Vorschau klein neben dem Preis statt mitlaufend */
+  .config-aside {
+    position: static;
     flex-direction: row;
-    justify-content: end;
-    align-items: center;
-    gap: 20px;
+    align-items: stretch;
+  }
+
+  .config-preview {
+    flex: 0 0 38%;
+  }
+
+  .config-price {
+    flex: 1;
+  }
 }
 
-.preisrechner .content-wrapper button {
-    margin: 0;
+@media (max-width: 550px) {
+  .config-step,
+  .quick-form {
+    padding: 1.25rem 1rem;
+  }
+
+  .config-tabs [role="tab"] {
+    flex: 1 1 100%;
+  }
+
+  .choice-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .config-aside {
+    flex-direction: column;
+  }
+
+  .config-preview {
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  .config-price-total {
+    font-size: 1.35rem;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .size-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .config-submit {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .config-submit button,
+  .quick-form button[type="submit"] {
+    width: 100%;
+  }
 }
 
-.preis {
-    text-align: right;
-}
-
-#gesamtpreis {
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    margin: 0 ;
-}
-
-#stueckpreis {
-    color: #0c0b2137;
-}
-
-.full-white{
-z-index: -10;
-}
-
-.footer{
-    z-index: -10;
+.upload-box .toggle-row {
+  font-weight: 400;
 }
