@@ -23,10 +23,11 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `farben` | `Schwarz:#000000, Weiß:#ffffff` | Farbauswahl mit Farbpunkt (Name:Farbcode) |
 | `varianten` | `Slim Fit, Regular Fit` | Auswahlliste „Variante“ |
 | `lager` | `nein` | `nein` = wird nach Bestellung gefertigt (Lieferzeit 14 Tage). Ohne Angabe oder `ja` = vorrätig (5 Werktage) |
-| `sortierung` | `1` | Reihenfolge im Shop (kleinere Zahl = weiter vorne) |
+| `kategorie` | `Postkarten` oder `Postkarten, Weihnachten` | Kategorie(n) für den Filter in der Shop-Übersicht und für „Das könnte dir gefallen“ (siehe unten) |
+| `sortierung` | `1` | Reihenfolge im Shop bei „Empfohlen“ (kleinere Zahl = weiter vorne) |
 | `vorbestellung` | `2026-12-15` oder `15.12.2026` | Vorbestellung: Versand erst ab diesem Datum statt in 5 bzw. 14 Tagen. Ist das Datum erreicht, gilt das Produkt automatisch wieder als normal lieferbar |
 | `herstellung` | `Im Digitaldruck gedruckt` oder `nein` | Ersetzt auf der Produktseite den Hinweis „Von Hand im Siebdruck bedruckt“; `nein` blendet ihn aus. Leer lassen = Siebdruck-Text |
-| `bestand` | `S:5, M:10, L:0` oder `20` | Lagerbestand je Größe bzw. insgesamt (siehe unten). Kein Eintrag = unbegrenzt |
+| `bestand` | `20`, `S:5, M:10, L:0` oder `Blau:3, Rot:0` | Lagerbestand insgesamt bzw. je Größe, Farbe oder Variante (siehe unten). Kein Eintrag = unbegrenzt |
 | `bildordner` | `hoodie` | Weitere Produktbilder aus dem Ordner `src/img/produkte/hoodie/` (siehe unten) |
 | `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
@@ -59,16 +60,27 @@ Mit dem Metadatum `bestand` legt ihr fest, wie viele Stück verkauft werden kön
 | *(kein Eintrag)* | unbegrenzt |
 | `20` | 20 Stück insgesamt (für Produkte ohne Größen) |
 | `S:5, M:10, L:3, XL:0` | Bestand je Größe; Größen, die nicht genannt sind, bleiben unbegrenzt |
+| `Blau:3, Grün:12, Rot:0` | Bestand je Farbe (oder je Variante) – genauso, nur mit den Namen aus `farben` bzw. `varianten` |
 
+- Die Namen müssen genau so geschrieben sein wie in `groessen`, `farben` oder `varianten`
+  (Groß-/Kleinschreibung, Leerzeichen). Pro Produkt bitte nur eine Art verwenden, also
+  entweder Größen **oder** Farben **oder** Varianten.
 - Ab 5 Stück oder weniger steht „Nur noch X Stück verfügbar“ auf der Produktseite.
-- Größen mit 0 sind durchgestrichen und nicht wählbar. Sind alle Größen bzw. der
-  Gesamtbestand bei 0, steht „Ausverkauft“ auf Produktseite und Produktbild.
+- Optionen mit 0 sind durchgestrichen bzw. ausgegraut und nicht wählbar. Ist alles bei 0,
+  steht „Ausverkauft“ auf Produktseite und Produktbild.
 - In den Warenkorb passt höchstens der verfügbare Bestand; vor der Kasse wird noch einmal
   geprüft.
 - Nach jeder bezahlten Bestellung zieht die Website die gekauften Stück automatisch vom
   Bestand in Stripe ab. Bei einer Erstattung den Bestand bitte von Hand wieder erhöhen.
 - Die Kasse verfällt nach gut 30 Minuten. Bezahlen zwei Leute gleichzeitig das letzte Stück,
   kann es ausnahmsweise einmal zu viel verkauft werden – dann eine Bestellung erstatten.
+
+### Was passiert bei Problemen an der Kasse?
+
+Passt etwas im Warenkorb nicht mehr (zu wenig Bestand, Farbe/Größe gibt es nicht mehr,
+Produkt wurde entfernt), nennt der Warenkorb das betroffene Produkt mit der Ausführung,
+z. B. „Von „Der Fels | Postkarte“ (Blau) sind nur noch 2 Stück verfügbar“, und markiert die
+Position.
 
 ### Einmalig einrichten: Webhook für das automatische Abziehen
 
@@ -81,6 +93,24 @@ Mit dem Metadatum `bestand` legt ihr fest, wie viele Stück verkauft werden kön
    `STRIPE_WEBHOOK_SECRET` mit diesem Wert (Scope: Functions), danach neu deployen.
 
 Für Test- und Live-Modus gibt es jeweils einen eigenen Webhook und ein eigenes Secret.
+
+## Kategorien, Filter und „Das könnte dir gefallen“
+
+- `kategorie` ist frei wählbar, z. B. `Postkarten`, `Shirts`, `Kissen`. Mehrere mit Komma.
+  Auf die Schreibweise achten – `Postkarte` und `Postkarten` wären zwei Kategorien.
+- Die Shop-Übersicht zeigt oben die Kategorien als Filter (erst ab zwei Kategorien) und
+  eine Sortierung: Empfohlen (`sortierung`), Neu (zuletzt in Stripe angelegt), Preis, A–Z.
+  Ausverkauftes steht immer am Ende.
+- Unter jedem Produkt stehen bis zu 4 Vorschläge, zuerst aus derselben Kategorie, danach
+  aufgefüllt mit weiteren Produkten. Ausverkauftes wird nie vorgeschlagen.
+
+## Vorschlag im Warenkorb (kurz vor 50 €)
+
+Fehlen bis zum kostenlosen Versand höchstens 20 €, schlägt der Warenkorb ein Produkt vor,
+das sich mit einem Klick hinzufügen lässt. Gewählt wird das **günstigste Produkt, mit dem
+die Bestellung über 50 € kommt** – also immer knapp darüber, nie darunter. Vorgeschlagen
+werden nur Produkte ohne Größenwahl, die lieferbar und keine Vorbestellung sind (Farbe bzw.
+Variante: die erste verfügbare).
 
 ## Mehr als ein Bild pro Produkt
 

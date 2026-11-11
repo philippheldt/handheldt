@@ -112,9 +112,15 @@ body.cart-open {
   transition: width 0.4s ease;
 }
 
-.cart-items {
+/* Scrollbereich: Artikel und Vorschlag; Kopf und Kasse bleiben fest */
+.cart-scroll {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.cart-items {
   margin: 0;
   padding: 0 1.5rem;
   list-style: none;
@@ -344,7 +350,7 @@ body.cart-open {
   background: #fff;
 }
 
-.cart-panel--page .cart-items {
+.cart-panel--page .cart-scroll {
   overflow: visible;
 }
 
@@ -402,4 +408,140 @@ body.cart-open {
   color: #8a1c1c;
   font-size: 0.85rem;
   font-weight: 600;
+}
+
+/* Position, die beim Checkout ein Problem hat */
+.cart-item--error {
+  margin: 0 -0.75rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-radius: var(--standard-radius);
+  background: #fdf1f1;
+}
+
+.quantity-control button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.quantity-control button:disabled:hover {
+  background: transparent;
+}
+
+/* ---------- Vorschlag kurz vor dem kostenlosen Versand ---------- */
+
+.cart-upsell {
+  margin: 0 1.5rem 1.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px dashed #c9c7c1;
+  border-radius: var(--standard-radius);
+  background: #fff;
+}
+
+.cart-upsell-title {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.cart-upsell-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cart-upsell-image {
+  flex-shrink: 0;
+  width: 48px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--standard-radius);
+  background: #e2e0da;
+}
+
+.cart-upsell-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  font-size: 0.9rem;
+}
+
+.cart-upsell-body a {
+  overflow: hidden;
+  color: var(--primary-color);
+  font-weight: 700;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cart-upsell-body span {
+  color: #6b6b6b;
+  font-size: 0.85rem;
+}
+
+.cart-upsell-add {
+  flex-shrink: 0;
+  width: auto;
+  height: 38px;
+  margin: 0;
+  padding: 0 0.9rem;
+  border: 1px solid var(--primary-color);
+  border-radius: var(--standard-radius);
+  background: var(--primary-color);
+  color: var(--secondary-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------- Kompakter Kassenbereich auf kleinen Bildschirmen ---------- */
+
+@media (max-width: 550px), (max-height: 700px) {
+  .cart-panel--drawer .cart-footer {
+    padding-top: 0.9rem;
+    padding-bottom: calc(0.9rem + env(safe-area-inset-bottom));
+  }
+
+  /* Zwischensumme steckt schon in Versand + Gesamt; „Weiter einkaufen“ = Schließen oben */
+  .cart-panel--drawer .cart-summary-sub,
+  .cart-panel--drawer .cart-continue {
+    display: none;
+  }
+
+  .cart-panel--drawer .cart-summary-rows {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .cart-panel--drawer .cart-summary-total {
+    margin-top: 0.2rem;
+    padding-top: 0.4rem !important;
+    font-size: 1.05rem;
+  }
+
+  .cart-panel--drawer .cart-note,
+  .cart-panel--drawer .cart-preorder-note {
+    margin-bottom: 0.6rem;
+  }
+
+  .cart-panel--drawer .checkout-button {
+    padding: 0.85rem;
+  }
+
+  .cart-panel--drawer .shipping-progress {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .cart-header {
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+  }
+
+  .cart-upsell {
+    margin: 0 1rem 1rem;
+  }
 }

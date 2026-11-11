@@ -7,8 +7,12 @@
   // Versandkosten laut AGB § 3 (müssen zu netlify/functions/create-checkout.js passen)
   const FREE_SHIPPING_FROM = 50;
   const SHIPPING_COST = 4.9;
+  // Vorschlag „Passt noch dazu“, wenn bis zum kostenlosen Versand höchstens so viel fehlt
+  const UPSELL_MAX_GAP = 20;
 
   let catalogSynced = false;
+  // Stripe-Katalog nach dem ersten Abgleich (für Vorschläge)
+  let catalog = [];
   let lastFocused = null;
 
   // ---------- Hilfsfunktionen ----------
@@ -28,11 +32,21 @@
     return `${day}.${month}.${year}`;
   }
 
-  function stockFor(product, size) {
+  // Bestand für die gewählte Größe/Farbe/Variante (null = unbegrenzt)
+  function stockFor(product, item) {
     const stock = product.stock;
     if (!stock) return null;
     if (stock.total !== null) return stock.total;
-    return size in stock.bySize ? stock.bySize[size] : null;
+    const option = [item.size, item.color, item.variant].find((value) => value && value in stock.byOption);
+    return option ? stock.byOption[option] : null;
+  }
+
+  // Gibt es die gewählte Ausführung noch? (Optionen können in Stripe geändert werden)
+  function optionsStillValid(product, item) {
+    if (product.sizes.length > 0 && !product.sizes.includes(item.size)) return false;
+    if (product.colors.length > 0 && !product.colors.some((color) => color.name === item.color)) return false;
+    if (product.variants.length > 0 && !product.variants.includes(item.variant)) return false;
+    return true;
   }
 
   function readCart() {
@@ -59,11 +73,14 @@
       const response = await fetch("/.netlify/functions/products");
       if (!response.ok) throw new Error(`Status ${response.status}`);
       const products = await response.json();
+      catalog = products;
 
       const synced = readCart()
         .filter((item) => products.some((p) => p.id === item.productId))
         .map((item) => {
           const product = products.find((p) => p.id === item.productId);
+          // Ausführung gibt es nicht mehr -> wie ausverkauft behandeln, damit klar ist, was zu tun ist
+          const available = optionsStillValid(product, item) ? stockFor(product, item) : 0;
           return {
             ...item,
             title: product.title,
@@ -77,9 +94,9 @@
             image: product.images[0] || "",
             freeShipping: product.freeShipping,
             preorderDate: product.preorderDate,
-            // Bestand der gewählten Größe (null = unbegrenzt); Menge höchstens so groß wie verfügbar
-            available: stockFor(product, item.size),
-            quantity: Math.min(item.quantity, Math.max(1, stockFor(product, item.size) ?? 99)),
+            // Bestand der gewählten Ausführung (null = unbegrenzt); Menge höchstens so groß wie verfügbar
+            available,
+            quantity: Math.min(item.quantity, Math.max(1, available ?? 99)),
           };
         });
 
@@ -97,7 +114,7 @@
       .map((item, index) => {
         const options = [item.size && `Größe ${item.size}`, item.color, item.variant].filter(Boolean).join(" · ");
         return `
-          <li class="cart-item">
+          <li class="cart-item" data-item-index="${index}">
             ${item.image ? `<img class="cart-item-image" src="${escapeHtml(item.image)}" alt="">` : '<div class="cart-item-image"></div>'}
             <div class="cart-item-body">
               <div class="cart-item-top">
@@ -105,13 +122,14 @@
                 <span class="cart-item-total">${formatPrice(item.price * item.quantity)}</span>
               </div>
               ${options ? `<p class="cart-item-options">${escapeHtml(options)}</p>` : ""}
-              ${item.available === 0 ? '<p class="cart-item-soldout">Ausverkauft – bitte entfernen</p>' : ""}
+              ${item.available === 0 ? '<p class="cart-item-soldout">Nicht mehr verfügbar – bitte entfernen</p>' : ""}
               ${item.preorderDate ? `<p class="cart-item-preorder">Vorbestellung · Versand ab ${formatDate(item.preorderDate)}</p>` : ""}
               <div class="cart-item-bottom">
                 <div class="quantity-control quantity-control--small" role="group" aria-label="Anzahl ${escapeHtml(item.title)}">
                   <button type="button" data-action="decrease" data-index="${index}" aria-label="Anzahl verringern">−</button>
                   <span aria-live="polite">${item.quantity}</span>
-                  <button type="button" data-action="increase" data-index="${index}" aria-label="Anzahl erhöhen">+</button>
+                  <button type="button" data-action="increase" data-index="${index}" aria-label="Anzahl erhöhen"
+                    ${item.quantity >= Math.min(99, item.available ?? 99) ? "disabled" : ""}>+</button>
                 </div>
                 <button type="button" class="link-button" data-action="remove" data-index="${index}"
                   aria-label="${escapeHtml(item.title)} entfernen">Entfernen</button>
@@ -147,6 +165,83 @@
       </div>`;
   }
 
+  // ---------- Vorschlag kurz vor dem kostenlosen Versand ----------
+
+  // Bestand einer einzelnen Option (Infinity = unbegrenzt)
+  function optionStock(product, value) {
+    const stock = product.stock;
+    if (!stock || stock.total !== null || !(value in stock.byOption)) return Infinity;
+    return stock.byOption[value];
+  }
+
+  // Passendes Produkt, mit dem die Bestellung knapp über die Grenze für kostenlosen Versand kommt:
+  // das günstigste, das die Lücke schließt (also immer etwas mehr als 50 €, nie darunter).
+  // Nur Produkte ohne Größenwahl (ein Klick genügt), keine Vorbestellungen (würden alles verzögern).
+  function findUpsell(cart, gap) {
+    const candidates = catalog
+      .filter((product) => !product.soldOut && !product.preorderDate && product.sizes.length === 0)
+      .map((product) => {
+        // Erste verfügbare Farbe/Variante vorauswählen
+        const color = product.colors.map((c) => c.name).find((name) => optionStock(product, name) > 0) || null;
+        const variant = product.variants.find((name) => optionStock(product, name) > 0) || null;
+        if ((product.colors.length > 0 && !color) || (product.variants.length > 0 && !variant)) return null;
+
+        const item = { productId: product.id, size: null, color, variant };
+        const inCart = cart
+          .filter((entry) => entry.productId === product.id && entry.color === color && entry.variant === variant)
+          .reduce((sum, entry) => sum + entry.quantity, 0);
+        const available = stockFor(product, item);
+        if (available !== null && available - inCart <= 0) return null;
+
+        const price =
+          product.price +
+          ((product.surcharges?.color?.[color] || 0) + (product.surcharges?.variant?.[variant] || 0)) / 100;
+        return { product, item, price, available, inCart: cart.some((entry) => entry.productId === product.id) };
+      })
+      .filter((candidate) => candidate && candidate.price >= gap - 0.001);
+
+    // Günstigstes zuerst; bei gleichem Preis lieber etwas, das noch nicht im Warenkorb liegt
+    candidates.sort((a, b) => a.price - b.price || Number(a.inCart) - Number(b.inCart));
+    return candidates[0] || null;
+  }
+
+  function renderUpsell(upsell) {
+    if (!upsell) return "";
+    const { product, item, price } = upsell;
+    const options = [item.color, item.variant].filter(Boolean).join(" · ");
+    return `
+      <div class="cart-upsell">
+        <p class="cart-upsell-title">Damit ist dein Versand kostenlos:</p>
+        <div class="cart-upsell-item">
+          ${product.images[0] ? `<img class="cart-upsell-image" src="${escapeHtml(product.images[0])}" alt="">` : '<div class="cart-upsell-image"></div>'}
+          <div class="cart-upsell-body">
+            <a href="shop_item.html?id=${encodeURIComponent(product.id)}">${escapeHtml(product.title)}</a>
+            <span>${formatPrice(price)}${options ? ` · ${escapeHtml(options)}` : ""}</span>
+          </div>
+          <button type="button" class="cart-upsell-add" data-action="upsell"
+            aria-label="${escapeHtml(product.title)} hinzufügen">+ Hinzufügen</button>
+        </div>
+      </div>`;
+  }
+
+  function addUpsell() {
+    const cart = readCart();
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const upsell = findUpsell(cart, FREE_SHIPPING_FROM - subtotal);
+    if (!upsell) return;
+    const { product, item, price, available } = upsell;
+    addItem({
+      ...item,
+      title: product.title,
+      price,
+      quantity: 1,
+      image: product.images[0] || "",
+      freeShipping: product.freeShipping,
+      preorderDate: product.preorderDate,
+      available,
+    });
+  }
+
   function renderCart(root) {
     const isDrawer = root.dataset.cart === "drawer";
     const cart = readCart();
@@ -161,6 +256,8 @@
       .sort()
       .pop();
     const shipping = onlyFreeShipping || subtotal >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
+    const gap = FREE_SHIPPING_FROM - subtotal;
+    const upsell = shipping > 0 && gap <= UPSELL_MAX_GAP ? findUpsell(cart, gap) : null;
 
     const header = isDrawer
       ? `
@@ -186,17 +283,24 @@
     root.innerHTML = `
       ${header}
       ${renderShippingProgress(subtotal, onlyFreeShipping)}
-      <ul class="cart-items">${renderItems(cart)}</ul>
+      <div class="cart-scroll">
+        <ul class="cart-items">${renderItems(cart)}</ul>
+        ${renderUpsell(upsell)}
+      </div>
       <div class="cart-footer">
         <dl class="cart-summary-rows">
-          <div><dt>Zwischensumme</dt><dd>${formatPrice(subtotal)}</dd></div>
+          <div class="cart-summary-sub"><dt>Zwischensumme</dt><dd>${formatPrice(subtotal)}</dd></div>
           <div><dt>Versand ${onlyFreeShipping ? "(Post)" : "(DHL)"}</dt><dd>${shipping === 0 ? "kostenlos" : formatPrice(shipping)}</dd></div>
           <div class="cart-summary-total"><dt>Gesamt</dt><dd>${formatPrice(subtotal + shipping)}</dd></div>
         </dl>
         ${preorderDate ? `<p class="cart-preorder-note">Deine Bestellung enthält Vorbestellungen und wird gesammelt ab dem <b>${formatDate(preorderDate)}</b> verschickt.</p>` : ""}
-        <p class="cart-note">Abholung in Teningen kannst du an der Kasse kostenlos wählen. Gemäß § 19 UStG wird
+        ${
+          isDrawer
+            ? '<p class="cart-note">Kostenlose Abholung in Teningen an der Kasse wählbar.</p>'
+            : `<p class="cart-note">Abholung in Teningen kannst du an der Kasse kostenlos wählen. Gemäß § 19 UStG wird
           keine Umsatzsteuer berechnet. Es gelten unsere <a href="agb.html">AGB</a> und die
-          <a href="widerruf.html">Widerrufsbelehrung</a>.</p>
+          <a href="widerruf.html">Widerrufsbelehrung</a>.</p>`
+        }
         <p class="cart-error" role="alert" hidden></p>
         <button type="button" class="black checkout-button" data-action="checkout">Weiter zur Kasse</button>
         ${isDrawer ? `<button type="button" class="link-button cart-continue" data-action="close">Weiter einkaufen</button>` : ""}
@@ -242,6 +346,14 @@
         window.location.href = data.url;
         return;
       }
+      // Betroffene Position markieren, damit klar ist, was angepasst werden muss
+      if (Number.isInteger(data.index)) {
+        const row = root.querySelector(`[data-item-index="${data.index}"]`);
+        if (row) {
+          row.classList.add("cart-item--error");
+          row.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      }
       throw new Error(data.error || "Checkout fehlgeschlagen.");
     } catch (error) {
       console.error("Fehler beim Checkout:", error);
@@ -266,6 +378,8 @@
         return changeQuantity(index, -1);
       case "remove":
         return removeItem(index);
+      case "upsell":
+        return addUpsell();
       case "checkout":
         return checkout(root, target);
       case "close":
@@ -319,24 +433,29 @@
 
   // ---------- Öffentliche Schnittstelle (für shop.js) ----------
 
+  // Artikel hinzufügen; gleiche Ausführung wird zusammengefasst, höchstens so viele wie verfügbar
+  function addItem(item) {
+    const cart = readCart();
+    const existing = cart.find(
+      (entry) =>
+        entry.productId === item.productId &&
+        entry.size === item.size &&
+        entry.color === item.color &&
+        entry.variant === item.variant,
+    );
+    const max = Math.min(99, item.available ?? 99);
+    if (existing) {
+      existing.quantity = Math.min(existing.quantity + item.quantity, max);
+      existing.available = item.available;
+    } else {
+      cart.push({ ...item, quantity: Math.min(item.quantity, max) });
+    }
+    writeCart(cart);
+  }
+
   window.handheldtCart = {
     add(item) {
-      const cart = readCart();
-      const existing = cart.find(
-        (entry) =>
-          entry.productId === item.productId &&
-          entry.size === item.size &&
-          entry.color === item.color &&
-          entry.variant === item.variant,
-      );
-      const max = Math.min(99, item.available ?? 99);
-      if (existing) {
-        existing.quantity = Math.min(existing.quantity + item.quantity, max);
-        existing.available = item.available;
-      } else {
-        cart.push({ ...item, quantity: Math.min(item.quantity, max) });
-      }
-      writeCart(cart);
+      addItem(item);
       openDrawer();
     },
     open: openDrawer,
