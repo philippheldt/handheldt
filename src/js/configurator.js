@@ -38,12 +38,9 @@
 
   const $ = (selector) => form.querySelector(selector);
 
+  // Schätzung immer in ganzen Euro
   function formatEuro(value) {
-    return value.toLocaleString("de-DE", {
-      style: "currency",
-      currency: "EUR",
-      maximumFractionDigits: value % 1 === 0 ? 0 : 2,
-    });
+    return Math.round(value).toLocaleString("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
   }
 
   function formatRange([min, max]) {
