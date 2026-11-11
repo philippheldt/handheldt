@@ -1,40 +1,66 @@
 ---
 title: "handheldt – Siebdruck und handbedruckte Textilien in Kleinauflagen"
 description: "Handbedruckte, faire Textilien mit eigenen Designs – für Jugendarbeit, Events, Bands und besondere Anlässe. Siebdruck ohne Mindestmenge, mit Liebe zum Detail."
-styles: ["faq.css", "video-overlay.css", "fade.css", "shop_gallery.css"]
+styles: ["faq.css", "video-overlay.css", "fade.css", "shop_gallery.css", "home.css"]
 scripts: ["js/video_replay.js"]
 bodyScripts: ["js/shop_gallery.js"]
 ---
-    <section class="white">
-        <div>
-            <div class="video-teaser-frame">
-                <video playsinline autoplay loop muted poster="img/screenprint.jpg">
-                    <source src="img/header_video.mp4" type="video/mp4" />
-                </video>
-                <div class="black-video-overlay"></div>
-                <div class="title-text header-text">
-                    <h1 class="header-heading"><img class="header-logo" src="img/logotype_only.png"
-                            alt="handheldt – Siebdruck und handbedruckte Textilien" loading="eager" fetchpriority="high"></h1>
-                    <p>🤚🏼 gemacht mit 🤍: <br> Bedruckte Textilien und mehr</p>
+    <!-- Einstieg: kurz sagen, was es hier gibt, und direkt in den Shop führen.
+         Der Bereich ist bewusst nicht bildschirmfüllend, damit darunter schon Produkte zu sehen sind. -->
+    <section class="home-hero">
+        <div class="home-hero-frame">
+            <video playsinline autoplay loop muted poster="img/screenprint.jpg" aria-hidden="true">
+                <source src="img/header_video.mp4" type="video/mp4" />
+            </video>
+            <div class="home-hero-overlay"></div>
+            <div class="home-hero-text">
+                <p class="home-hero-kicker">handheldt · in Teningen von Hand gedruckt</p>
+                <h1>Von Hand bedruckt.<br> Shirts, Hoodies, Kissen &amp; Papeterie</h1>
+                <div class="home-hero-actions">
+                    <a href="shop.html" class="hero-button hero-button--primary">Zum Shop</a>
+                    <a href="#eigenes-design" class="hero-button">Eigenes Design drucken</a>
                 </div>
-                <!-- <video playsinline autoplay loop muted poster="img/screenprint.jpg">
-
-                    <source src="img/header_video.mp4" type="video/mp4" />
-                </video> -->
             </div>
         </div>
     </section>
 
-    <section class="white">
-        <div class="content-wrapper vertical-distance">
-            <h2 class="yellow-underline">Shop</h2>
-            <div class="product-grid product-grid--preview" data-product-gallery data-limit="4"
-                data-variant="preview" aria-live="polite"></div>
-            <div class="shop-preview-action">
-                <a href="shop.html" class="black-button">Zum Shop</a>
-            </div>
+    <!-- Kategorien als Kacheln (aus dem Stripe-Katalog, Bild = erstes Produkt der Kategorie) -->
+    <section class="white home-categories" data-category-section hidden>
+        <div class="content-wrapper">
+            <h2 class="visually-hidden">Kategorien</h2>
+            <div class="category-tiles" data-category-tiles></div>
         </div>
+    </section>
 
+    <section class="white">
+        <div class="content-wrapper home-shop">
+            <div class="home-section-head">
+                <h2>Neu im Shop</h2>
+                <a href="shop.html" class="home-section-link">Alle Produkte</a>
+            </div>
+            <div class="product-grid product-grid--preview product-grid--row" data-product-gallery data-limit="8"
+                data-sort="neu" data-variant="preview" aria-live="polite"></div>
+        </div>
+    </section>
+
+    <!-- Die typischen Fragen vor dem Kauf -->
+    <section class="white">
+        <div class="content-wrapper">
+            <ul class="trust-bar">
+                <li>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12M11 11V4.5a1.5 1.5 0 0 1 3 0V12M14 11.5V6a1.5 1.5 0 0 1 3 0v8c0 3.9-2.6 6.5-6 6.5-2.4 0-4-1.1-5.3-3.2L4 14.5a1.5 1.5 0 0 1 2.4-1.7L8 14.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span><b>Von Hand gedruckt</b> in Teningen</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7M7.5 18.5a1.5 1.5 0 1 0 0-.01M17.5 18.5a1.5 1.5 0 1 0 0-.01" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    <span><b>Kostenloser Versand</b> ab 50&nbsp;€</span>
+                </li>
+                <li>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z M12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    <span><b>Abholung</b> in Teningen möglich</span>
+                </li>
+            </ul>
+        </div>
     </section>
 
     <section class="image-section">
@@ -42,7 +68,7 @@ bodyScripts: ["js/shop_gallery.js"]
     </section>
 
 
-    <section class="white">
+    <section class="white" id="eigenes-design">
         <div class="content-wrapper">
             <header class="two-column screen-hight">
                 <div class="title-text blue-frame">

@@ -167,6 +167,41 @@
     update();
   }
 
+  // ---------- Startseite: Kategorie-Kacheln und „Neu im Shop“ ----------
+
+  // Je Kategorie eine Kachel; Bild = erstes Produkt der Kategorie mit Bild (lieferbare zuerst)
+  function renderCategoryTiles(products) {
+    const box = document.querySelector("[data-category-tiles]");
+    if (!box) return;
+    const categories = [...new Set(products.flatMap((product) => product.categories || []))];
+    if (categories.length < 2) return;
+
+    const ordered = [...products].sort((a, b) => Number(a.soldOut) - Number(b.soldOut));
+    box.innerHTML = categories
+      .slice(0, 6)
+      .map((name) => {
+        const image = ordered.find((product) => product.categories.includes(name) && product.images[0]);
+        return `
+          <a class="category-tile" href="shop.html?kategorie=${encodeURIComponent(name)}">
+            <span class="category-tile-image">
+              ${image ? `<img src="${escapeHtml(image.images[0])}" alt="" loading="lazy">` : ""}
+            </span>
+            <span class="category-tile-name">${escapeHtml(name)}</span>
+          </a>`;
+      })
+      .join("");
+    box.classList.toggle("category-tiles--many", categories.length > 4);
+    const section = box.closest("[data-category-section]");
+    if (section) section.hidden = false;
+  }
+
+  // Vorschau mit data-sort="neu": zuletzt angelegte zuerst, Ausverkauftes weglassen
+  function previewProducts(gallery, products) {
+    if (gallery.dataset.sort !== "neu") return products;
+    const available = products.filter((product) => !product.soldOut);
+    return [...(available.length > 0 ? available : products)].sort(SORTERS.neu);
+  }
+
   // ---------- „Das könnte dir gefallen“ (Produktseite) ----------
 
   function renderRelated(gallery, products) {
@@ -202,11 +237,12 @@
       if (!response.ok) throw new Error(`Status ${response.status}`);
       const [catalog, folders] = await Promise.all([response.json(), loadProductImageFolders()]);
       const products = catalog.map((product) => withFolderImages(product, folders));
+      renderCategoryTiles(products);
 
       galleries.forEach((gallery) => {
         if ("related" in gallery.dataset) return renderRelated(gallery, products);
         if (products.length === 0) return renderEmpty(gallery);
-        if (gallery.dataset.variant === "preview") return renderCards(gallery, products);
+        if (gallery.dataset.variant === "preview") return renderCards(gallery, previewProducts(gallery, products));
         initFilter(gallery, products);
       });
     } catch (error) {
