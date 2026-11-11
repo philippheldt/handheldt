@@ -1,151 +1,262 @@
-{"T-Shirt": {
-    "Produktcode": "TSHI",
-    "Farben": {
-      "French Navy": "C727",
-      "Black": "C002",
-      "Lilac Dream": "C355",
-      "Viva Yellow": "C356",
-      "Pool Blue": "C357",
-      "Stone": "C358",
-      "White": "C001",
-      "Heather Grey": "C250",
-      "Natural Raw": "C054",
-      "Fiesta": "C143",
-      "Nispero": "C142",
-      "Fraiche Peche": "C101",
-      "Bubble Pink": "C129",
-      "Cotton Pink": "C005",
-      "Red Brown": "C116",
-      "Burgundy": "C244",
-      "Red": "C004",
-      "Lavender": "C063",
-      "Purple Love": "C115",
-      "Worker Blue": "C088",
-      "Blue Ice": "C728",
-      "Blue Soul": "C149",
-      "Aqua Blue": "C145",
-      "Bright Blue": "C053",
-      "Mindful Blue": "C729",
-      "Dark Heather Blue": "C652",
-      "Aloe": "C089",
-      "Stargazer": "C702",
-      "Misty Jade": "C735",
-      "Green Bay": "C144",
-      "Glazed Green": "C036",
-      "Khaki": "C223",
-      "Spectra Yellow": "C204",
-      "Ochre": "C048",
-      "Heritage Brown": "C730",
-      "Latte": "C112",
-      "Desert Dust": "C028",
-      "Vintage White": "C504",
-      "Off White": "C018"
+{
+  "_hinweis": "Preise in Euro. textil = [min, max] pro Stück. Farbcodes = Stanley/Stella, Hex-Werte in js/configurator.js. Siehe KONFIGURATOR.md",
+  "druck": {
+    "sieb": 20,
+    "proStueck": {
+      "Klein": 1,
+      "Mittel": 2,
+      "Groß": 3
     },
-    "Druckbereiche": {
-      "Vorne": "VORN",
-      "Hinten": "HINT",
-      "Sonderbereich": "SONB"
-    },
-    "Vorne": {
-      "Druckgroessen": {
-        "Klein": "VKLE",
-        "Mittel": "VMIT",
-        "Groß": "VGRO"
-      },
-      "Druckpositionen": {
-        "Links": "VPLI",
-        "Mitte": "VPMO",
-        "Rechts": "VPRE",
-        "Sonderwunsch": "VPSO"
-      },
-      "Druckfarben": {
-        "1": "VZ1F",
-        "2": "VZ2F",
-        "Mehr": "VZME"
-      }
-    },
-    "Hinten": {
-      "Druckgroessen": {
-        "Klein": "HKLE",
-        "Mittel": "HMIT",
-        "Groß": "HGRO"
-      },
-      "Druckpositionen": {
-        "Oben": "HPMO",
-        "Mitte": "HPMM",
-        "Unten": "HPMU",
-        "Sonderwunsch": "HPSO"
-      },
-      "Druckfarben": {
-        "1": "HZ1F",
-        "2": "HZ2F",
-        "Mehr": "HZME"
-      }
-    },
-    "Sonderbereich": {
-      "Druckgroessen": {
-        "Klein": "SKLE",
-        "Mittel": "SMIT",
-        "Groß": "SGRO"
-      },
-      "Druckpositionen": {
-        "Sonderwunsch": "SPSO"
-      },
-      "Druckfarben": {
-        "1": "SZ1F",
-        "2": "SZ2F",
-        "Mehr": "SZME"
-      }
+    "proZusatzfarbe": 1,
+    "farben": {
+      "1": [
+        1,
+        1
+      ],
+      "2": [
+        2,
+        2
+      ],
+      "3": [
+        3,
+        3
+      ],
+      "4 oder mehr": [
+        4,
+        6
+      ]
     }
   },
-  "Tote Bag": {
-    "Produktcode": "TOTE",
-    "Farben": {
-      "Black": "C002",
-      "White": "C001",
-      "Heather Grey": "C250",
-      "Midnight Blue": "C591",
-      "Natural": "C007"
+  "produkte": [
+    {
+      "code": "TSHI",
+      "name": "T-Shirt",
+      "textil": [
+        8,
+        15
+      ],
+      "groessen": "erwachsene",
+      "farben": {
+        "French Navy": "C727",
+        "Black": "C002",
+        "Lilac Dream": "C355",
+        "Viva Yellow": "C356",
+        "Pool Blue": "C357",
+        "Stone": "C358",
+        "White": "C001",
+        "Heather Grey": "C250",
+        "Natural Raw": "C054",
+        "Fiesta": "C143",
+        "Nispero": "C142",
+        "Fraiche Peche": "C101",
+        "Bubble Pink": "C129",
+        "Cotton Pink": "C005",
+        "Red Brown": "C116",
+        "Burgundy": "C244",
+        "Red": "C004",
+        "Lavender": "C063",
+        "Purple Love": "C115",
+        "Worker Blue": "C088",
+        "Blue Ice": "C728",
+        "Blue Soul": "C149",
+        "Aqua Blue": "C145",
+        "Bright Blue": "C053",
+        "Mindful Blue": "C729",
+        "Dark Heather Blue": "C652",
+        "Aloe": "C089",
+        "Stargazer": "C702",
+        "Misty Jade": "C735",
+        "Green Bay": "C144",
+        "Glazed Green": "C036",
+        "Khaki": "C223",
+        "Spectra Yellow": "C204",
+        "Ochre": "C048",
+        "Heritage Brown": "C730",
+        "Latte": "C112",
+        "Desert Dust": "C028",
+        "Vintage White": "C504",
+        "Off White": "C018"
+      },
+      "bereiche": {
+        "Vorne": [
+          "Links",
+          "Mitte",
+          "Rechts"
+        ],
+        "Hinten": [
+          "Oben",
+          "Mitte",
+          "Unten"
+        ]
+      },
+      "vorschau": "TSHI"
     },
-    "Druckbereiche": {
-      "Vorne": "VORN",
-      "Hinten": "HINT"
+    {
+      "code": "HOOD",
+      "name": "Hoodie",
+      "textil": [
+        25,
+        40
+      ],
+      "groessen": "erwachsene",
+      "farben": {
+        "Black": "C002",
+        "White": "C001",
+        "Heather Grey": "C250",
+        "French Navy": "C727",
+        "Natural Raw": "C054",
+        "Off White": "C018",
+        "Stone": "C358",
+        "Khaki": "C223",
+        "Burgundy": "C244",
+        "Glazed Green": "C036",
+        "Aloe": "C089",
+        "Lavender": "C063",
+        "Cotton Pink": "C005",
+        "Worker Blue": "C088",
+        "Latte": "C112",
+        "Desert Dust": "C028"
+      },
+      "bereiche": {
+        "Vorne": [
+          "Links",
+          "Mitte",
+          "Rechts"
+        ],
+        "Hinten": [
+          "Oben",
+          "Mitte",
+          "Unten"
+        ]
+      },
+      "vorschau": null
     },
-    "Vorne": {
-      "Druckgroessen": {
-        "Klein": "VKLE",
-        "Mittel": "VMIT",
-        "Groß": "VGRO"
+    {
+      "code": "SWEA",
+      "name": "Sweater",
+      "textil": [
+        20,
+        32
+      ],
+      "groessen": "erwachsene",
+      "farben": {
+        "Black": "C002",
+        "White": "C001",
+        "Heather Grey": "C250",
+        "French Navy": "C727",
+        "Natural Raw": "C054",
+        "Off White": "C018",
+        "Stone": "C358",
+        "Khaki": "C223",
+        "Burgundy": "C244",
+        "Glazed Green": "C036",
+        "Aloe": "C089",
+        "Lavender": "C063",
+        "Cotton Pink": "C005",
+        "Worker Blue": "C088",
+        "Latte": "C112",
+        "Desert Dust": "C028"
       },
-      "Druckpositionen": {
-        "Oben": "VPMO",
-        "Mitte": "VPMM",
-        "Unten": "VPMU",
-        "Sonderwunsch": "VPSO"
+      "bereiche": {
+        "Vorne": [
+          "Links",
+          "Mitte",
+          "Rechts"
+        ],
+        "Hinten": [
+          "Oben",
+          "Mitte",
+          "Unten"
+        ]
       },
-      "Druckfarben": {
-        "1": "VZ1F",
-        "2": "VZ2F",
-        "Mehr": "VZME"
-      }
+      "vorschau": null
     },
-    "Hinten": {
-      "Druckgroessen": {
-        "Klein": "HKLE",
-        "Mittel": "HMIT",
-        "Groß": "HGRO"
+    {
+      "code": "BABY",
+      "name": "Babybody",
+      "textil": [
+        8,
+        14
+      ],
+      "groessen": "baby",
+      "farben": {
+        "White": "C001",
+        "Natural Raw": "C054",
+        "Heather Grey": "C250",
+        "Black": "C002",
+        "French Navy": "C727",
+        "Cotton Pink": "C005",
+        "Blue Ice": "C728",
+        "Aloe": "C089"
       },
-      "Druckpositionen": {
-        "Oben": "HPMO",
-        "Mitte": "HPMM",
-        "Unten": "HPMU",
-        "Sonderwunsch": "HPSO"
+      "bereiche": {
+        "Vorne": [
+          "Mitte"
+        ],
+        "Hinten": [
+          "Mitte"
+        ]
       },
-      "Druckfarben": {
-        "1": "HZ1F",
-        "2": "HZ2F",
-        "Mehr": "HZME"
-      }
+      "vorschau": null
+    },
+    {
+      "code": "TOTE",
+      "name": "Tote Bag",
+      "textil": [
+        3,
+        6
+      ],
+      "groessen": null,
+      "farben": {
+        "Black": "C002",
+        "White": "C001",
+        "Heather Grey": "C250",
+        "Midnight Blue": "C591",
+        "Natural": "C007"
+      },
+      "bereiche": {
+        "Vorne": [
+          "Mitte"
+        ],
+        "Hinten": [
+          "Mitte"
+        ]
+      },
+      "vorschau": "TOTE"
+    },
+    {
+      "code": "SONS",
+      "name": "Etwas anderes",
+      "textil": null,
+      "groessen": null,
+      "farben": null,
+      "bereiche": {
+        "Vorne": [
+          "Mitte"
+        ],
+        "Hinten": [
+          "Mitte"
+        ]
+      },
+      "vorschau": null
     }
+  ],
+  "groessen": {
+    "erwachsene": [
+      "XXS",
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL",
+      "XXXL"
+    ],
+    "baby": [
+      "50/56",
+      "62/68",
+      "74/80",
+      "86/92"
+    ]
   }
 }
