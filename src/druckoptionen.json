@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Preise in Euro. textil = [min, max] pro Stück. Farbcodes = Stanley/Stella, Hex-Werte in js/configurator.js. Siehe KONFIGURATOR.md",
+  "_hinweis": "Preise in Euro inkl. MwSt. (Einkauf Shirtschleuder, Stanley/Stella, Stand 11/2026). textil = [min, max] pro Stück: T-Shirt Creator 2.0 bis Sparker 2.0, Hoodie Cruiser 2.0, Sweater Changer 2.0, Babybody Baby Body, Tote Bag Light bis Tote Bag. Siehe KONFIGURATOR.md",
   "druck": {
     "sieb": 20,
     "proStueck": {
@@ -32,8 +32,8 @@
       "code": "TSHI",
       "name": "T-Shirt",
       "textil": [
-        8,
-        15
+        8.2,
+        15.4
       ],
       "groessen": "erwachsene",
       "farben": {
@@ -95,8 +95,8 @@
       "code": "HOOD",
       "name": "Hoodie",
       "textil": [
-        30,
-        45
+        35.88,
+        44.32
       ],
       "groessen": "erwachsene",
       "farben": {
@@ -135,8 +135,8 @@
       "code": "SWEA",
       "name": "Sweater",
       "textil": [
-        25,
-        35
+        27.55,
+        34.3
       ],
       "groessen": "erwachsene",
       "farben": {
@@ -175,8 +175,8 @@
       "code": "BABY",
       "name": "Babybody",
       "textil": [
-        8,
-        14
+        7.31,
+        8.54
       ],
       "groessen": "baby",
       "farben": {
@@ -203,8 +203,8 @@
       "code": "TOTE",
       "name": "Tote Bag",
       "textil": [
-        3,
-        6
+        3.47,
+        6.3
       ],
       "groessen": null,
       "farben": {
@@ -250,12 +250,16 @@
       "L",
       "XL",
       "XXL",
-      "XXXL"
+      "3XL",
+      "4XL",
+      "5XL"
     ],
     "baby": [
-      "50/56",
+      "56/62",
       "62/68",
+      "68/74",
       "74/80",
+      "80/86",
       "86/92"
     ]
   }
