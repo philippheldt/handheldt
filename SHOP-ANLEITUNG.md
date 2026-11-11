@@ -24,7 +24,7 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `varianten` | `Slim Fit, Regular Fit` | Auswahlliste „Variante“ |
 | `lager` | `nein` | `nein` = wird nach Bestellung gefertigt (Lieferzeit 14 Tage). Ohne Angabe oder `ja` = vorrätig (5 Werktage) |
 | `kategorie` | `Postkarten` oder `Postkarten, Weihnachten` | Kategorie(n) für den Filter in der Shop-Übersicht und für „Das könnte dir gefallen“ (siehe unten) |
-| `neu_seit` | `2026-11-01` oder `01.11.2026` | Für „Neu“ (Shop-Sortierung, „Neu im Shop“ auf der Startseite, Bild der Kategorie-Kachel). Ohne Angabe zählt, wann das Produkt in Stripe angelegt wurde |
+| `neu_seit` | `2026-11-01` oder `01.11.2026` | Für „Neu“ (Shop-Sortierung und „Neu im Shop“ auf der Startseite). Ohne Angabe zählt, wann das Produkt in Stripe angelegt wurde |
 | `sortierung` | `1` | Reihenfolge im Shop bei „Empfohlen“ (kleinere Zahl = weiter vorne) |
 | `vorbestellung` | `2026-12-15` oder `15.12.2026` | Vorbestellung: Versand erst ab diesem Datum statt in 5 bzw. 14 Tagen. Ist das Datum erreicht, gilt das Produkt automatisch wieder als normal lieferbar |
 | `herstellung` | `Im Digitaldruck gedruckt` oder `nein` | Ersetzt auf der Produktseite den Hinweis „Von Hand im Siebdruck bedruckt“; `nein` blendet ihn aus. Leer lassen = Siebdruck-Text |
@@ -197,8 +197,6 @@ steht in `netlify/functions/create-checkout.js`, `src/js/cart.js`, den AGB und d
 
 ## Startseite
 
-- **Kategorie-Kacheln:** je Kategorie eine Kachel (höchstens 6), Bild ist das neueste
-  lieferbare Produkt der Kategorie.
 - **Neu im Shop:** die 8 neuesten lieferbaren Produkte.
 - „Neu“ richtet sich nach `neu_seit`, sonst danach, wann das Produkt in Stripe angelegt wurde.
   Wer die Reihenfolge festlegen will, trägt bei den Produkten einfach ein Datum in `neu_seit` ein.

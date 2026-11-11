@@ -1,4 +1,4 @@
-/* Startseite: Einstieg, Kategorien, „Neu im Shop“, Vertrauensleiste */
+/* Startseite: Einstieg und „Neu im Shop“ */
 
 /* ---------- Einstieg ---------- */
 
@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  /* Nicht bildschirmfüllend: darunter sollen schon die Kategorien zu sehen sein */
+  /* Nicht bildschirmfüllend: darunter sollen schon Produkte zu sehen sein */
   height: clamp(480px, 60vh, 640px);
   padding: 140px 20px 40px; /* oben Platz für Banner und Navigation */
   background: var(--primary-color);
@@ -91,60 +91,6 @@
   color: var(--primary-color);
 }
 
-/* ---------- Kategorien ---------- */
-
-.home-categories[hidden] {
-  display: none;
-}
-
-.home-categories .content-wrapper {
-  padding-top: 2.5rem;
-  padding-bottom: 0.5rem; /* Abschnitte überlappen sich um 5px (section.white) */
-}
-
-.category-tiles {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
-}
-
-.category-tile {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  color: var(--primary-color);
-  text-decoration: none !important;
-}
-
-.category-tile-image {
-  display: block;
-  overflow: hidden;
-  aspect-ratio: 4 / 3;
-  border-radius: var(--standard-radius);
-  background: #e2e0da;
-}
-
-.category-tile-image img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.category-tile:hover .category-tile-image img {
-  transform: scale(1.04);
-}
-
-.category-tile-name {
-  font-weight: 800;
-}
-
-.category-tile-name::after {
-  content: " →";
-  font-weight: 500;
-}
-
 /* ---------- Neu im Shop ---------- */
 
 .home-shop {
@@ -210,8 +156,7 @@
     text-align: center;
   }
 
-  /* Kategorien und Produkte als waagerecht wischbare Reihen */
-  .category-tiles,
+  /* Produkte als waagerecht wischbare Reihe */
   .product-grid--row {
     display: flex;
     gap: 12px;
@@ -225,23 +170,10 @@
     scrollbar-width: none;
   }
 
-  .category-tiles::-webkit-scrollbar,
   .product-grid--row::-webkit-scrollbar {
     display: none;
   }
 
-  .category-tile {
-    flex: 0 0 38%;
-    scroll-snap-align: start;
-  }
-
-  .category-tile-image {
-    aspect-ratio: 1 / 1;
-  }
-
-  .category-tile-name {
-    font-size: 0.95rem;
-  }
 
   .product-grid--row > .product-card {
     flex: 0 0 44%;
@@ -252,9 +184,6 @@
     flex: 1 0 100%;
   }
 
-  .home-categories .content-wrapper {
-    padding-top: 1.75rem;
-  }
 
   .home-shop {
     padding-top: 2.25rem;
