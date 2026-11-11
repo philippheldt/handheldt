@@ -223,6 +223,10 @@
   white-space: nowrap;
 }
 
+.shop-sort select[hidden] {
+  display: none;
+}
+
 .shop-sort select {
   height: 40px;
   margin: 0;
@@ -263,8 +267,19 @@
   }
 
   .shop-sort {
+    flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
+  }
+
+  /* Mit Kategorie-Liste: beide Auswahlfelder nebeneinander, Anzahl darüber */
+  .shop-sort:has(#shop-category:not([hidden])) .shop-count {
+    width: 100%;
+  }
+
+  .shop-sort:has(#shop-category:not([hidden])) select {
+    flex: 1;
+    min-width: 0;
   }
 }
 
@@ -280,4 +295,14 @@
 
 .related-products .product-grid {
   margin-top: 1.5rem;
+}
+
+/* Viele Kategorien (Auswahlliste): Anzahl links, beide Auswahlfelder rechts */
+.shop-sort:has(#shop-category:not([hidden])) {
+  width: 100%;
+  margin-left: 0;
+}
+
+.shop-sort:has(#shop-category:not([hidden])) .shop-count {
+  margin-right: auto;
 }
