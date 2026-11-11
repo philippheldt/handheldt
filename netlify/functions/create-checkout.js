@@ -7,6 +7,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const headers = { "Content-Type": "application/json" };
 
+// Mindestbestellwert laut AGB § 3 (Warenwert ohne Versand, in Cent; muss zu js/cart.js passen)
+const MIN_ORDER_AMOUNT = 250;
+
 // "2026-12-15" -> "15.12.2026"
 function formatDate(isoDate) {
   const [year, month, day] = isoDate.split("-");
@@ -149,6 +152,10 @@ export const handler = async (event) => {
       (sum, item, index) => sum + (products[index].unitAmount + surchargeFor(products[index], item)) * item.quantity,
       0,
     );
+    if (subtotal < MIN_ORDER_AMOUNT) {
+      return errorResponse(400, "Der Mindestbestellwert beträgt 2,50 €. Bitte lege noch etwas in den Warenkorb.");
+    }
+
     const onlyFreeShipping = products.every((product) => product.freeShipping);
     const shippingAmount = onlyFreeShipping || subtotal >= 5000 ? 0 : 490;
 

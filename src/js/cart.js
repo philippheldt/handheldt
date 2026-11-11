@@ -7,6 +7,8 @@
   // Versandkosten laut AGB § 3 (müssen zu netlify/functions/create-checkout.js passen)
   const FREE_SHIPPING_FROM = 50;
   const SHIPPING_COST = 4.9;
+  // Mindestbestellwert laut AGB § 3 (Warenwert ohne Versand)
+  const MIN_ORDER = 2.5;
   // Vorschlag „Passt noch dazu“, wenn bis zum kostenlosen Versand höchstens so viel fehlt
   const UPSELL_MAX_GAP = 20;
 
@@ -301,8 +303,14 @@
           keine Umsatzsteuer berechnet. Es gelten unsere <a href="agb.html">AGB</a> und die
           <a href="widerruf.html">Widerrufsbelehrung</a>.</p>`
         }
+        ${
+          subtotal < MIN_ORDER
+            ? `<p class="cart-min-order">Mindestbestellwert ${formatPrice(MIN_ORDER)} – es fehlen noch <b>${formatPrice(MIN_ORDER - subtotal)}</b>.</p>`
+            : ""
+        }
         <p class="cart-error" role="alert" hidden></p>
-        <button type="button" class="black checkout-button" data-action="checkout">Weiter zur Kasse</button>
+        <button type="button" class="black checkout-button" data-action="checkout"
+          ${subtotal < MIN_ORDER ? "disabled" : ""}>Weiter zur Kasse</button>
         ${isDrawer ? `<button type="button" class="link-button cart-continue" data-action="close">Weiter einkaufen</button>` : ""}
       </div>`;
   }
