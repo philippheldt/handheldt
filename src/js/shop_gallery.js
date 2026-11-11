@@ -91,7 +91,7 @@
   };
 
   // Bis zu so vielen Kategorien als Buttons, darüber als Auswahlliste (bleibt übersichtlich)
-  const MAX_CATEGORY_CHIPS = 5;
+  const MAX_CATEGORY_CHIPS = 3;
 
   function initFilter(gallery, products) {
     const toolbar = document.querySelector("[data-shop-filter]");
