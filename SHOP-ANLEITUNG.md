@@ -99,7 +99,7 @@ Für Test- und Live-Modus gibt es jeweils einen eigenen Webhook und ein eigenes 
 - `kategorie` ist frei wählbar, z. B. `Postkarten`, `Shirts`, `Kissen`. Mehrere mit Komma.
   Auf die Schreibweise achten – `Postkarte` und `Postkarten` wären zwei Kategorien.
 - Die Shop-Übersicht zeigt oben die Kategorien als Filter (erst ab zwei Kategorien; bis zu
-  5 als Buttons, ab 6 als Auswahlliste „Alle Kategorien“, damit es übersichtlich bleibt) und
+  3 als Buttons, ab 4 als Auswahlliste „Alle Kategorien“, damit es übersichtlich bleibt) und
   eine Sortierung: Empfohlen (`sortierung`), Neu (zuletzt in Stripe angelegt), Preis, A–Z.
   Ausverkauftes steht immer am Ende.
 - Unter jedem Produkt stehen bis zu 4 Vorschläge, zuerst aus derselben Kategorie, danach
