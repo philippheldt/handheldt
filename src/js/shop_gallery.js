@@ -1,7 +1,7 @@
 // js/shop_gallery.js
 // Produktkarten aus dem Stripe-Katalog. Jedes Element mit data-product-gallery wird befüllt:
 // - shop.html: alle Produkte, mit Filter nach Kategorie und Sortierung (data-shop-filter)
-// - Startseite: data-limit="4" data-variant="preview" (bei leerem Shop nur ein kurzer Hinweis)
+// - Startseite: data-variant="preview" mit data-limit/data-sort (bei leerem Shop nur ein kurzer Hinweis)
 // - Produktseite: data-related = „Das könnte dir gefallen“ (gleiche Kategorie zuerst)
 
 (function () {
@@ -91,7 +91,7 @@
   };
 
   // Bis zu so vielen Kategorien als Buttons, darüber als Auswahlliste (bleibt übersichtlich)
-  const MAX_CATEGORY_CHIPS = 5;
+  const MAX_CATEGORY_CHIPS = 3;
 
   function initFilter(gallery, products) {
     const toolbar = document.querySelector("[data-shop-filter]");
@@ -167,6 +167,15 @@
     update();
   }
 
+  // ---------- Startseite: „Neu im Shop“ ----------
+
+  // Vorschau mit data-sort="neu": zuletzt angelegte zuerst, Ausverkauftes weglassen
+  function previewProducts(gallery, products) {
+    if (gallery.dataset.sort !== "neu") return products;
+    const available = products.filter((product) => !product.soldOut);
+    return [...(available.length > 0 ? available : products)].sort(SORTERS.neu);
+  }
+
   // ---------- „Das könnte dir gefallen“ (Produktseite) ----------
 
   function renderRelated(gallery, products) {
@@ -206,7 +215,7 @@
       galleries.forEach((gallery) => {
         if ("related" in gallery.dataset) return renderRelated(gallery, products);
         if (products.length === 0) return renderEmpty(gallery);
-        if (gallery.dataset.variant === "preview") return renderCards(gallery, products);
+        if (gallery.dataset.variant === "preview") return renderCards(gallery, previewProducts(gallery, products));
         initFilter(gallery, products);
       });
     } catch (error) {

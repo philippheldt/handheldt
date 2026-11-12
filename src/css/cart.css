@@ -545,3 +545,21 @@ body.cart-open {
     margin: 0 1rem 1rem;
   }
 }
+
+/* Mindestbestellwert noch nicht erreicht */
+.cart-min-order {
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--standard-radius);
+  background: var(--accent-color);
+  color: #7a4a0c;
+  font-size: 0.85rem;
+}
+
+.checkout-button:disabled,
+.checkout-button:disabled:hover {
+  background: #b9b7b0;
+  border-color: #b9b7b0;
+  color: #fff;
+  cursor: not-allowed;
+}

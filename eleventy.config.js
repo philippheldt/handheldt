@@ -2,7 +2,7 @@ import { eleventyImageTransformPlugin } from "@11ty/eleventy-img";
 
 export default function (eleventyConfig) {
   // Statische Dateien 1:1 übernehmen
-  for (const path of ["css", "js", "img", "fonts", "configurator.js", "druckoptionen.json", "_redirects", ".well-known"]) {
+  for (const path of ["css", "js", "img", "fonts", "druckoptionen.json", "_redirects", ".well-known"]) {
     eleventyConfig.addPassthroughCopy({ [`src/${path}`]: path });
   }
 

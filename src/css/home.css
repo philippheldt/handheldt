@@ -1,0 +1,192 @@
+/* Startseite: Einstieg und „Neu im Shop“ */
+
+/* ---------- Einstieg ---------- */
+
+.home-hero-frame {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  /* Nicht bildschirmfüllend: darunter sollen schon Produkte zu sehen sein */
+  height: clamp(480px, 60vh, 640px);
+  padding: 140px 20px 40px; /* oben Platz für Banner und Navigation */
+  background: var(--primary-color);
+}
+
+.home-hero-frame video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12, 11, 33, 0.25) 0%, rgba(12, 11, 33, 0.55) 100%);
+}
+
+.home-hero-text {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  color: #fff;
+  text-align: center;
+}
+
+.home-hero-kicker {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  opacity: 0.9;
+}
+
+.home-hero-text h1 {
+  width: auto;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+.home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.hero-button {
+  display: inline-block;
+  padding: 0.95rem 1.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--standard-radius);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.hero-button:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.hero-button--primary {
+  border-color: var(--secondary-color);
+  background: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.hero-button--primary:hover {
+  background: #e2dfd7;
+  border-color: #e2dfd7;
+  color: var(--primary-color);
+}
+
+/* ---------- Neu im Shop ---------- */
+
+.home-shop {
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+.home-section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.home-section-head h2 {
+  margin: 0;
+}
+
+.home-section-link {
+  color: var(--primary-color);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.home-shop .product-grid {
+  margin-top: 1.5rem;
+}
+
+/* 8 Produkte: 4 je Reihe (die Vorschau-Regel mit 2 Spalten gilt hier erst auf dem Handy) */
+@media (max-width: 1020px) {
+  .product-grid--row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------- Handy ---------- */
+
+@media (max-width: 870px) {
+  /* Navigation sitzt unten, oben nur das Banner */
+  .home-hero-frame {
+    height: clamp(420px, 58vh, 560px);
+    padding-top: 60px;
+  }
+}
+
+@media (max-width: 550px) {
+  .home-hero-frame {
+    height: auto;
+    min-height: 0;
+    padding: 90px 20px 48px;
+  }
+
+  .home-hero-kicker {
+    font-size: 0.85rem;
+  }
+
+  .home-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-button {
+    text-align: center;
+  }
+
+  /* Produkte als waagerecht wischbare Reihe */
+  .product-grid--row {
+    display: flex;
+    gap: 12px;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+    margin-right: -20px;
+    padding: 0 20px 4px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 20px;
+    scrollbar-width: none;
+  }
+
+  .product-grid--row::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .product-grid--row > .product-card {
+    flex: 0 0 44%;
+    scroll-snap-align: start;
+  }
+
+  .product-grid--row > .shop-maintenance {
+    flex: 1 0 100%;
+  }
+
+
+  .home-shop {
+    padding-top: 2.25rem;
+    padding-bottom: 2.5rem;
+  }
+}
