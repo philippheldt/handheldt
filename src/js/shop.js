@@ -126,7 +126,11 @@ function renderProduct() {
 
   const description = document.getElementById("prod-desc");
   if (currentProduct.description) {
-    description.innerText = currentProduct.description;
+    // Zeilenumbrüche: "/n" (oder "\n") im Stripe-Feld wird zur neuen Zeile, innerText macht daraus <br>.
+    // "/n" vor einem Kleinbuchstaben bleibt stehen, damit z. B. „und/nicht“ nicht umbricht.
+    description.innerText = currentProduct.description
+      .replace(/[ \t]*\/n(?![a-zäöüß])[ \t]*/g, "\n")
+      .replace(/\\n/g, "\n");
   } else {
     document.getElementById("description-accordion").hidden = true;
   }

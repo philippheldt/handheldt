@@ -32,6 +32,11 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `bildordner` | `hoodie` | Weitere Produktbilder aus dem Ordner `src/img/produkte/hoodie/` (siehe unten) |
 | `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
+**Zeilenumbrüche in der Beschreibung:** `/n` an die Stelle des Umbruchs schreiben, für einen Absatz
+`/n/n`. Beispiel: `100 % Bio-Baumwolle/nVon Hand bedruckt/n/nPflege: 30 °C, links waschen`.
+Steht direkt nach `/n` ein Kleinbuchstabe (z. B. „und/nicht“), bleibt es normaler Text – ein Umbruch
+vor einem kleingeschriebenen Wort geht mit `/n ` und Leerzeichen danach. `\n` funktioniert auch.
+
 Alle Felder sind optional. Ohne `groessen`, `farben` oder `varianten` wird die
 jeweilige Auswahl auf der Produktseite ausgeblendet.
 
