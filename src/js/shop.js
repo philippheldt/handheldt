@@ -126,7 +126,8 @@ function renderProduct() {
 
   const description = document.getElementById("prod-desc");
   if (currentProduct.description) {
-    description.innerText = currentProduct.description;
+    // Zeilenumbrüche: echte Umbrüche oder "\n" im Stripe-Feld (innerText macht daraus <br>)
+    description.innerText = currentProduct.description.replace(/\\n/g, "\n");
   } else {
     document.getElementById("description-accordion").hidden = true;
   }
