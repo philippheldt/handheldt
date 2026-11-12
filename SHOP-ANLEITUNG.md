@@ -32,7 +32,7 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `bildordner` | `hoodie` | Weitere Produktbilder aus dem Ordner `src/img/produkte/hoodie/` (siehe unten) |
 | `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
-**Zeilenumbrüche in der Beschreibung:** Stripe erlaubt im Feld „Beschreibung“ keine Enter-Taste. Schreib
+**Zeilenumbrüche in der Beschreibung:** Echte Umbrüche (Enter) werden übernommen. Lässt das Feld in Stripe keine zu, schreib
 stattdessen `\n` (Backslash + n) an die Stelle des Umbruchs, für einen Absatz `\n\n`.
 Beispiel: `100 % Bio-Baumwolle\nVon Hand bedruckt\n\nPflege: 30 °C, links waschen`.
 
