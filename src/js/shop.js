@@ -69,11 +69,6 @@ function selectedImage() {
   return index !== undefined ? currentProduct.thumbs[index] : currentProduct.images[0] || "";
 }
 
-// "2026-12-15" -> "15. Dezember 2026"
-function formatLongDate(isoDate) {
-  return new Date(`${isoDate}T12:00:00`).toLocaleDateString("de-DE", { day: "numeric", month: "long", year: "numeric" });
-}
-
 // 200 (Cent) -> "+2,00 €"
 function formatSurcharge(cents) {
   return `+${formatPrice(cents / 100)}`;
@@ -138,7 +133,8 @@ function renderProduct() {
   // Lieferzeit laut AGB § 5: Vorbestellung ab Datum, sonst vorrätig 5 Werktage bzw. gefertigt 14 Tage
   const stock = document.getElementById("delivery-time");
   if (currentProduct.preorderDate) {
-    stock.innerText = `Vorbestellung – Versand ab ${formatLongDate(currentProduct.preorderDate)}`;
+    // z. B. „Noch 12 Tage vorbestellbar – wir versenden am 15. Dezember“ (js/preorder.js)
+    stock.innerText = window.handheldtPreorder.productText(currentProduct);
     stock.classList.add("stock-badge--preorder");
     document.getElementById("add-to-cart-btn").innerText = "Vorbestellen";
   } else {
@@ -395,13 +391,22 @@ function optionStock(value) {
 // Button, Mengenauswahl und Hinweis an den Bestand der gewählten Größe anpassen
 function updateAvailability() {
   const available = availableStock();
-  const soldOut = currentProduct.soldOut || available <= 0;
+  // Bestellschluss einer Vorbestellung vorbei (Seite war z. B. über Mitternacht offen)
+  const preorderEnded =
+    Boolean(currentProduct.preorderUntil) && window.handheldtPreorder.daysUntil(currentProduct.preorderUntil) < 0;
+  const soldOut = currentProduct.soldOut || available <= 0 || preorderEnded;
   const button = document.getElementById("add-to-cart-btn");
   const hint = document.getElementById("stock-hint");
   const quantityInput = document.getElementById("quantity");
 
   button.disabled = soldOut;
-  button.innerText = soldOut ? "Ausverkauft" : currentProduct.preorderDate ? "Vorbestellen" : "In den Warenkorb";
+  button.innerText = preorderEnded
+    ? "Vorbestellung beendet"
+    : soldOut
+      ? "Ausverkauft"
+      : currentProduct.preorderDate
+        ? "Vorbestellen"
+        : "In den Warenkorb";
   document.querySelectorAll("[data-quantity-step]").forEach((b) => (b.disabled = soldOut));
   quantityInput.disabled = soldOut;
   quantityInput.max = Math.min(99, available);
@@ -446,6 +451,7 @@ function initBuyRow() {
       image: selectedImage(),
       freeShipping: currentProduct.freeShipping,
       preorderDate: currentProduct.preorderDate,
+      preorderExact: currentProduct.preorderExact,
       // Für den Warenkorb: mehr als verfügbar lässt sich nicht hineinlegen (null = unbegrenzt)
       available: Number.isFinite(availableStock()) ? availableStock() : null,
     });

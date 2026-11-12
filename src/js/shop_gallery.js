@@ -60,7 +60,11 @@
         <img src="${escapeHtml(img2Src)}" alt="" class="secondary-img" loading="lazy">`
       : "";
 
-    const badge = product.soldOut ? "Ausverkauft" : product.preorderDate ? "Vorbestellung" : "";
+    const badge = product.soldOut
+      ? "Ausverkauft"
+      : product.preorderDate
+        ? window.handheldtPreorder?.badgeText(product) || "Vorbestellung"
+        : "";
 
     card.innerHTML = `
       <div class="card-image-wrapper">
@@ -69,6 +73,7 @@
       </div>
       <h3>${escapeHtml(product.title)}</h3>
       <div class="price">${product.hasSurcharges ? "ab " : ""}${formatPrice(product.price)}</div>
+      ${product.preorderDate && !product.soldOut && window.handheldtPreorder ? `<div class="card-note">${window.handheldtPreorder.cardNote(product)}</div>` : ""}
       ${product.freeShipping ? '<div class="card-note">Versandkostenfrei</div>' : ""}`;
     return card;
   }

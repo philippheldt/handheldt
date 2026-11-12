@@ -159,16 +159,27 @@ Bilder, wird das erste (nach Dateiname sortiert) gezeigt.
 
 ## Vorbestellungen
 
-Mit dem Metadatum `vorbestellung` (z. B. `15.12.2026`) wird ein Produkt zur Vorbestellung:
+Das Metadatum `vorbestellung` macht ein Produkt zur Vorbestellung. Es gibt zwei Varianten:
 
-- Produktseite: Hinweis „Vorbestellung – Versand ab 15. Dezember 2026“, Button „Vorbestellen“
-- Shop-Übersicht: Kennzeichnung „Vorbestellung“ auf dem Produktbild
-- Warenkorb und Kasse: Hinweis mit dem Versanddatum; in Stripe steht es an der Bestellposition
-  und als Metadatum `vorbestellung` an der Zahlung
+| Wert | Bedeutung |
+| --- | --- |
+| `15.12.2026` | Versand **ab** diesem Datum. Danach wird das Produkt automatisch normal lieferbar. |
+| `30.11.2026, 15.12.2026` | Vorbestellbar **bis** zum 1. Datum (einschließlich), Versand **am** 2. Datum. Ab dem Tag nach dem 1. Datum ist das Produkt **offline** (Shop, Warenkorb und Kasse). |
+
+So erscheint es im Shop (Variante mit zwei Daten):
+
+- Produktseite: „Noch 12 Tage vorbestellbar – wir versenden am 15. Dezember“. Kurz vor Schluss
+  „Noch eine Woche vorbestellbar“, „Nur noch bis morgen vorbestellbar“, „Nur noch heute
+  vorbestellbar“; mehr als zwei Wochen vorher „Vorbestellbar bis 30. November“. Button „Vorbestellen“.
+- Shop-Übersicht: auf dem Bild „Noch 12 Tage“, „Noch 1 Woche“, „Nur bis morgen“, „Nur noch heute“
+  (ab 2 Wochen vorher), sonst „Vorbestellung“; unter dem Preis „Versand am 15.12.“
+- Warenkorb und Kasse: „Vorbestellung · Versand am 15.12.2026“; in Stripe steht es an der
+  Bestellposition und als Metadatum `vorbestellung` an der Zahlung.
+
+Mit nur einem Datum steht dort „Vorbestellung – Versand ab 15. Dezember“.
 
 Bezahlt wird sofort. Enthält eine Bestellung Vorbestellungen, wird sie gesammelt ab dem
-spätesten Vorbestell-Datum verschickt (so steht es auch in den AGB). Ab dem Datum selbst
-verschwindet der Hinweis automatisch – das Metadatum kann danach gelöscht werden.
+spätesten Versanddatum verschickt (so steht es auch in den AGB). Die Tage zählen nach deutscher Zeit.
 
 ## Produkt aus dem Shop nehmen
 

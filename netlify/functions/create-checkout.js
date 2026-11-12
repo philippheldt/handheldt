@@ -123,7 +123,8 @@ export const handler = async (event) => {
         item.size && withSurcharge(`Größe ${item.size}`, size[item.size]),
         item.color && withSurcharge(`Farbe ${item.color}`, color[item.color]),
         item.variant && withSurcharge(item.variant, variant[item.variant]),
-        product.preorderDate && `Vorbestellung – Versand ab ${formatDate(product.preorderDate)}`,
+        product.preorderDate &&
+          `Vorbestellung – Versand ${product.preorderExact ? "am" : "ab"} ${formatDate(product.preorderDate)}`,
       ].filter(Boolean);
 
       return {
