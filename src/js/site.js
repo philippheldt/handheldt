@@ -19,3 +19,12 @@ document
         this.setAttribute('aria-label', this.checked ? 'Menü schließen' : 'Menü öffnen')
     })
 
+
+// Startseite: Kopf-Video nur am Desktop laden; auf dem Handy bleibt das Standbild
+// (iOS blendet je nach Modus Play-Symbol und Zeitleiste über Videos ein)
+const heroVideo = document.querySelector('.home-hero-frame video')
+if (heroVideo && !window.matchMedia('(max-width: 550px)').matches) {
+    heroVideo.querySelectorAll('source[data-src]').forEach((source) => (source.src = source.dataset.src))
+    heroVideo.load()
+    heroVideo.play().catch(() => {})
+}
