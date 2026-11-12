@@ -22,7 +22,51 @@ function withFolderImages(product, folders) {
     ...product,
     images: [...product.images, ...extra.map((image) => image.src)],
     thumbs: [...product.images, ...extra.map((image) => image.thumb)],
+    // Dateinamen der Ordnerbilder (Stripe-Bilder haben keinen), z. B. "fels-rot"
+    imageNames: [...product.images.map(() => ""), ...extra.map((image) => image.name || "")],
   };
+}
+
+// "Dunkel Blau" / "fels-rot.jpg" -> ["dunkel", "blau"] / ["fels", "rot"]
+function nameTokens(text) {
+  return String(text)
+    .toLowerCase()
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
+    .split(/[^a-z0-9]+/)
+    .filter(Boolean);
+}
+
+// Erstes Bild, dessen Dateiname die Farbe/Variante enthält (z. B. "Rot" -> fels-rot.jpg), sonst -1
+function imageIndexFor(option) {
+  const wanted = nameTokens(option);
+  if (!option || wanted.length === 0) return -1;
+  return currentProduct.imageNames.findIndex((name) => {
+    const tokens = nameTokens(name);
+    return tokens.some((_, start) => wanted.every((token, offset) => tokens[start + offset] === token));
+  });
+}
+
+// Bei Auswahl einer Farbe/Variante das passende Bild zeigen. Ohne eigenes Bild zurück zum Titelbild,
+// damit nicht das Bild einer anderen Farbe stehen bleibt.
+let showingOptionImage = false;
+function showImageFor(option) {
+  const index = imageIndexFor(option);
+  if (index >= 0) {
+    updateImg(index);
+    showingOptionImage = true;
+  } else if (showingOptionImage) {
+    updateImg(0);
+    showingOptionImage = false;
+  }
+}
+
+// Vorschaubild für den Warenkorb: passendes Bild zu Farbe/Variante, sonst das Titelbild
+function selectedImage() {
+  const index = [selectedColor, selectedVariant].map(imageIndexFor).find((i) => i >= 0);
+  return index !== undefined ? currentProduct.thumbs[index] : currentProduct.images[0] || "";
 }
 
 // "2026-12-15" -> "15. Dezember 2026"
@@ -157,6 +201,7 @@ function renderProduct() {
         selectedColor = value;
         updatePrice();
         updateAvailability();
+        showImageFor(value);
       },
       selectedColor,
     );
@@ -181,6 +226,7 @@ function renderProduct() {
       selectedVariant = e.target.value;
       updatePrice();
       updateAvailability();
+      showImageFor(selectedVariant);
     });
   } else {
     document.getElementById("variant-group").hidden = true;
@@ -393,7 +439,7 @@ function initBuyRow() {
       size: selectedSize,
       color: selectedColor,
       variant: selectedVariant,
-      image: currentProduct.images[0] || "",
+      image: selectedImage(),
       freeShipping: currentProduct.freeShipping,
       preorderDate: currentProduct.preorderDate,
       // Für den Warenkorb: mehr als verfügbar lässt sich nicht hineinlegen (null = unbegrenzt)

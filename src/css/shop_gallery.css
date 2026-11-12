@@ -251,6 +251,7 @@
   /* Kategorien als waagerecht wischbare Leiste statt mehrerer Zeilen */
   .filter-categories {
     flex-wrap: nowrap;
+    box-sizing: border-box; /* sonst 40px breiter als der Bildschirm */
     width: calc(100% + 40px);
     margin: 0 -20px;
     padding: 0 20px 2px;
