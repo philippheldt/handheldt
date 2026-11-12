@@ -140,7 +140,7 @@ function renderProduct() {
   } else {
     stock.innerText = currentProduct.inStock
       ? "Auf Lager – Versand in 5 Werktagen"
-      : "Wird für dich gefertigt – Versand in 14 Tagen";
+      : "Wird für dich gefertigt – Versand spätestens in 14 Tagen";
     stock.classList.toggle("stock-badge--made-to-order", !currentProduct.inStock);
   }
   stock.hidden = false;
