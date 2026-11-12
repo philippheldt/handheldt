@@ -11,7 +11,8 @@ bodyScripts: ["js/shop_gallery.js"]
         <div class="home-hero-frame">
             <video playsinline autoplay loop muted disablepictureinpicture disableremoteplayback preload="auto"
                 poster="img/screenprint.jpg" aria-hidden="true" tabindex="-1">
-                <source src="img/header_video.mp4" type="video/mp4" />
+                <!-- Quelle setzt js/site.js nur am Desktop, auf dem Handy bleibt es beim Standbild -->
+                <source data-src="img/header_video.mp4" type="video/mp4" />
             </video>
             <div class="home-hero-overlay"></div>
             <div class="home-hero-text">

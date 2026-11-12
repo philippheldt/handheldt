@@ -11,7 +11,8 @@
   /* Nicht bildschirmfüllend: darunter sollen schon Produkte zu sehen sein */
   height: clamp(480px, 60vh, 640px);
   padding: 140px 20px 40px; /* oben Platz für Banner und Navigation */
-  background: var(--primary-color);
+  /* Standbild als Hintergrund: sichtbar, bis das Video läuft, und auf dem Handy statt des Videos */
+  background: var(--primary-color) url("/img/screenprint.jpg") center / cover no-repeat;
 }
 
 /* Keine Player-Bedienelemente (z. B. Play-Symbol auf iOS, wenn Autoplay noch nicht läuft) */
@@ -29,6 +30,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none; /* Tippen öffnet keine Player-Steuerung */
 }
 
 .home-hero-overlay {
@@ -156,6 +158,11 @@
 
   .home-hero-actions {
     display: none !important;
+  }
+
+  /* Auf dem Handy nur das Standbild: iOS blendet sonst je nach Modus Play-Symbol und Zeitleiste ein */
+  .home-hero-frame video {
+    display: none;
   }
 
   .home-hero-kicker {

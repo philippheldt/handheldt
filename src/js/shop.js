@@ -8,7 +8,7 @@ function formatPrice(value) {
 // Zusätzliche Produktbilder aus src/img/produkte/<bildordner>/ (Liste wird beim Build erzeugt)
 async function loadProductImageFolders() {
   try {
-    const response = await fetch("/img/produkte/bilder.json");
+    const response = await fetch("/produktbilder.json");
     return response.ok ? await response.json() : {};
   } catch (error) {
     return {};

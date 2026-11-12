@@ -1,4 +1,4 @@
-// Erzeugt /img/produkte/bilder.json: alle Bilder aus src/img/produkte/<ordner>/, verkleinert als WebP.
+// Erzeugt /produktbilder.json (bewusst nicht unter /img/, das 7 Tage im Browser-Cache bleibt): alle Bilder aus src/img/produkte/<ordner>/, verkleinert als WebP.
 // In Stripe verweist das Metadatum "bildordner" auf einen dieser Ordner (siehe SHOP-ANLEITUNG.md).
 import fs from "node:fs";
 import path from "node:path";
@@ -10,7 +10,7 @@ const IMAGE_FILE = /\.(jpe?g|png|webp)$/i;
 export default class {
   data() {
     return {
-      permalink: "/img/produkte/bilder.json",
+      permalink: "/produktbilder.json",
       layout: false,
       eleventyExcludeFromCollections: true,
     };
