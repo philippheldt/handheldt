@@ -14,6 +14,15 @@
   background: var(--primary-color);
 }
 
+/* Keine Player-Bedienelemente (z. B. Play-Symbol auf iOS, wenn Autoplay noch nicht läuft) */
+.home-hero-frame video::-webkit-media-controls,
+.home-hero-frame video::-webkit-media-controls-start-playback-button,
+.home-hero-frame video::-webkit-media-controls-overlay-play-button,
+.home-hero-frame video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 .home-hero-frame video {
   position: absolute;
   inset: 0;
@@ -137,29 +146,52 @@
 }
 
 @media (max-width: 550px) {
+  /* Ruhiger Kopf: kleinere Überschrift, ein Hauptbutton, zweiter Weg als Textlink */
   .home-hero-frame {
     height: auto;
     min-height: 0;
-    padding: 90px 20px 48px;
+    padding: 64px 20px 36px;
   }
 
   .home-hero-kicker {
-    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .home-hero-text h1 {
+    font-size: 1.75rem;
   }
 
   .home-hero-actions {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
   }
 
   .hero-button {
+    padding: 0.8rem 2.5rem;
     text-align: center;
+  }
+
+  .hero-button:not(.hero-button--primary) {
+    padding: 0.25rem;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: underline !important;
+    text-underline-offset: 3px;
+  }
+
+  .hero-button:not(.hero-button--primary):hover {
+    background: none;
   }
 
   /* Produkte als waagerecht wischbare Reihe */
   .product-grid--row {
     display: flex;
     gap: 12px;
+    box-sizing: border-box; /* sonst ist die Reihe 40px breiter als der Bildschirm */
     width: calc(100% + 40px);
     margin-left: -20px;
     margin-right: -20px;
