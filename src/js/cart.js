@@ -93,7 +93,8 @@
                 (product.surcharges?.color?.[item.color] || 0) +
                 (product.surcharges?.variant?.[item.variant] || 0)) /
                 100,
-            image: product.images[0] || "",
+            // Bild der gewählten Farbe/Variante behalten, sonst Titelbild aus Stripe
+            image: item.image || product.images[0] || "",
             freeShipping: product.freeShipping,
             preorderDate: product.preorderDate,
             // Bestand der gewählten Ausführung (null = unbegrenzt); Menge höchstens so groß wie verfügbar

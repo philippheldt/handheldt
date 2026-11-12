@@ -40,7 +40,8 @@ export default class {
           urlPath: "/img/opt/",
         });
         const [thumb, full] = metadata.webp;
-        manifest[folder].push({ src: (full || thumb).url, thumb: thumb.url });
+        // name = Dateiname ohne Endung; darüber findet die Produktseite das Bild zu einer Farbe/Variante
+        manifest[folder].push({ src: (full || thumb).url, thumb: thumb.url, name: path.parse(file).name });
       }
     }
 

@@ -140,6 +140,18 @@ erscheint in der Shop-Übersicht beim Drüberfahren.
 Die Bilder werden beim Build automatisch verkleinert. Bitte trotzdem nicht größer als
 etwa 2400 px Breite und als JPG hochladen.
 
+### Bild zur Farbe oder Variante
+
+Steht der Name einer Farbe oder Variante im Dateinamen, springt die Produktseite bei der
+Auswahl automatisch zu diesem Bild – und genau dieses Bild erscheint auch im Warenkorb.
+
+- Farbe „Rot“ → `fels-rot.jpg` oder `rot.jpg` oder `rot-2.jpg`
+- Farbe „Dunkel Blau“ → `dunkel-blau.jpg`
+- Variante „Mit Rückenprint“ → `mit-rueckenprint.jpg` (Umlaute als ae/oe/ue)
+
+Groß-/Kleinschreibung ist egal, Wörter mit `-` oder `_` trennen. Gibt es mehrere passende
+Bilder, wird das erste (nach Dateiname sortiert) gezeigt.
+
 ## Vorbestellungen
 
 Mit dem Metadatum `vorbestellung` (z. B. `15.12.2026`) wird ein Produkt zur Vorbestellung:
