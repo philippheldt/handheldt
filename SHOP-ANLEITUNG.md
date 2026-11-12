@@ -171,8 +171,7 @@ So erscheint es im Shop (Variante mit zwei Daten):
 - Produktseite: „Noch 12 Tage vorbestellbar – wir versenden am 15. Dezember“. Kurz vor Schluss
   „Noch eine Woche vorbestellbar“, „Nur noch bis morgen vorbestellbar“, „Nur noch heute
   vorbestellbar“; mehr als zwei Wochen vorher „Vorbestellbar bis 30. November“. Button „Vorbestellen“.
-- Shop-Übersicht: auf dem Bild „Noch 12 Tage“, „Noch 1 Woche“, „Nur bis morgen“, „Nur noch heute“
-  (ab 2 Wochen vorher), sonst „Vorbestellung“; unter dem Preis „Versand am 15.12.“
+- Shop-Übersicht: Kennzeichnung „Vorbestellung“ auf dem Produktbild.
 - Warenkorb und Kasse: „Vorbestellung · Versand am 15.12.2026“; in Stripe steht es an der
   Bestellposition und als Metadatum `vorbestellung` an der Zahlung.
 

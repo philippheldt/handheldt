@@ -1,4 +1,4 @@
-// js/preorder.js – Texte für Vorbestellungen (Produktseite und Produktkarten)
+// js/preorder.js – Texte für Vorbestellungen (Produktseite)
 // Metadatum "vorbestellung" mit zwei Daten: vorbestellbar bis zum 1. Datum, Versand am 2. Datum.
 // Die Texte zählen in Worten herunter: „Noch 12 Tage vorbestellbar“, „Noch eine Woche“, „bis morgen“, „heute“.
 
@@ -48,22 +48,5 @@
     return deadline ? `${deadline} – ${ship}` : "Vorbestellung beendet";
   }
 
-  // Kurzer Hinweis auf dem Produktbild (Übersicht): kurz vor Schluss der Countdown, sonst „Vorbestellung“
-  function badgeText(product) {
-    if (!product.preorderUntil) return "Vorbestellung";
-    const days = daysUntil(product.preorderUntil);
-    if (days === 0) return "Nur noch heute";
-    if (days === 1) return "Nur bis morgen";
-    if (days === 7) return "Noch 1 Woche";
-    if (days > 0 && days < 14) return `Noch ${days} Tage`;
-    return "Vorbestellung";
-  }
-
-  // Zeile unter dem Preis (Übersicht), z. B. „Versand am 13.12.“
-  function cardNote(product) {
-    const [, month, day] = product.preorderDate.split("-");
-    return `Versand ${product.preorderExact ? "am" : "ab"} ${Number(day)}.${Number(month)}.`;
-  }
-
-  window.handheldtPreorder = { daysUntil, formatLong, deadlineText, productText, badgeText, cardNote };
+  window.handheldtPreorder = { daysUntil, formatLong, deadlineText, productText };
 })();
