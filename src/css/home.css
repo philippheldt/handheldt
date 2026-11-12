@@ -147,10 +147,15 @@
 
 @media (max-width: 550px) {
   /* Ruhiger Kopf: kleinere Überschrift, ein Hauptbutton, zweiter Weg als Textlink */
+  /* Gleiche Höhe wie mit Buttons, Text mittig; Buttons auf dem Handy ausgeblendet */
   .home-hero-frame {
-    height: auto;
+    height: 310px;
     min-height: 0;
-    padding: 64px 20px 36px;
+    padding: 0 20px;
+  }
+
+  .home-hero-actions {
+    display: none !important;
   }
 
   .home-hero-kicker {
