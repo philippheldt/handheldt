@@ -57,13 +57,26 @@ function parseDate(value) {
   return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 }
 
-// "vorbestellung: 2026-12-15" oder "15.12.2026": Versand erst ab diesem Datum.
-// Liegt das Datum nicht mehr in der Zukunft, gilt das Produkt wieder als normal lieferbar.
-function parsePreorderDate(value) {
-  const date = parseDate(value);
-  if (!date) return null;
-  const today = new Date().toISOString().slice(0, 10);
-  return date > today ? date : null;
+// Heutiges Datum in Deutschland als "2026-12-15" (der Server läuft in UTC)
+function todayInGermany() {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date());
+}
+
+// Metadatum "vorbestellung":
+//   ein Datum  "2026-12-15"              -> Versand ab diesem Datum, danach normal lieferbar
+//   zwei Daten "2026-11-30, 2026-12-15"  -> vorbestellbar bis zum 1. Datum (einschließlich),
+//                                           Versand am 2. Datum; nach dem 1. Datum ist das Produkt offline
+function parsePreorder(value) {
+  const dates = parseList(value).map(parseDate).filter(Boolean);
+  const today = todayInGermany();
+  if (dates.length >= 2) {
+    const [until, ship] = dates;
+    return { date: ship > today ? ship : null, until, exact: true, closed: until < today };
+  }
+  if (dates.length === 1) {
+    return { date: dates[0] > today ? dates[0] : null, until: null, exact: false, closed: false };
+  }
+  return { date: null, until: null, exact: false, closed: false };
 }
 
 // Bestand: "20" = insgesamt, "S:5, M:10, L:0" = je Größe, "Blau:3, Rot:0" = je Farbe/Variante.
@@ -112,6 +125,7 @@ function toShopProduct(product) {
   const sizes = parseOptions(meta.groessen);
   const colors = parseColors(meta.farben);
   const variants = parseOptions(meta.varianten);
+  const preorder = parsePreorder(meta.vorbestellung);
 
   return {
     id: product.id,
@@ -133,7 +147,11 @@ function toShopProduct(product) {
     freeShipping: (meta.versandfrei || "").toLowerCase() === "ja",
     // Weitere Bilder liegen in src/img/produkte/<bildordner>/ (Stripe erlaubt im Dashboard nur ein Bild)
     imageFolder: (meta.bildordner || "").trim(),
-    preorderDate: parsePreorderDate(meta.vorbestellung),
+    // Vorbestellung: Versanddatum, ggf. Bestellschluss; "exact" = Versand genau am Datum (zwei Daten)
+    preorderDate: preorder.date,
+    preorderUntil: preorder.until,
+    preorderExact: preorder.exact,
+    preorderClosed: preorder.closed,
     // Herstellungs-Hinweis auf der Produktseite: leer = Siebdruck-Standardtext, "nein" = ausblenden
     production: (meta.herstellung || "").trim(),
     stock: parseStock(meta.bestand),
@@ -179,6 +197,8 @@ export async function loadCatalog(stripe) {
       );
     })
     .map(toShopProduct)
+    // Vorbestellung mit Bestellschluss: nach dem Schluss ist das Produkt offline (Shop und Kasse)
+    .filter((product) => !product.preorderClosed)
     .map((product) => ({ ...product, soldOut: isSoldOut(product) }))
     .sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title, "de"));
 }

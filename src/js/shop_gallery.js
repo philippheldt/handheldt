@@ -60,7 +60,11 @@
         <img src="${escapeHtml(img2Src)}" alt="" class="secondary-img" loading="lazy">`
       : "";
 
-    const badge = product.soldOut ? "Ausverkauft" : product.preorderDate ? "Vorbestellung" : "";
+    const badge = product.soldOut
+      ? "Ausverkauft"
+      : product.preorderDate
+        ? "Vorbestellung"
+        : "";
 
     card.innerHTML = `
       <div class="card-image-wrapper">

@@ -97,6 +97,7 @@
             image: item.image || product.images[0] || "",
             freeShipping: product.freeShipping,
             preorderDate: product.preorderDate,
+            preorderExact: product.preorderExact,
             // Bestand der gewählten Ausführung (null = unbegrenzt); Menge höchstens so groß wie verfügbar
             available,
             quantity: Math.min(item.quantity, Math.max(1, available ?? 99)),
@@ -126,7 +127,7 @@
               </div>
               ${options ? `<p class="cart-item-options">${escapeHtml(options)}</p>` : ""}
               ${item.available === 0 ? '<p class="cart-item-soldout">Nicht mehr verfügbar – bitte entfernen</p>' : ""}
-              ${item.preorderDate ? `<p class="cart-item-preorder">Vorbestellung · Versand ab ${formatDate(item.preorderDate)}</p>` : ""}
+              ${item.preorderDate ? `<p class="cart-item-preorder">Vorbestellung · Versand ${item.preorderExact ? "am" : "ab"} ${formatDate(item.preorderDate)}</p>` : ""}
               <div class="cart-item-bottom">
                 <div class="quantity-control quantity-control--small" role="group" aria-label="Anzahl ${escapeHtml(item.title)}">
                   <button type="button" data-action="decrease" data-index="${index}" aria-label="Anzahl verringern">−</button>
