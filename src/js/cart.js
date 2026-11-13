@@ -4,6 +4,10 @@
 
 (function () {
   const CART_KEY = "handheldt_cart";
+  // Freiwillig auf den nächsten vollen 5-€-Betrag aufrunden (Spende, muss zu create-checkout.js passen)
+  const ROUNDUP_KEY = "handheldt_aufrunden";
+  const ROUNDUP_STEP = 5;
+  const DONATION_URL = "https://www.ec-sma.de/";
   // Versandkosten laut AGB § 3 (müssen zu netlify/functions/create-checkout.js passen)
   const FREE_SHIPPING_FROM = 50;
   const SHIPPING_COST = 4.9;
@@ -246,6 +250,42 @@
     });
   }
 
+  // ---------- Aufrunden für Nepal ----------
+
+  function roundUpChosen() {
+    try {
+      return localStorage.getItem(ROUNDUP_KEY) === "ja";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function setRoundUp(chosen) {
+    try {
+      chosen ? localStorage.setItem(ROUNDUP_KEY, "ja") : localStorage.removeItem(ROUNDUP_KEY);
+    } catch (e) {}
+    renderAll();
+  }
+
+  // Differenz zum nächsten vollen 5-€-Betrag in Euro (0 = schon glatt); in Cent gerechnet, wie an der Kasse
+  function roundUpAmount(total) {
+    const cents = Math.round(total * 100);
+    return (Math.ceil(cents / (ROUNDUP_STEP * 100)) * ROUNDUP_STEP * 100 - cents) / 100;
+  }
+
+  function renderRoundUp(total, donation, chosen) {
+    if (donation <= 0) return "";
+    return `
+      <label class="cart-roundup">
+        <input type="checkbox" data-action="roundup" ${chosen ? "checked" : ""}>
+        <span>
+          <b>Auf ${formatPrice(total + donation)} aufrunden</b> – ${formatPrice(donation)} für Kinder in Nepal
+          <a href="${DONATION_URL}" target="_blank" rel="noopener"
+            aria-label="Mehr über die Sozial-Missionarische Arbeit des EC in Nepal">Mehr</a>
+        </span>
+      </label>`;
+  }
+
   function renderCart(root) {
     const isDrawer = root.dataset.cart === "drawer";
     const cart = readCart();
@@ -260,6 +300,8 @@
       .sort()
       .pop();
     const shipping = onlyFreeShipping || subtotal >= FREE_SHIPPING_FROM ? 0 : SHIPPING_COST;
+    const donation = roundUpAmount(subtotal + shipping);
+    const roundUp = roundUpChosen() && donation > 0;
     const gap = FREE_SHIPPING_FROM - subtotal;
     const upsell = shipping > 0 && gap <= UPSELL_MAX_GAP ? findUpsell(cart, gap) : null;
 
@@ -295,8 +337,10 @@
         <dl class="cart-summary-rows">
           <div class="cart-summary-sub"><dt>Zwischensumme</dt><dd>${formatPrice(subtotal)}</dd></div>
           <div><dt>Versand ${onlyFreeShipping ? "(Post)" : "(DHL)"}</dt><dd>${shipping === 0 ? "kostenlos" : formatPrice(shipping)}</dd></div>
-          <div class="cart-summary-total"><dt>Gesamt</dt><dd>${formatPrice(subtotal + shipping)}</dd></div>
+          ${donation > 0 && roundUp ? `<div class="cart-summary-donation"><dt>Spende für Nepal</dt><dd>${formatPrice(donation)}</dd></div>` : ""}
+          <div class="cart-summary-total"><dt>Gesamt</dt><dd>${formatPrice(subtotal + shipping + (roundUp ? donation : 0))}</dd></div>
         </dl>
+        ${subtotal >= MIN_ORDER ? renderRoundUp(subtotal + shipping, donation, roundUp) : ""}
         ${preorderDate ? `<p class="cart-preorder-note">Deine Bestellung enthält Vorbestellungen und wird gesammelt ab dem <b>${formatDate(preorderDate)}</b> verschickt.</p>` : ""}
         ${
           isDrawer
@@ -347,7 +391,7 @@
       const response = await fetch("/.netlify/functions/create-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: readCart() }),
+        body: JSON.stringify({ items: readCart(), aufrunden: roundUpChosen() }),
       });
       const data = await response.json();
 
@@ -390,6 +434,8 @@
         return removeItem(index);
       case "upsell":
         return addUpsell();
+      case "roundup":
+        return setRoundUp(target.checked);
       case "checkout":
         return checkout(root, target);
       case "close":
