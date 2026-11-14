@@ -10,6 +10,9 @@ const headers = { "Content-Type": "application/json" };
 // Mindestbestellwert laut AGB § 3 (Warenwert ohne Versand, in Cent; muss zu js/cart.js passen)
 const MIN_ORDER_AMOUNT = 250;
 
+// Freiwilliges Aufrunden auf den nächsten vollen 5-€-Betrag (in Cent), Differenz = Spende (siehe js/cart.js)
+const ROUNDUP_STEP = 500;
+
 // "2026-12-15" -> "15.12.2026"
 function formatDate(isoDate) {
   const [year, month, day] = isoDate.split("-");
@@ -68,7 +71,7 @@ export const handler = async (event) => {
   }
 
   try {
-    const { items } = JSON.parse(event.body);
+    const { items, aufrunden } = JSON.parse(event.body);
     const siteUrl = process.env.URL || "https://bright-taffy-986c8a.netlify.app";
 
     // Nur Produkte zulassen, die aktuell in Stripe aktiv sind
@@ -123,7 +126,8 @@ export const handler = async (event) => {
         item.size && withSurcharge(`Größe ${item.size}`, size[item.size]),
         item.color && withSurcharge(`Farbe ${item.color}`, color[item.color]),
         item.variant && withSurcharge(item.variant, variant[item.variant]),
-        product.preorderDate && `Vorbestellung – Versand ab ${formatDate(product.preorderDate)}`,
+        product.preorderDate &&
+          `Vorbestellung – Versand ${product.preorderExact ? "am" : "ab"} ${formatDate(product.preorderDate)}`,
       ].filter(Boolean);
 
       return {
@@ -158,6 +162,25 @@ export const handler = async (event) => {
 
     const onlyFreeShipping = products.every((product) => product.freeShipping);
     const shippingAmount = onlyFreeShipping || subtotal >= 5000 ? 0 : 490;
+
+    // Aufrunden: Warenwert + Versand (wie im Warenkorb angezeigt) auf den nächsten 5er, Differenz als Spende.
+    // Zählt nicht zum Warenwert (kein Einfluss auf kostenlosen Versand oder Mindestbestellwert).
+    const roundTotal = subtotal + shippingAmount;
+    const donation = aufrunden === true ? Math.ceil(roundTotal / ROUNDUP_STEP) * ROUNDUP_STEP - roundTotal : 0;
+    if (donation > 0) {
+      line_items.push({
+        quantity: 1,
+        price_data: {
+          currency: "eur",
+          unit_amount: donation,
+          product_data: {
+            name: "Aufrundung: Spende für Kinder in Nepal",
+            description: "Geht vollständig an die Sozial-Missionarische Arbeit des EC Deutschlands in Nepal.",
+            metadata: { spende: "ja" },
+          },
+        },
+      });
+    }
 
     // Lieferzeit laut AGB § 5: vorrätig 5 Werktage, sonst 14 Tage.
     // Mit Vorbestellungen geht die ganze Bestellung gemeinsam ab dem spätesten Vorbestell-Datum raus.
@@ -210,7 +233,10 @@ export const handler = async (event) => {
         allowed_countries: ["DE"],
       },
       shipping_options: shipping_options,
-      ...(preorderDate && { metadata: { vorbestellung: preorderDate } }),
+      metadata: {
+        ...(preorderDate && { vorbestellung: preorderDate }),
+        ...(donation > 0 && { spende_cent: String(donation) }),
+      },
       custom_text: {
         ...(preorderDate && {
           shipping_address: {

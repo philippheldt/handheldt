@@ -159,16 +159,26 @@ Bilder, wird das erste (nach Dateiname sortiert) gezeigt.
 
 ## Vorbestellungen
 
-Mit dem Metadatum `vorbestellung` (z. B. `15.12.2026`) wird ein Produkt zur Vorbestellung:
+Das Metadatum `vorbestellung` macht ein Produkt zur Vorbestellung. Es gibt zwei Varianten:
 
-- Produktseite: Hinweis „Vorbestellung – Versand ab 15. Dezember 2026“, Button „Vorbestellen“
-- Shop-Übersicht: Kennzeichnung „Vorbestellung“ auf dem Produktbild
-- Warenkorb und Kasse: Hinweis mit dem Versanddatum; in Stripe steht es an der Bestellposition
-  und als Metadatum `vorbestellung` an der Zahlung
+| Wert | Bedeutung |
+| --- | --- |
+| `15.12.2026` | Versand **ab** diesem Datum. Danach wird das Produkt automatisch normal lieferbar. |
+| `30.11.2026, 15.12.2026` | Vorbestellbar **bis** zum 1. Datum (einschließlich), Versand **am** 2. Datum. Ab dem Tag nach dem 1. Datum ist das Produkt **offline** (Shop, Warenkorb und Kasse). |
+
+So erscheint es im Shop (Variante mit zwei Daten):
+
+- Produktseite: „Noch 12 Tage vorbestellbar – wir versenden am 15. Dezember“. Kurz vor Schluss
+  „Noch eine Woche vorbestellbar“, „Nur noch bis morgen vorbestellbar“, „Nur noch heute
+  vorbestellbar“; mehr als zwei Wochen vorher „Vorbestellbar bis 30. November“. Button „Vorbestellen“.
+- Shop-Übersicht: Kennzeichnung „Vorbestellung“ auf dem Produktbild.
+- Warenkorb und Kasse: „Vorbestellung · Versand am 15.12.2026“; in Stripe steht es an der
+  Bestellposition und als Metadatum `vorbestellung` an der Zahlung.
+
+Mit nur einem Datum steht dort „Vorbestellung – Versand ab 15. Dezember“.
 
 Bezahlt wird sofort. Enthält eine Bestellung Vorbestellungen, wird sie gesammelt ab dem
-spätesten Vorbestell-Datum verschickt (so steht es auch in den AGB). Ab dem Datum selbst
-verschwindet der Hinweis automatisch – das Metadatum kann danach gelöscht werden.
+spätesten Versanddatum verschickt (so steht es auch in den AGB). Die Tage zählen nach deutscher Zeit.
 
 ## Produkt aus dem Shop nehmen
 
@@ -217,3 +227,17 @@ steht in `netlify/functions/create-checkout.js`, `src/js/cart.js`, den AGB und d
 - **Neu im Shop:** die 8 neuesten lieferbaren Produkte.
 - „Neu“ richtet sich nach `neu_seit`, sonst danach, wann das Produkt in Stripe angelegt wurde.
   Wer die Reihenfolge festlegen will, trägt bei den Produkten einfach ein Datum in `neu_seit` ein.
+
+## Aufrunden für Nepal
+
+Im Warenkorb kann man freiwillig auf den nächsten vollen 5-€-Betrag aufrunden (Warenwert + Versand,
+so wie im Warenkorb angezeigt). Die Option ist nie vorausgewählt. Die Differenz erscheint an der Kasse und
+in Stripe als eigene Position „Aufrundung: Spende für Kinder in Nepal“, an der Zahlung steht zusätzlich
+das Metadatum `spende_cent` (z. B. `260` = 2,60 €).
+
+- Ist der Betrag schon glatt (z. B. 55,00 €), wird keine Aufrundung angeboten.
+- Die Spende zählt nicht zum Warenwert (kein Einfluss auf kostenlosen Versand oder Mindestbestellwert).
+- Wählt jemand an der Kasse „Abholung“, entfällt der Versand – die Summe ist dann nicht mehr ganz glatt,
+  die Spende bleibt gleich.
+- Die Spenden bitte gesammelt an die Sozial-Missionarische Arbeit des EC weiterleiten
+  (Summe: in Stripe nach Positionen „Aufrundung“ filtern bzw. Metadatum `spende_cent`).

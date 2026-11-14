@@ -563,3 +563,42 @@ body.cart-open {
   color: #fff;
   cursor: not-allowed;
 }
+
+/* Freiwillig aufrunden (Spende für Nepal) */
+.cart-roundup {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--standard-radius);
+  background: var(--accent-color);
+  color: var(--primary-color);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.cart-roundup input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--primary-color);
+}
+
+.cart-roundup a {
+  color: inherit;
+}
+
+.cart-summary-donation {
+  color: #6b6b6b;
+}
+
+@media (max-width: 550px), (max-height: 700px) {
+  .cart-panel--drawer .cart-roundup {
+    margin-bottom: 0.6rem;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.8rem;
+  }
+}
