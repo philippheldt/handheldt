@@ -39,6 +39,36 @@ function addressOf(details) {
   };
 }
 
+// Datum als "2026-11-25" in deutscher Zeit
+const isoDay = (date) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(date);
+
+// Zusage aus der Kasse (z. B. 1–5 Werktage, 1–14 Tage) ab Bestelldatum weiterzählen
+function addEstimate(createdSec, { unit, value }) {
+  const date = new Date(createdSec * 1000);
+  if (unit === "business_day") {
+    let left = value;
+    while (left > 0) {
+      date.setUTCDate(date.getUTCDate() + 1);
+      const day = date.getUTCDay();
+      if (day !== 0 && day !== 6) left -= 1;
+    }
+  } else if (unit === "week") date.setUTCDate(date.getUTCDate() + 7 * value);
+  else if (unit === "month") date.setUTCMonth(date.getUTCMonth() + value);
+  else if (unit === "hour") date.setUTCHours(date.getUTCHours() + value);
+  else date.setUTCDate(date.getUTCDate() + value);
+  return isoDay(date);
+}
+
+// Bis wann die Bestellung raus sein muss:
+// Vorbestellung -> Versanddatum der Vorbestellung, sonst -> späteste Lieferzusage an der Kasse.
+// Abholung hat keine Frist.
+function deadlineFor(session, rate, abholung) {
+  if (abholung) return "";
+  if (session.metadata?.vorbestellung) return session.metadata.vorbestellung;
+  const max = rate?.delivery_estimate?.maximum;
+  return addEstimate(session.created, max || { unit: "business_day", value: 5 });
+}
+
 async function loadSessionOrders() {
   const sessions = await stripe.checkout.sessions
     .list({ status: "complete", limit: 100, expand: ["data.payment_intent.latest_charge", "data.shipping_cost.shipping_rate"] })
@@ -91,6 +121,7 @@ async function loadSessionOrders() {
 
         const shipping = session.collected_information?.shipping_details || session.shipping_details;
         const rate = typeof session.shipping_cost?.shipping_rate === "object" ? session.shipping_cost.shipping_rate : null;
+        const abholung = /abholung/i.test(rate?.display_name || "");
         return {
           art: "shop",
           id: session.id,
@@ -105,7 +136,8 @@ async function loadSessionOrders() {
           versandkosten: session.shipping_cost?.amount_total ?? session.total_details?.amount_shipping ?? 0,
           // Gewählte Versandart an der Kasse, z. B. "DHL Versand" oder "Abholung in Teningen (nach Absprache)"
           versandart: rate?.display_name || "",
-          abholung: /abholung/i.test(rate?.display_name || ""),
+          abholung,
+          frist: deadlineFor(session, rate, abholung),
           spende,
           summe: session.amount_total,
           erstattet,
@@ -151,6 +183,7 @@ async function loadInvoiceOrders() {
         versandkosten: 0,
         versandart: "",
         abholung: false,
+        frist: "",
         spende: 0,
         summe: inv.total,
         erstattet: inv.post_payment_credit_notes_amount || 0,
