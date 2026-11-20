@@ -97,7 +97,14 @@ button:disabled { opacity: 0.5; cursor: progress; }
 
 .stat.late { background: var(--alert-bg); color: var(--alert); }
 
-.search { display: block; width: 100%; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); margin-bottom: 18px; }
+.export { display: grid; gap: 14px; margin-bottom: 20px; }
+.export h2 { margin-bottom: 6px; }
+.export p { margin: 0; }
+.export-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+.search { flex: 1 1 260px; min-width: 0; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); }
+.sort { display: flex; align-items: center; gap: 8px; }
+.sort select { padding: 0.7rem 2rem 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); font: inherit; color: inherit; }
 
 /* Bestellungen */
 .orders { display: grid; gap: 14px; }
@@ -175,10 +182,25 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         <button type="button" data-view="spenden" aria-pressed="false">Spenden<span class="count" data-count="spenden"></span></button>
       </nav>
       <div class="bar-actions">
+        <button class="ghost-button small-button" id="export-toggle" type="button" aria-expanded="false" aria-controls="export">EÜR-Export</button>
         <button class="ghost-button small-button" id="reload" type="button">Aktualisieren</button>
         <button class="ghost-button small-button" id="logout" type="button">Abmelden</button>
       </div>
     </div>
+
+    <form class="white-frame export" id="export" hidden>
+      <div>
+        <h2>Einnahmen für die EÜR</h2>
+        <p class="small muted">Excel-Datei mit allen Zahlungen, Erstattungen und Stripe-Gebühren des Jahres, Spenden separat, dazu eine Monatsübersicht.</p>
+      </div>
+      <div class="export-controls">
+        <label class="sort small" for="export-year">Jahr
+          <select id="export-year"></select>
+        </label>
+        <button class="black-button" id="export-download" type="submit">Excel herunterladen</button>
+      </div>
+      <p class="small" id="export-status" role="status" hidden></p>
+    </form>
 
     <section id="orders-view">
       <div class="stats" id="stats"></div>
@@ -188,7 +210,15 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         <span><i style="background:var(--due-late)"></i>überfällig</span>
         <span><i style="background:var(--due-none)"></i>ohne Frist (Abholung, Rechnung) oder erledigt</span>
       </div>
-      <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer, Abholung …" aria-label="Bestellungen durchsuchen">
+      <div class="filters">
+        <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer, Abholung …" aria-label="Bestellungen durchsuchen">
+        <label class="sort small" for="sort">Sortieren
+          <select id="sort">
+            <option value="versand">nach Versanddatum</option>
+            <option value="neu">neueste Bestellungen zuerst</option>
+          </select>
+        </label>
+      </div>
       <div class="orders" id="orders"></div>
     </section>
 
@@ -230,6 +260,9 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
   try { pw = localStorage.getItem(KEY) || ""; } catch (e) {}
   let orders = [];
   let view = "offen";
+  const SORT_KEY = "handheldt_bestellungen_sortierung";
+  let sort = "versand";
+  try { sort = localStorage.getItem(SORT_KEY) === "neu" ? "neu" : "versand"; } catch (e) {}
 
   function toast(text) {
     const t = $("toast");
@@ -320,9 +353,14 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         ...o.positionen.flatMap((p) => [p.name, p.groesse, p.farbe, p.variante])].join(" ").toLowerCase();
       return hay.includes(q);
     });
-    // Offene zuerst nach Frist (dringendste oben), Bestellungen ohne Frist danach
-    if (view === "offen") list.sort((a, b) => (a.frist || "9999").localeCompare(b.frist || "9999") || a.datum - b.datum);
-    return list;
+    if (sort === "neu") return list.sort((a, b) => b.datum - a.datum);
+    // Nach Versanddatum: offene nach Frist (dringendste oben, ohne Frist danach),
+    // danach verschickte, zuletzt verschickte zuerst
+    return list.sort((a, b) => {
+      if (!a.versendet !== !b.versendet) return a.versendet ? 1 : -1;
+      if (a.versendet) return b.versendet.localeCompare(a.versendet) || b.datum - a.datum;
+      return (a.frist || "9999").localeCompare(b.frist || "9999") || a.datum - b.datum;
+    });
   }
 
   function renderCounts() {
@@ -489,7 +527,54 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     render();
   }));
   $("search").addEventListener("input", renderOrders);
+  $("sort").value = sort;
+  $("sort").addEventListener("change", () => {
+    sort = $("sort").value;
+    try { localStorage.setItem(SORT_KEY, sort); } catch (e) {}
+    renderOrders();
+  });
   $("reload").addEventListener("click", load);
+
+  // EÜR-Export: Excel-Datei für ein Kalenderjahr
+  const thisYear = new Date().getFullYear();
+  for (let y = thisYear; y >= 2024; y--) $("export-year").add(new Option(String(y), String(y)));
+  // Im Januar ist meist das Vorjahr gemeint
+  if (new Date().getMonth() === 0) $("export-year").value = String(thisYear - 1);
+  $("export-toggle").addEventListener("click", () => {
+    const open = $("export").hidden;
+    $("export").hidden = !open;
+    $("export-toggle").setAttribute("aria-expanded", String(open));
+  });
+  $("export").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const year = $("export-year").value;
+    const status = $("export-status");
+    $("export-download").disabled = true;
+    status.hidden = false;
+    status.className = "small";
+    status.textContent = "Wird aus Stripe zusammengestellt, das kann einen Moment dauern …";
+    try {
+      const res = await fetch(`${API}?export=eur&jahr=${encodeURIComponent(year)}`, { headers: { "x-passwort": pw } });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Fehler " + res.status);
+      }
+      const url = URL.createObjectURL(await res.blob());
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `handheldt-EUER-${year}.xlsx`;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      status.textContent = `handheldt-EUER-${year}.xlsx wurde heruntergeladen.`;
+    } catch (err) {
+      status.className = "small error";
+      status.textContent = "Export fehlgeschlagen: " + err.message;
+    } finally {
+      $("export-download").disabled = false;
+    }
+  });
   $("logout").addEventListener("click", () => {
     pw = "";
     try { localStorage.removeItem(KEY); } catch (e) {}

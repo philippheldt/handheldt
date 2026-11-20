@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "Website von handheldt – Siebdruck und Design",
   "dependencies": {
+    "exceljs": "^4.4.0",
     "stripe": "^22.2.0"
   },
   "devDependencies": {

@@ -262,3 +262,19 @@ Passwortgeschützte Seite fürs Team mit allen Bestellungen direkt aus Stripe:
 Einmalig einrichten: Netlify → **Project configuration → Environment variables** → Variable
 `BESTELLUNGEN_PASSWORT` mit dem Team-Passwort (Scope: Functions), danach neu deployen.
 Das Passwort bleibt im Browser gespeichert, bis man auf „Abmelden“ klickt.
+
+### EÜR-Export (Einnahmen eines Jahres als Excel)
+
+In der Bestellübersicht oben rechts **EÜR-Export** → Jahr wählen → **Excel herunterladen**.
+Die Datei `handheldt-EUER-<Jahr>.xlsx` hat drei Blätter:
+
+- **Einnahmen:** jede Zahlung, Erstattung und Stripe-Gebühr des Jahres mit Datum, Beleg-Nr.,
+  Kunde, Positionen, Warenwert, Versand, Spende, Brutto, Stripe-Gebühr und Netto (Auszahlung).
+  Rechnungen, die außerhalb von Stripe bezahlt und als bezahlt markiert wurden, stehen ohne Gebühr dabei.
+- **Übersicht:** dieselben Zahlen pro Monat und als Jahressumme, Spenden und Erstattungen getrennt.
+- **Hinweise:** wie die Zahlen zustande kommen.
+
+Grundlage sind die Buchungen im Stripe-Guthaben (Datum = Tag der Zahlung in Stripe, deutsche Zeit).
+Auszahlungen aufs Bankkonto sind Umbuchungen und erscheinen nicht. Bar-Einnahmen ohne Stripe-Rechnung
+fehlen. Falls `STRIPE_SECRET_KEY` ein eingeschränkter Schlüssel ist, braucht er Leserechte für
+Balance transactions, Checkout Sessions und Invoices.
