@@ -33,6 +33,11 @@ sitemapExclude: true
   --alert: #a32020;
   --alert-bg: #fbe3e3;
   --standard-radius: 0.3rem;
+  /* Versandfrist am Rand der Bestellung */
+  --due-ok: #6cbf8c;
+  --due-soon: #f2a33a;
+  --due-late: #d64545;
+  --due-none: #e6e4df;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -56,13 +61,12 @@ h2 { font-size: 1.6rem; }
 .content-wrapper { max-width: 950px; margin: 0 auto; padding: 40px 16px 80px; }
 
 /* Buttons wie auf der Hauptseite */
-.black-button, .accent-button, .ghost-button {
+.black-button, .ghost-button {
   display: inline-block; padding: 0.7rem 1.6rem; border-radius: var(--standard-radius); border: 1px solid var(--primary-color);
   font-weight: 500; cursor: pointer; transition: all 0.3s; background: var(--primary-color); color: var(--secondary-color);
 }
-.accent-button { background: var(--accent-color); color: var(--primary-color); }
 .ghost-button { background: transparent; color: var(--primary-color); }
-.black-button:hover, .accent-button:hover, .ghost-button:hover { background: var(--hover); color: var(--primary-color); }
+.black-button:hover, .ghost-button:hover { background: var(--hover); color: var(--primary-color); }
 .small-button { padding: 0.35rem 0.9rem; font-size: 0.875rem; }
 button:disabled { opacity: 0.5; cursor: progress; }
 
@@ -75,41 +79,40 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .login input { padding: 0.75rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); }
 .error { color: var(--alert); }
 
-/* Kopf */
-.top { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-.brand { display: flex; align-items: center; gap: 16px; }
-.brand img { height: 64px; width: auto; flex: none; }
-.brand p { margin: 4px 0 0; }
-.top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+/* Leiste oben: Reiter und Aktionen */
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.bar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* Navigation: Pille wie die Seitennavigation */
-.tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; background: var(--frame); border-radius: 200px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.08); width: fit-content; max-width: 100%; margin-bottom: 20px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; background: var(--frame); border-radius: 200px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.08); width: fit-content; max-width: 100%; }
 .tabs button { border: 0; background: transparent; padding: 0.55rem 1.2rem; border-radius: 2rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
 .tabs button:hover { background: var(--secondary-color); }
 .tabs button[aria-pressed="true"] { background: var(--primary-color); color: var(--secondary-color); }
 @media (max-width: 520px) { .tabs { flex-wrap: nowrap; overflow-x: auto; } .tabs button { padding: 0.5rem 0.8rem; white-space: nowrap; font-size: 0.9rem; } }
 .tabs .count { font-variant-numeric: tabular-nums; opacity: 0.7; margin-left: 0.25rem; }
 
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 28px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin-bottom: 28px; }
 .stat { background: var(--frame); border-radius: var(--standard-radius); padding: 14px 16px; }
 .stat b { display: block; font-size: 1.6rem; font-weight: 800; line-height: 1.15; }
-.stat.highlight { background: var(--accent-color); }
+
+.stat.late { background: var(--alert-bg); color: var(--alert); }
 
 .search { display: block; width: 100%; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); margin-bottom: 18px; }
 
 /* Bestellungen */
 .orders { display: grid; gap: 14px; }
-.order { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 20px 28px; }
-.order.done { opacity: 0.75; }
+.order { border-left: 6px solid var(--due-none); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 20px 28px; }
+.order.due-ok { border-left-color: var(--due-ok); }
+.order.due-soon { border-left-color: var(--due-soon); }
+.order.due-late { border-left-color: var(--due-late); }
+.order.done { opacity: 0.75; border-left-color: var(--due-none); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: -14px 0 18px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 6px; height: 16px; border-radius: 2px; display: inline-block; }
 @media (max-width: 720px) { .order { grid-template-columns: 1fr; } h1 { font-size: 2rem; } }
 .order h3 { font-size: 1.15rem; }
 .meta { margin-top: 2px; }
 .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.pill { font-size: 0.78rem; font-weight: 600; padding: 0.15rem 0.55rem; border-radius: var(--standard-radius); background: var(--accent-color); }
-.pill.ok { background: var(--ok-bg); color: var(--ok); }
-.pill.alert { background: var(--alert-bg); color: var(--alert); }
-.pill.plain { background: var(--secondary-color); }
-.pill.pickup { background: var(--primary-color); color: var(--secondary-color); }
 address { font-style: normal; margin-top: 12px; white-space: pre-line; }
 .contact { margin: 4px 0 12px; overflow-wrap: anywhere; }
 .items { width: 100%; border-collapse: collapse; }
@@ -118,11 +121,19 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
 .items td.qty { width: 2.8em; font-weight: 800; }
 .items td.price { text-align: right; white-space: nowrap; padding-left: 10px; }
 .opts { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
-.opt { font-size: 0.8rem; padding: 0 0.4rem; border-radius: var(--standard-radius); background: var(--accent-color); }
+.opt { font-size: 0.8rem; padding: 0 0.4rem; border-radius: var(--standard-radius); border: 1px solid var(--line); color: #4a4a55; }
+/* Tags: neutral, die Bedeutung steckt im kleinen Punkt */
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 500; padding: 0.1rem 0.55rem; border-radius: var(--standard-radius); background: var(--secondary-color); color: #4a4a55; }
+.pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #b9b7b0; flex: none; }
+.pill.ok::before, .pill.due-ok::before { background: var(--due-ok); }
+.pill.due-soon::before { background: var(--due-soon); }
+.pill.alert::before, .pill.due-late::before { background: var(--due-late); }
+.pill.pickup::before { background: var(--primary-color); }
+.pill.alert, .pill.due-late { color: var(--alert); }
 .totals { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .totals strong { font-size: 1.1rem; }
 .order-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-top: 16px; border-top: 1px solid var(--line); }
-.order-foot textarea { flex: 1 1 240px; min-width: 0; min-height: 2.6rem; resize: vertical; padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--secondary-color); }
+.order-foot textarea { flex: 1 1 240px; min-width: 0; height: calc(1.5em + 1.4rem + 2px); min-height: calc(1.5em + 1.4rem + 2px); line-height: 1.5; resize: vertical; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--secondary-color); }
 .order-foot a { font-size: 0.875rem; color: var(--muted); }
 .empty { text-align: center; padding: 48px 24px; }
 
@@ -156,29 +167,27 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
   </form>
 
   <div id="app" hidden>
-    <header class="top">
-      <div class="brand">
-        <img src="/img/logo.png" alt="handheldt">
-        <div>
-          <h1><span class="yellow-underline">Bestellungen</span></h1>
-          <p class="slanted muted" id="stand">wird geladen …</p>
-        </div>
-      </div>
-      <div class="top-actions">
-        <button class="accent-button small-button" id="reload" type="button">Aktualisieren</button>
+    <div class="bar">
+      <nav class="tabs" aria-label="Ansicht">
+        <button type="button" data-view="offen" aria-pressed="true">Offen<span class="count" data-count="offen"></span></button>
+        <button type="button" data-view="versendet" aria-pressed="false">Verschickt<span class="count" data-count="versendet"></span></button>
+        <button type="button" data-view="alle" aria-pressed="false">Alle<span class="count" data-count="alle"></span></button>
+        <button type="button" data-view="spenden" aria-pressed="false">Spenden<span class="count" data-count="spenden"></span></button>
+      </nav>
+      <div class="bar-actions">
+        <button class="ghost-button small-button" id="reload" type="button">Aktualisieren</button>
         <button class="ghost-button small-button" id="logout" type="button">Abmelden</button>
       </div>
-    </header>
-
-    <nav class="tabs" aria-label="Ansicht">
-      <button type="button" data-view="offen" aria-pressed="true">Offen<span class="count" data-count="offen"></span></button>
-      <button type="button" data-view="versendet" aria-pressed="false">Verschickt<span class="count" data-count="versendet"></span></button>
-      <button type="button" data-view="alle" aria-pressed="false">Alle<span class="count" data-count="alle"></span></button>
-      <button type="button" data-view="spenden" aria-pressed="false">Spenden<span class="count" data-count="spenden"></span></button>
-    </nav>
+    </div>
 
     <section id="orders-view">
       <div class="stats" id="stats"></div>
+      <div class="legend small muted" aria-label="Farben am Rand">
+        <span><i style="background:var(--due-ok)"></i>im Plan</span>
+        <span><i style="background:var(--due-soon)"></i>bis morgen raus</span>
+        <span><i style="background:var(--due-late)"></i>überfällig</span>
+        <span><i style="background:var(--due-none)"></i>ohne Frist (Abholung, Rechnung) oder erledigt</span>
+      </div>
       <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer, Abholung …" aria-label="Bestellungen durchsuchen">
       <div class="orders" id="orders"></div>
     </section>
@@ -255,14 +264,12 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
 
   async function load() {
     $("reload").disabled = true;
-    $("stand").textContent = "wird geladen …";
     try {
       const data = await api("GET");
       orders = data.bestellungen;
       $("login").hidden = true;
       $("app").hidden = false;
       $("load-error").hidden = true;
-      $("stand").textContent = "Stand " + new Date(data.stand * 1000).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) + ", direkt aus Stripe";
       render();
     } catch (err) {
       if (err.status === 401) {
@@ -273,7 +280,6 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
       } else {
         $("load-error").hidden = false;
         $("load-error").textContent = "Bestellungen konnten nicht geladen werden: " + err.message;
-        $("stand").textContent = "";
       }
     } finally {
       $("reload").disabled = false;
@@ -284,11 +290,29 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
   const pieces = (o) => o.positionen.reduce((n, p) => n + p.menge, 0);
   // Umsatz ohne Spende, abzüglich Erstattungen
   const revenue = (o) => o.summe - o.spende - (o.erstattet || 0);
+  // Versandfrist: überfällig, bis morgen raus, im Plan
+  const todayIso = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date());
+  const tomorrowIso = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date(Date.now() + 86400000));
+  function dueState(o) {
+    if (o.versendet || !o.frist) return "";
+    if (o.frist < todayIso) return "late";
+    if (o.frist <= tomorrowIso) return "soon";
+    return "ok";
+  }
+  function duePill(o) {
+    const state = dueState(o);
+    if (!state) return "";
+    const text = state === "late" ? `überfällig, Frist war ${isoDatum(o.frist)}`
+      : o.frist === todayIso ? "muss heute raus"
+      : state === "soon" ? "muss morgen raus"
+      : `raus bis ${isoDatum(o.frist)}`;
+    return `<span class="pill due-${state}">${esc(text)}</span>`;
+  }
   const donations = () => orders.filter((o) => o.spende > 0).sort((a, b) => b.datum - a.datum);
 
   function visibleOrders() {
     const q = $("search").value.trim().toLowerCase();
-    return orders.filter((o) => {
+    const list = orders.filter((o) => {
       if (view === "offen" && o.versendet) return false;
       if (view === "versendet" && !o.versendet) return false;
       if (!q) return true;
@@ -296,6 +320,9 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         ...o.positionen.flatMap((p) => [p.name, p.groesse, p.farbe, p.variante])].join(" ").toLowerCase();
       return hay.includes(q);
     });
+    // Offene zuerst nach Frist (dringendste oben), Bestellungen ohne Frist danach
+    if (view === "offen") list.sort((a, b) => (a.frist || "9999").localeCompare(b.frist || "9999") || a.datum - b.datum);
+    return list;
   }
 
   function renderCounts() {
@@ -308,14 +335,15 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     const open = orders.filter((o) => !o.versendet);
     const paid = orders.filter((o) => o.bezahlt);
     const tiles = [
-      ["Offene Bestellungen", open.length, true],
+      ["Offene Bestellungen", open.length],
+      ["Überfällig", open.filter((o) => dueState(o) === "late").length, open.some((o) => dueState(o) === "late") ? "late" : ""],
       ["Offene Stück", open.reduce((n, o) => n + pieces(o), 0)],
       ["Verschickt", orders.length - open.length],
       ["Umsatz (bezahlt)", euro(paid.reduce((n, o) => n + revenue(o), 0))],
       ["Spenden", euro(paid.reduce((n, o) => n + o.spende, 0))],
     ];
     $("stats").innerHTML = tiles.map(([label, value, hi]) =>
-      `<div class="stat${hi ? " highlight" : ""}"><b class="num">${esc(value)}</b><span class="small">${esc(label)}</span></div>`).join("");
+      `<div class="stat${hi ? " " + hi : ""}"><b class="num">${esc(value)}</b><span class="small">${esc(label)}</span></div>`).join("");
   }
 
   function addressText(o) {
@@ -332,6 +360,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     }
     $("orders").innerHTML = list.map((o) => {
       const pills = [
+        duePill(o),
         o.abholung && `<span class="pill pickup">Abholung</span>`,
         o.versendet && `<span class="pill ok">${o.abholung ? "Abgeholt" : "Verschickt"} am ${esc(isoDatum(o.versendet))}</span>`,
         o.vorbestellung && `<span class="pill">Vorbestellung, Versand ab ${esc(isoDatum(o.vorbestellung))}</span>`,
@@ -351,7 +380,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         o.spende > 0 && `Spende ${euro(o.spende)}`,
       ].filter(Boolean).join(" · ");
       return `
-      <article class="white-frame order${o.versendet ? " done" : ""}" data-id="${esc(o.id)}">
+      <article class="white-frame order${o.versendet ? " done" : ""}${dueState(o) ? " due-" + dueState(o) : ""}" data-id="${esc(o.id)}">
         <div>
           <h3>${esc(o.kunde || "Ohne Namen")}</h3>
           <div class="meta small muted num">${datum(o.datum)}${o.art === "shop" ? " · Nr. " + esc(o.nummer) : ""}</div>
@@ -367,7 +396,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         </div>
         <div class="order-foot">
           <button class="${o.versendet ? "ghost-button" : "black-button"}" type="button" data-ship>${o.abholung ? (o.versendet ? "Doch nicht abgeholt" : "Als abgeholt markieren") : (o.versendet ? "Doch nicht verschickt" : "Als verschickt markieren")}</button>
-          <textarea data-note placeholder="Interne Notiz, z. B. Sendungsnummer" aria-label="Interne Notiz">${esc(o.notiz)}</textarea>
+          <textarea rows="1" data-note placeholder="Interne Notiz, z. B. Sendungsnummer" aria-label="Interne Notiz">${esc(o.notiz)}</textarea>
           <a href="${esc(o.stripeUrl)}" target="_blank" rel="noopener">In Stripe öffnen</a>
         </div>
       </article>`;
