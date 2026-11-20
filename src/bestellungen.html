@@ -10,156 +10,202 @@ sitemapExclude: true
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Bestellungen | handheldt intern</title>
-<link rel="icon" href="/img/favicon_3.png">
+<link rel="icon" href="/img/favicon_3.png" type="image/png">
+<link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-@font-face { font-family: "Plus Jakarta Sans"; src: url(/fonts/plus-jakarta-sans-latin-wght-normal.woff2) format("woff2"); font-weight: 200 800; font-display: swap; }
-@font-face { font-family: "Plus Jakarta Sans"; src: url(/fonts/plus-jakarta-sans-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 200 800; font-display: swap; unicode-range: U+0100-02BA, U+1E00-1EFF; }
-@font-face { font-family: "Source Serif 4"; src: url(/fonts/source-serif-4-latin-opsz-normal.woff2) format("woff2"); font-weight: 200 900; font-display: swap; }
+/* Schriften wie auf der Hauptseite: Plus Jakarta Sans, Source Serif 4 nur kursiv für Akzente */
+@font-face { font-family: "Plus Jakarta Sans"; src: url(/fonts/plus-jakarta-sans-latin-ext-wght-normal.woff2) format("woff2"); font-style: normal; font-weight: 200 800; font-display: swap; unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+@font-face { font-family: "Plus Jakarta Sans"; src: url(/fonts/plus-jakarta-sans-latin-wght-normal.woff2) format("woff2"); font-style: normal; font-weight: 200 800; font-display: swap; unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+@font-face { font-family: "Source Serif 4"; src: url(/fonts/source-serif-4-latin-opsz-italic.woff2) format("woff2"); font-style: italic; font-weight: 200 900; font-display: swap; }
 
+/* Farben und Formen der Hauptseite (css/style.css) */
 :root {
-  --ink: #0c0b21;
-  --paper: #f8f7f4;
-  --card: #ffffff;
-  --muted: #6b6a7a;
-  --line: #e4e1da;
-  --accent: #ffecd0;
-  --accent-strong: #f3c98d;
-  --ok: #1f7a4d;
-  --ok-bg: #e2f3e9;
-  --warn: #9a5b00;
-  --warn-bg: #fff1d6;
-  --info-bg: #e7ecf7;
-  --info: #2d4a8a;
-  --radius: 0.4rem;
-  --sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
-  --serif: "Source Serif 4", Georgia, serif;
+  --primary-color: #0c0b21;
+  --secondary-color: #f8f7f4;
+  --accent-color: #ffecd0;
+  --darker-accent-color: #ffe2bf;
+  --frame: #ffffff;
+  --muted: #6b6b6b;
+  --line: #e6e4df;
+  --hover: #e9e9e9;
+  --ok: #1f6b45;
+  --ok-bg: #dff1e6;
+  --alert: #a32020;
+  --alert-bg: #fbe3e3;
+  --standard-radius: 0.3rem;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--sans); }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--secondary-color); color: var(--primary-color); font: 16px/1.5 "Plus Jakarta Sans", sans-serif; }
 [hidden] { display: none !important; }
-button, input, textarea, select { font: inherit; color: inherit; }
-button { cursor: pointer; }
-:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-
-.wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
-h1 { font-family: var(--serif); font-weight: 600; font-size: 2rem; margin: 0; line-height: 1.1; }
-h2 { font-family: var(--serif); font-weight: 600; font-size: 1.35rem; margin: 0; }
+button, input, textarea { font: inherit; color: inherit; }
+a { color: var(--primary-color); font-weight: 500; text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #f2a33a; outline-offset: 2px; }
+h1, h2, h3 { font-weight: 800; margin: 0; line-height: 1.1; }
+h1 { font-size: 2.5rem; }
+h2 { font-size: 1.6rem; }
+.slanted { font-family: "Source Serif 4", serif; font-style: italic; }
 .muted { color: var(--muted); }
-.small { font-size: 0.85rem; }
+.small { font-size: 0.875rem; }
 .num { font-variant-numeric: tabular-nums; }
+.yellow-box { padding: 0.15rem 0.4rem; background: var(--accent-color); border-radius: var(--standard-radius); }
+.yellow-underline { position: relative; display: inline-block; z-index: 0; }
+.yellow-underline::after { content: ""; position: absolute; left: 0; bottom: 0.05em; width: 100%; height: 0.3em; border-radius: 0.1rem; background: var(--darker-accent-color); z-index: -1; }
 
-.btn { border: 1px solid var(--ink); background: var(--ink); color: var(--paper); border-radius: var(--radius); padding: 0.5rem 0.9rem; font-weight: 600; }
-.btn.ghost { background: transparent; color: var(--ink); }
-.btn.small { padding: 0.3rem 0.6rem; font-size: 0.85rem; }
-.btn:disabled { opacity: 0.5; cursor: progress; }
+.content-wrapper { max-width: 950px; margin: 0 auto; padding: 40px 16px 80px; }
 
-/* Login */
-.login { max-width: 360px; margin: 12vh auto 0; display: grid; gap: 12px; }
-.login input { padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
-.error { color: #a32020; }
+/* Buttons wie auf der Hauptseite */
+.black-button, .accent-button, .ghost-button {
+  display: inline-block; padding: 0.7rem 1.6rem; border-radius: var(--standard-radius); border: 1px solid var(--primary-color);
+  font-weight: 500; cursor: pointer; transition: all 0.3s; background: var(--primary-color); color: var(--secondary-color);
+}
+.accent-button { background: var(--accent-color); color: var(--primary-color); }
+.ghost-button { background: transparent; color: var(--primary-color); }
+.black-button:hover, .accent-button:hover, .ghost-button:hover { background: var(--hover); color: var(--primary-color); }
+.small-button { padding: 0.35rem 0.9rem; font-size: 0.875rem; }
+button:disabled { opacity: 0.5; cursor: progress; }
+
+.white-frame { background: var(--frame); border-radius: var(--standard-radius); padding: 24px; }
+.white-frame > h2 { margin-bottom: 14px; }
+
+/* Anmeldung */
+.login { max-width: 380px; margin: 10vh auto 0; display: grid; gap: 14px; }
+.login img { height: 72px; width: auto; }
+.login input { padding: 0.75rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); }
+.error { color: var(--alert); }
 
 /* Kopf */
-.top { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; justify-content: space-between; margin-bottom: 20px; }
-.top .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.top { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.brand { display: flex; align-items: center; gap: 16px; }
+.brand img { height: 64px; width: auto; flex: none; }
+.brand p { margin: 4px 0 0; }
+.top-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
-.stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
-.stat b { display: block; font-size: 1.6rem; font-family: var(--serif); line-height: 1.1; }
+/* Navigation: Pille wie die Seitennavigation */
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; background: var(--frame); border-radius: 200px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.08); width: fit-content; max-width: 100%; margin-bottom: 20px; }
+.tabs button { border: 0; background: transparent; padding: 0.55rem 1.2rem; border-radius: 2rem; font-weight: 500; cursor: pointer; transition: background 0.2s; }
+.tabs button:hover { background: var(--secondary-color); }
+.tabs button[aria-pressed="true"] { background: var(--primary-color); color: var(--secondary-color); }
+@media (max-width: 520px) { .tabs { flex-wrap: nowrap; overflow-x: auto; } .tabs button { padding: 0.5rem 0.8rem; white-space: nowrap; font-size: 0.9rem; } }
+.tabs .count { font-variant-numeric: tabular-nums; opacity: 0.7; margin-left: 0.25rem; }
 
-.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
-.tabs { display: inline-flex; border: 1px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
-.tabs button { border: 0; background: transparent; padding: 0.45rem 0.85rem; font-weight: 600; }
-.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-.toolbar input[type="search"] { flex: 1 1 200px; min-width: 0; padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
-.toolbar label { display: inline-flex; gap: 6px; align-items: center; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 28px; }
+.stat { background: var(--frame); border-radius: var(--standard-radius); padding: 14px 16px; }
+.stat b { display: block; font-size: 1.6rem; font-weight: 800; line-height: 1.15; }
+.stat.highlight { background: var(--accent-color); }
 
-/* Packliste */
-.pack { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 28px; }
-.pack-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-.pack-product { border-top: 2px solid var(--ink); padding-top: 8px; min-width: 0; }
-.pack-product h3 { margin: 0 0 6px; font-size: 1rem; display: flex; justify-content: space-between; gap: 8px; }
-.pack-product table { width: 100%; border-collapse: collapse; }
-.pack-product td { padding: 3px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-.pack-product td:last-child { text-align: right; font-weight: 700; width: 3.5em; }
+.search { display: block; width: 100%; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); margin-bottom: 18px; }
 
 /* Bestellungen */
-.orders { display: grid; gap: 12px; }
-.order { background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--accent-strong); border-radius: var(--radius); padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; }
-.order.done { border-left-color: var(--ok); opacity: 0.85; }
-@media (max-width: 720px) { .order { grid-template-columns: 1fr; } }
-.order-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
-.order-head strong { font-size: 1.05rem; }
-.pill { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 999px; letter-spacing: 0.02em; }
-.pill.pre { background: var(--warn-bg); color: var(--warn); }
-.pill.inv { background: var(--info-bg); color: var(--info); }
-.pill.unpaid { background: #fbe1e1; color: #a32020; }
+.orders { display: grid; gap: 14px; }
+.order { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 20px 28px; }
+.order.done { opacity: 0.75; }
+@media (max-width: 720px) { .order { grid-template-columns: 1fr; } h1 { font-size: 2rem; } }
+.order h3 { font-size: 1.15rem; }
+.meta { margin-top: 2px; }
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.pill { font-size: 0.78rem; font-weight: 600; padding: 0.15rem 0.55rem; border-radius: var(--standard-radius); background: var(--accent-color); }
 .pill.ok { background: var(--ok-bg); color: var(--ok); }
-address { font-style: normal; margin-top: 6px; white-space: pre-line; }
-.contact { margin-top: 4px; word-break: break-all; }
+.pill.alert { background: var(--alert-bg); color: var(--alert); }
+.pill.plain { background: var(--secondary-color); }
+.pill.pickup { background: var(--primary-color); color: var(--secondary-color); }
+address { font-style: normal; margin-top: 12px; white-space: pre-line; }
+.contact { margin: 4px 0 12px; overflow-wrap: anywhere; }
 .items { width: 100%; border-collapse: collapse; }
-.items td { padding: 4px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-.items td.qty { width: 2.6em; font-weight: 700; }
-.items td.price { text-align: right; white-space: nowrap; padding-left: 8px; }
-.opt { display: inline-block; background: var(--accent); border-radius: 0.25rem; padding: 0 0.35rem; margin: 2px 4px 0 0; font-size: 0.82rem; }
-.totals { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-.order-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-top: 1px dashed var(--line); padding-top: 10px; }
-.order-foot textarea { flex: 1 1 240px; min-width: 0; min-height: 2.4rem; resize: vertical; padding: 0.4rem 0.6rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
-.order-foot a { color: var(--muted); font-size: 0.85rem; }
-.empty { padding: 32px; text-align: center; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: var(--radius); }
-.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 0.55rem 1rem; border-radius: var(--radius); font-weight: 600; }
+.items td { padding: 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.items tr:first-child td { padding-top: 0; }
+.items td.qty { width: 2.8em; font-weight: 800; }
+.items td.price { text-align: right; white-space: nowrap; padding-left: 10px; }
+.opts { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.opt { font-size: 0.8rem; padding: 0 0.4rem; border-radius: var(--standard-radius); background: var(--accent-color); }
+.totals { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.totals strong { font-size: 1.1rem; }
+.order-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding-top: 16px; border-top: 1px solid var(--line); }
+.order-foot textarea { flex: 1 1 240px; min-width: 0; min-height: 2.6rem; resize: vertical; padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--secondary-color); }
+.order-foot a { font-size: 0.875rem; color: var(--muted); }
+.empty { text-align: center; padding: 48px 24px; }
+
+/* Spenden */
+.donation-head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; margin-bottom: 14px; }
+@media (max-width: 720px) { .donation-head { grid-template-columns: 1fr; } }
+.donation-total { background: var(--accent-color); border-radius: var(--standard-radius); padding: 24px; }
+.donation-total b { display: block; font-size: 3rem; font-weight: 800; line-height: 1; margin: 8px 0; }
+.table-wrap { overflow-x: auto; }
+table.list { width: 100%; border-collapse: collapse; }
+table.list th { text-align: left; font-size: 0.8rem; font-weight: 600; color: var(--muted); padding: 0 12px 8px 0; border-bottom: 2px solid var(--primary-color); }
+table.list td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); }
+table.list .right { text-align: right; padding-right: 0; }
+table.list tfoot td { font-weight: 800; border-bottom: 0; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--primary-color); color: var(--secondary-color); padding: 0.6rem 1.1rem; border-radius: var(--standard-radius); font-weight: 500; box-shadow: 0 10px 40px rgba(12, 11, 33, 0.25); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
-<main class="wrap">
+<main class="content-wrapper">
 
   <form class="login" id="login" hidden>
+    <img src="/img/logo.png" alt="handheldt">
     <h1>Bestellungen</h1>
-    <p class="muted">Interne Übersicht für handheldt. Bitte das Team-Passwort eingeben.</p>
+    <p class="slanted muted">Interne Übersicht fürs Team</p>
     <label for="pw" class="small">Passwort</label>
     <input id="pw" type="password" autocomplete="current-password" required>
-    <button class="btn" type="submit">Anmelden</button>
+    <button class="black-button" type="submit">Anmelden</button>
     <p class="error" id="login-error" hidden></p>
   </form>
 
   <div id="app" hidden>
-    <div class="top">
-      <div>
-        <h1>Bestellungen</h1>
-        <p class="muted small" id="stand">Wird geladen …</p>
+    <header class="top">
+      <div class="brand">
+        <img src="/img/logo.png" alt="handheldt">
+        <div>
+          <h1><span class="yellow-underline">Bestellungen</span></h1>
+          <p class="slanted muted" id="stand">wird geladen …</p>
+        </div>
       </div>
-      <div class="actions">
-        <button class="btn ghost small" id="reload" type="button">Aktualisieren</button>
-        <button class="btn ghost small" id="logout" type="button">Abmelden</button>
+      <div class="top-actions">
+        <button class="accent-button small-button" id="reload" type="button">Aktualisieren</button>
+        <button class="ghost-button small-button" id="logout" type="button">Abmelden</button>
       </div>
-    </div>
+    </header>
 
-    <div class="stats" id="stats"></div>
+    <nav class="tabs" aria-label="Ansicht">
+      <button type="button" data-view="offen" aria-pressed="true">Offen<span class="count" data-count="offen"></span></button>
+      <button type="button" data-view="versendet" aria-pressed="false">Verschickt<span class="count" data-count="versendet"></span></button>
+      <button type="button" data-view="alle" aria-pressed="false">Alle<span class="count" data-count="alle"></span></button>
+      <button type="button" data-view="spenden" aria-pressed="false">Spenden<span class="count" data-count="spenden"></span></button>
+    </nav>
 
-    <div class="toolbar">
-      <div class="tabs" role="group" aria-label="Versandstatus">
-        <button type="button" data-filter="offen" aria-pressed="true">Offen</button>
-        <button type="button" data-filter="versendet" aria-pressed="false">Verschickt</button>
-        <button type="button" data-filter="alle" aria-pressed="false">Alle</button>
-      </div>
-      <input type="search" id="search" placeholder="Name, Produkt, Farbe, Nummer …" aria-label="Suchen">
-      <label class="small"><input type="checkbox" id="only-ready"> nur sofort versandbereit</label>
-    </div>
-
-    <section class="pack" aria-labelledby="pack-title">
-      <div class="pack-head">
-        <h2 id="pack-title">Was wird gebraucht?</h2>
-        <span class="muted small" id="pack-note"></span>
-      </div>
-      <div class="pack-grid" id="pack"></div>
+    <section id="orders-view">
+      <div class="stats" id="stats"></div>
+      <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer, Abholung …" aria-label="Bestellungen durchsuchen">
+      <div class="orders" id="orders"></div>
     </section>
 
-    <div class="orders" id="orders"></div>
+    <section id="donations-view" hidden>
+      <div class="donation-head">
+        <div class="donation-total">
+          <span class="small">Gesammelte Spenden</span>
+          <b class="num" id="donation-sum"></b>
+          <span class="slanted">geht vollständig an die Sozial-Missionarische Arbeit des EC Deutschlands in Nepal</span>
+        </div>
+        <div class="white-frame">
+          <h2>Pro Monat</h2>
+          <div class="table-wrap"><table class="list" id="donation-months"></table></div>
+        </div>
+      </div>
+      <div class="white-frame">
+        <h2>Alle Spenden</h2>
+        <p class="small muted" style="margin-top:-6px">Aus Shop-Bestellungen mit Spende. Komplett erstattete Bestellungen zählen nicht mit.</p>
+        <div class="table-wrap"><table class="list" id="donation-list"></table></div>
+      </div>
+    </section>
   </div>
 
   <p class="error" id="load-error" hidden></p>
 </main>
-<div class="toast" id="toast" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
 
 <script>
 (() => {
@@ -168,20 +214,20 @@ address { font-style: normal; margin-top: 6px; white-space: pre-line; }
   const $ = (id) => document.getElementById(id);
   const euro = (cent) => (cent / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
   const datum = (sek) => new Date(sek * 1000).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
-  const isoDatum = (iso) => iso ? iso.split("-").reverse().join(".") : "";
+  const isoDatum = (iso) => (iso ? iso.split("-").reverse().join(".") : "");
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
   let pw = "";
   try { pw = localStorage.getItem(KEY) || ""; } catch (e) {}
   let orders = [];
-  let filter = "offen";
+  let view = "offen";
 
   function toast(text) {
     const t = $("toast");
     t.textContent = text;
     t.hidden = false;
     clearTimeout(toast.timer);
-    toast.timer = setTimeout(() => (t.hidden = true), 2200);
+    toast.timer = setTimeout(() => (t.hidden = true), 2400);
   }
 
   async function api(method, body) {
@@ -209,14 +255,14 @@ address { font-style: normal; margin-top: 6px; white-space: pre-line; }
 
   async function load() {
     $("reload").disabled = true;
-    $("stand").textContent = "Wird geladen …";
+    $("stand").textContent = "wird geladen …";
     try {
       const data = await api("GET");
       orders = data.bestellungen;
       $("login").hidden = true;
       $("app").hidden = false;
       $("load-error").hidden = true;
-      $("stand").textContent = "Stand " + new Date(data.stand * 1000).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) + " · direkt aus Stripe";
+      $("stand").textContent = "Stand " + new Date(data.stand * 1000).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) + ", direkt aus Stripe";
       render();
     } catch (err) {
       if (err.status === 401) {
@@ -234,70 +280,42 @@ address { font-style: normal; margin-top: 6px; white-space: pre-line; }
     }
   }
 
-  // Vorbestellungen mit Versanddatum in der Zukunft sind noch nicht versandbereit
-  const today = new Date().toISOString().slice(0, 10);
-  const ready = (o) => !o.vorbestellung || o.vorbestellung <= today;
+  const optionsOf = (p) => [p.groesse && "Größe " + p.groesse, p.farbe, p.variante].filter(Boolean);
+  const pieces = (o) => o.positionen.reduce((n, p) => n + p.menge, 0);
+  // Umsatz ohne Spende, abzüglich Erstattungen
+  const revenue = (o) => o.summe - o.spende - (o.erstattet || 0);
+  const donations = () => orders.filter((o) => o.spende > 0).sort((a, b) => b.datum - a.datum);
 
-  function visible() {
+  function visibleOrders() {
     const q = $("search").value.trim().toLowerCase();
-    const onlyReady = $("only-ready").checked;
     return orders.filter((o) => {
-      if (filter === "offen" && o.versendet) return false;
-      if (filter === "versendet" && !o.versendet) return false;
-      if (onlyReady && !ready(o)) return false;
+      if (view === "offen" && o.versendet) return false;
+      if (view === "versendet" && !o.versendet) return false;
       if (!q) return true;
-      const hay = [o.kunde, o.email, o.nummer, o.notiz, o.adresse?.ort,
+      const hay = [o.kunde, o.versandart, o.ansprechpartner, o.email, o.nummer, o.notiz, o.adresse?.ort,
         ...o.positionen.flatMap((p) => [p.name, p.groesse, p.farbe, p.variante])].join(" ").toLowerCase();
       return hay.includes(q);
     });
   }
 
-  function optionsOf(p) {
-    return [p.groesse && "Größe " + p.groesse, p.farbe, p.variante].filter(Boolean);
+  function renderCounts() {
+    const open = orders.filter((o) => !o.versendet).length;
+    const counts = { offen: open, versendet: orders.length - open, alle: orders.length, spenden: donations().length };
+    document.querySelectorAll("[data-count]").forEach((el) => (el.textContent = counts[el.dataset.count]));
   }
 
   function renderStats() {
     const open = orders.filter((o) => !o.versendet);
-    const openPieces = open.reduce((n, o) => n + o.positionen.reduce((m, p) => m + p.menge, 0), 0);
-    const openReady = open.filter(ready).length;
-    const revenue = orders.filter((o) => o.bezahlt).reduce((n, o) => n + o.summe, 0);
+    const paid = orders.filter((o) => o.bezahlt);
     const tiles = [
-      ["Offene Bestellungen", open.length],
-      ["Davon versandbereit", openReady],
-      ["Offene Stück", openPieces],
+      ["Offene Bestellungen", open.length, true],
+      ["Offene Stück", open.reduce((n, o) => n + pieces(o), 0)],
       ["Verschickt", orders.length - open.length],
-      ["Umsatz bezahlt", euro(revenue)],
+      ["Umsatz (bezahlt)", euro(paid.reduce((n, o) => n + revenue(o), 0))],
+      ["Spenden", euro(paid.reduce((n, o) => n + o.spende, 0))],
     ];
-    $("stats").innerHTML = tiles.map(([label, value]) => `<div class="stat"><b class="num">${esc(value)}</b><span class="small muted">${esc(label)}</span></div>`).join("");
-    document.querySelector('[data-filter="offen"]').textContent = `Offen (${open.length})`;
-    document.querySelector('[data-filter="versendet"]').textContent = `Verschickt (${orders.length - open.length})`;
-    document.querySelector('[data-filter="alle"]').textContent = `Alle (${orders.length})`;
-  }
-
-  function renderPack(list) {
-    const products = new Map();
-    for (const o of list) {
-      for (const p of o.positionen) {
-        const key = p.name;
-        if (!products.has(key)) products.set(key, { name: p.name, total: 0, variants: new Map() });
-        const prod = products.get(key);
-        const label = optionsOf(p).join(" · ") || "ohne Auswahl";
-        prod.total += p.menge;
-        prod.variants.set(label, (prod.variants.get(label) || 0) + p.menge);
-      }
-    }
-    const sorted = [...products.values()].sort((a, b) => b.total - a.total);
-    const scope = { offen: "offene Bestellungen", versendet: "verschickte Bestellungen", alle: "alle Bestellungen" }[filter];
-    $("pack-note").textContent = `Summe über ${list.length} ${scope}${$("search").value ? " (gefiltert)" : ""}`;
-    $("pack").innerHTML = sorted.length
-      ? sorted.map((prod) => `
-        <div class="pack-product">
-          <h3><span>${esc(prod.name)}</span><span class="num">${prod.total}×</span></h3>
-          <table><tbody>${[...prod.variants.entries()]
-            .sort((a, b) => a[0].localeCompare(b[0], "de", { numeric: true }))
-            .map(([label, n]) => `<tr><td>${esc(label)}</td><td class="num">${n}×</td></tr>`).join("")}</tbody></table>
-        </div>`).join("")
-      : `<p class="muted">Nichts zu tun.</p>`;
+    $("stats").innerHTML = tiles.map(([label, value, hi]) =>
+      `<div class="stat${hi ? " highlight" : ""}"><b class="num">${esc(value)}</b><span class="small">${esc(label)}</span></div>`).join("");
   }
 
   function addressText(o) {
@@ -306,47 +324,49 @@ address { font-style: normal; margin-top: 6px; white-space: pre-line; }
     return [a.name, a.zeile1, a.zeile2, `${a.plz} ${a.ort}`.trim(), a.land && a.land !== "DE" ? a.land : ""].filter(Boolean).join("\n");
   }
 
-  function renderOrders(list) {
+  function renderOrders() {
+    const list = visibleOrders();
     if (!list.length) {
-      $("orders").innerHTML = `<div class="empty">${filter === "offen" ? "Alles verschickt. 🎉" : "Keine Bestellungen gefunden."}</div>`;
+      $("orders").innerHTML = `<div class="white-frame empty"><h2>${view === "offen" && !$("search").value ? "Alles verschickt." : "Keine Bestellungen gefunden."}</h2></div>`;
       return;
     }
     $("orders").innerHTML = list.map((o) => {
       const pills = [
-        o.art === "rechnung" && `<span class="pill inv">Rechnung ${esc(o.nummer)}</span>`,
-        !o.bezahlt && `<span class="pill unpaid">Zahlung offen</span>`,
-        o.vorbestellung && `<span class="pill pre">Vorbestellung · ab ${esc(isoDatum(o.vorbestellung))}</span>`,
-        o.versendet && `<span class="pill ok">Verschickt ${esc(isoDatum(o.versendet))}</span>`,
-      ].filter(Boolean).join(" ");
+        o.abholung && `<span class="pill pickup">Abholung</span>`,
+        o.versendet && `<span class="pill ok">${o.abholung ? "Abgeholt" : "Verschickt"} am ${esc(isoDatum(o.versendet))}</span>`,
+        o.vorbestellung && `<span class="pill">Vorbestellung, Versand ab ${esc(isoDatum(o.vorbestellung))}</span>`,
+        o.art === "rechnung" && `<span class="pill plain">Rechnung ${esc(o.nummer)}</span>`,
+        !o.bezahlt && `<span class="pill alert">${o.art === "rechnung" ? "Noch nicht bezahlt" : "Zahlung läuft noch"}</span>`,
+        o.erstattet > 0 && `<span class="pill alert">${euro(o.erstattet)} erstattet</span>`,
+        o.spende > 0 && `<span class="pill plain">Spende ${euro(o.spende)}</span>`,
+      ].filter(Boolean).join("");
       const items = o.positionen.map((p) => `
         <tr>
           <td class="qty num">${p.menge}×</td>
-          <td>${esc(p.name)}<br>${optionsOf(p).map((x) => `<span class="opt">${esc(x)}</span>`).join("")}</td>
+          <td>${esc(p.name)}${optionsOf(p).length ? `<div class="opts">${optionsOf(p).map((x) => `<span class="opt">${esc(x)}</span>`).join("")}</div>` : ""}</td>
           <td class="price num">${euro(p.betrag)}</td>
         </tr>`).join("");
       const extras = [
-        o.versandkosten ? `Versand ${euro(o.versandkosten)}` : (o.art === "shop" ? "Versand kostenlos" : ""),
-        o.spende ? `Spende ${euro(o.spende)}` : "",
+        o.art === "shop" && (o.abholung ? esc(o.versandart) : o.versandkosten ? `Versand ${euro(o.versandkosten)}` : "Versand kostenlos"),
+        o.spende > 0 && `Spende ${euro(o.spende)}`,
       ].filter(Boolean).join(" · ");
       return `
-      <article class="order ${o.versendet ? "done" : ""}" data-id="${esc(o.id)}">
+      <article class="white-frame order${o.versendet ? " done" : ""}" data-id="${esc(o.id)}">
         <div>
-          <div class="order-head">
-            <strong>${esc(o.kunde || "Ohne Namen")}</strong>
-            <span class="muted small num">${datum(o.datum)}${o.art === "shop" ? " · #" + esc(o.nummer) : ""}</span>
-          </div>
-          <div>${pills}</div>
-          ${o.ansprechpartner ? `<div class="small">z. Hd. ${esc(o.ansprechpartner)}</div>` : ""}
+          <h3>${esc(o.kunde || "Ohne Namen")}</h3>
+          <div class="meta small muted num">${datum(o.datum)}${o.art === "shop" ? " · Nr. " + esc(o.nummer) : ""}</div>
+          ${pills ? `<div class="pills">${pills}</div>` : ""}
+          ${o.ansprechpartner ? `<div class="small" style="margin-top:8px">z. Hd. ${esc(o.ansprechpartner)}</div>` : ""}
           <address>${esc(addressText(o))}</address>
           <div class="contact small muted">${[o.email, o.telefon].filter(Boolean).map(esc).join(" · ")}</div>
-          ${o.adresse ? `<button class="btn ghost small" type="button" data-copy>Adresse kopieren</button>` : ""}
+          ${o.adresse ? `<button class="ghost-button small-button" type="button" data-copy>Adresse kopieren</button>` : ""}
         </div>
         <div>
           <table class="items"><tbody>${items}</tbody></table>
           <div class="totals small"><span class="muted">${extras}</span><strong class="num">${euro(o.summe)}</strong></div>
         </div>
         <div class="order-foot">
-          <button class="btn ${o.versendet ? "ghost" : ""}" type="button" data-ship>${o.versendet ? "Doch nicht verschickt" : "Als verschickt markieren"}</button>
+          <button class="${o.versendet ? "ghost-button" : "black-button"}" type="button" data-ship>${o.abholung ? (o.versendet ? "Doch nicht abgeholt" : "Als abgeholt markieren") : (o.versendet ? "Doch nicht verschickt" : "Als verschickt markieren")}</button>
           <textarea data-note placeholder="Interne Notiz, z. B. Sendungsnummer" aria-label="Interne Notiz">${esc(o.notiz)}</textarea>
           <a href="${esc(o.stripeUrl)}" target="_blank" rel="noopener">In Stripe öffnen</a>
         </div>
@@ -354,11 +374,48 @@ address { font-style: normal; margin-top: 6px; white-space: pre-line; }
     }).join("");
   }
 
+  function renderDonations() {
+    const list = donations();
+    const total = list.reduce((n, o) => n + o.spende, 0);
+    $("donation-sum").textContent = euro(total);
+
+    const months = new Map();
+    for (const o of list) {
+      const d = new Date(o.datum * 1000);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const m = months.get(key) || { label: d.toLocaleDateString("de-DE", { month: "long", year: "numeric" }), n: 0, sum: 0 };
+      m.n += 1;
+      m.sum += o.spende;
+      months.set(key, m);
+    }
+    $("donation-months").innerHTML = list.length
+      ? `<thead><tr><th>Monat</th><th class="right">Anzahl</th><th class="right">Betrag</th></tr></thead><tbody>${
+          [...months.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([, m]) =>
+            `<tr><td>${esc(m.label)}</td><td class="right num">${m.n}</td><td class="right num">${euro(m.sum)}</td></tr>`).join("")
+        }</tbody>`
+      : `<tbody><tr><td class="muted">Noch keine Spenden.</td></tr></tbody>`;
+
+    $("donation-list").innerHTML = list.length
+      ? `<thead><tr><th>Datum</th><th>Name</th><th>Bestellung</th><th class="right">Spende</th></tr></thead><tbody>${
+          list.map((o) => `<tr>
+            <td class="num">${datum(o.datum)}</td>
+            <td>${esc(o.kunde || "Ohne Namen")}${o.bezahlt ? "" : ` <span class="pill alert">Zahlung läuft noch</span>`}</td>
+            <td class="num"><a href="${esc(o.stripeUrl)}" target="_blank" rel="noopener">Nr. ${esc(o.nummer)}</a></td>
+            <td class="right num">${euro(o.spende)}</td></tr>`).join("")
+        }</tbody><tfoot><tr><td colspan="3">Gesamt</td><td class="right num">${euro(total)}</td></tr></tfoot>`
+      : `<tbody><tr><td class="muted">Sobald jemand im Warenkorb spendet, steht es hier.</td></tr></tbody>`;
+  }
+
   function render() {
-    const list = visible();
-    renderStats();
-    renderPack(list);
-    renderOrders(list);
+    renderCounts();
+    const donationsView = view === "spenden";
+    $("orders-view").hidden = donationsView;
+    $("donations-view").hidden = !donationsView;
+    if (donationsView) renderDonations();
+    else {
+      renderStats();
+      renderOrders();
+    }
   }
 
   async function save(order, patch, button) {
@@ -366,7 +423,7 @@ address { font-style: normal; margin-top: 6px; white-space: pre-line; }
     try {
       const result = await api("POST", { art: order.art, id: order.id, ...patch });
       Object.assign(order, result);
-      toast(patch.versendet !== undefined ? (result.versendet ? "Als verschickt gespeichert" : "Wieder als offen gespeichert") : "Notiz gespeichert");
+      toast(patch.versendet !== undefined ? (result.versendet ? (order.abholung ? "Als abgeholt gespeichert" : "Als verschickt gespeichert") : "Wieder als offen gespeichert") : "Notiz gespeichert");
       if (patch.versendet !== undefined) render();
     } catch (err) {
       toast("Nicht gespeichert: " + err.message);
@@ -397,13 +454,12 @@ address { font-style: normal; margin-top: 6px; white-space: pre-line; }
     if (event.target.value !== order.notiz) save(order, { notiz: event.target.value });
   });
 
-  document.querySelectorAll("[data-filter]").forEach((btn) => btn.addEventListener("click", () => {
-    filter = btn.dataset.filter;
-    document.querySelectorAll("[data-filter]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+  document.querySelectorAll("[data-view]").forEach((btn) => btn.addEventListener("click", () => {
+    view = btn.dataset.view;
+    document.querySelectorAll("[data-view]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
     render();
   }));
-  $("search").addEventListener("input", render);
-  $("only-ready").addEventListener("change", render);
+  $("search").addEventListener("input", renderOrders);
   $("reload").addEventListener("click", load);
   $("logout").addEventListener("click", () => {
     pw = "";

@@ -41,23 +41,34 @@ function addressOf(details) {
 
 async function loadSessionOrders() {
   const sessions = await stripe.checkout.sessions
-    .list({ status: "complete", limit: 100, expand: ["data.payment_intent"] })
+    .list({ status: "complete", limit: 100, expand: ["data.payment_intent.latest_charge", "data.shipping_cost.shipping_rate"] })
     .autoPagingToArray({ limit: MAX_ORDERS });
+
+  // Nur Bestellungen, die bezahlt sind oder deren Zahlung noch läuft (z. B. Lastschrift).
+  // Storniert, fehlgeschlagen oder komplett erstattet: nicht anzeigen.
+  const relevant = sessions
+    .map((session) => {
+      const pi = typeof session.payment_intent === "object" ? session.payment_intent : null;
+      const charge = pi && typeof pi.latest_charge === "object" ? pi.latest_charge : null;
+      const paid = ["paid", "no_payment_required"].includes(session.payment_status);
+      const pending = pi?.status === "processing";
+      if (pi && ["canceled", "requires_payment_method"].includes(pi.status)) return null;
+      if (!paid && !pending) return null;
+      if (charge?.refunded) return null;
+      return { session, pi, paid, erstattet: charge?.amount_refunded || 0 };
+    })
+    .filter(Boolean);
 
   const orders = [];
   // Positionen in kleinen Gruppen laden, damit Stripe nicht drosselt
-  for (let i = 0; i < sessions.length; i += 8) {
-    const batch = sessions.slice(i, i + 8);
+  for (let i = 0; i < relevant.length; i += 8) {
+    const batch = relevant.slice(i, i + 8);
     const results = await Promise.all(
-      batch.map(async (session) => {
-        // Abgeschlossen, aber weder bezahlt noch mit Zahlungsvorgang (z. B. abgebrochene Lastschrift): überspringen
-        const paid = ["paid", "no_payment_required"].includes(session.payment_status);
-        if (!paid && !session.payment_intent) return null;
+      batch.map(async ({ session, pi, paid, erstattet }) => {
         const lineItems = await stripe.checkout.sessions
           .listLineItems(session.id, { limit: 100, expand: ["data.price.product"] })
           .autoPagingToArray({ limit: 100 });
 
-        const pi = typeof session.payment_intent === "object" ? session.payment_intent : null;
         const positionen = [];
         let spende = 0;
         for (const item of lineItems) {
@@ -79,6 +90,7 @@ async function loadSessionOrders() {
         }
 
         const shipping = session.collected_information?.shipping_details || session.shipping_details;
+        const rate = typeof session.shipping_cost?.shipping_rate === "object" ? session.shipping_cost.shipping_rate : null;
         return {
           art: "shop",
           id: session.id,
@@ -91,8 +103,12 @@ async function loadSessionOrders() {
           adresse: addressOf(shipping) || addressOf(session.customer_details),
           vorbestellung: session.metadata?.vorbestellung || "",
           versandkosten: session.shipping_cost?.amount_total ?? session.total_details?.amount_shipping ?? 0,
+          // Gewählte Versandart an der Kasse, z. B. "DHL Versand" oder "Abholung in Teningen (nach Absprache)"
+          versandart: rate?.display_name || "",
+          abholung: /abholung/i.test(rate?.display_name || ""),
           spende,
           summe: session.amount_total,
+          erstattet,
           positionen,
           versendet: pi?.metadata?.versendet || "",
           notiz: pi?.metadata?.notiz || "",
@@ -114,7 +130,9 @@ async function loadInvoiceOrders() {
     .autoPagingToArray({ limit: MAX_ORDERS });
 
   return invoices
+    // Offen oder bezahlt; per Gutschrift komplett zurückgenommene Rechnungen ausblenden
     .filter((inv) => ["open", "paid"].includes(inv.status) && inv.billing_reason === "manual")
+    .filter((inv) => (inv.post_payment_credit_notes_amount || 0) + (inv.pre_payment_credit_notes_amount || 0) < inv.total)
     .map((inv) => {
       const customer = typeof inv.customer === "object" ? inv.customer : null;
       const shipping = inv.customer_shipping || customer?.shipping;
@@ -131,8 +149,11 @@ async function loadInvoiceOrders() {
         adresse: addressOf(shipping) || addressOf({ name: inv.customer_name, address: inv.customer_address }),
         vorbestellung: "",
         versandkosten: 0,
+        versandart: "",
+        abholung: false,
         spende: 0,
         summe: inv.total,
+        erstattet: inv.post_payment_credit_notes_amount || 0,
         positionen: inv.lines.data.map((line) => ({
           produktId: null,
           name: line.description || "Position",

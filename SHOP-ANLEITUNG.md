@@ -246,14 +246,16 @@ das Metadatum `spende_cent` (z. B. `260` = 2,60 €).
 
 Passwortgeschützte Seite fürs Team mit allen Bestellungen direkt aus Stripe:
 
-- **Was wird gebraucht?** zählt die Stück je Produkt und Größe/Farbe/Variante – standardmäßig
-  über alle noch nicht verschickten Bestellungen (Filter „Offen“, „Verschickt“, „Alle“, Suche und
-  „nur sofort versandbereit“ wirken mit).
-- Darunter jede Bestellung mit Lieferadresse (Kopier-Button), Positionen, Vorbestellungsdatum,
-  Versand und Spende.
+- Ansichten **Offen**, **Verschickt**, **Alle** und **Spenden**, dazu eine Suche (Name, Produkt,
+  Größe, Farbe, Nummer).
+- Jede Bestellung mit Lieferadresse (Kopier-Button), Positionen mit Größe/Farbe/Variante,
+  Vorbestellungsdatum, Versandart (Abholungen sind markiert, Button „Als abgeholt markieren“) und Spende.
 - **Als verschickt markieren** und die **interne Notiz** (z. B. Sendungsnummer) werden in Stripe
   gespeichert (Metadaten `versendet` und `notiz` am Zahlungsvorgang bzw. an der Rechnung) und sind
   damit für alle im Team gleich.
+- Stornierte, fehlgeschlagene und komplett erstattete Zahlungen erscheinen nicht. Teilweise
+  Erstattungen stehen als Hinweis an der Bestellung und werden vom Umsatz abgezogen.
+- **Spenden** listet alle Spenden aus dem Warenkorb mit Summe und Monatsübersicht.
 - Separat abgerechnete Bestellungen (in Stripe als Rechnung angelegt) erscheinen ebenfalls, ohne
   Aufschlüsselung nach Größe/Farbe.
 
