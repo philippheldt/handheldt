@@ -41,7 +41,7 @@ function addressOf(details) {
 
 async function loadSessionOrders() {
   const sessions = await stripe.checkout.sessions
-    .list({ status: "complete", limit: 100, expand: ["data.payment_intent.latest_charge"] })
+    .list({ status: "complete", limit: 100, expand: ["data.payment_intent.latest_charge", "data.shipping_cost.shipping_rate"] })
     .autoPagingToArray({ limit: MAX_ORDERS });
 
   // Nur Bestellungen, die bezahlt sind oder deren Zahlung noch läuft (z. B. Lastschrift).
@@ -90,6 +90,7 @@ async function loadSessionOrders() {
         }
 
         const shipping = session.collected_information?.shipping_details || session.shipping_details;
+        const rate = typeof session.shipping_cost?.shipping_rate === "object" ? session.shipping_cost.shipping_rate : null;
         return {
           art: "shop",
           id: session.id,
@@ -102,6 +103,9 @@ async function loadSessionOrders() {
           adresse: addressOf(shipping) || addressOf(session.customer_details),
           vorbestellung: session.metadata?.vorbestellung || "",
           versandkosten: session.shipping_cost?.amount_total ?? session.total_details?.amount_shipping ?? 0,
+          // Gewählte Versandart an der Kasse, z. B. "DHL Versand" oder "Abholung in Teningen (nach Absprache)"
+          versandart: rate?.display_name || "",
+          abholung: /abholung/i.test(rate?.display_name || ""),
           spende,
           summe: session.amount_total,
           erstattet,
@@ -145,6 +149,8 @@ async function loadInvoiceOrders() {
         adresse: addressOf(shipping) || addressOf({ name: inv.customer_name, address: inv.customer_address }),
         vorbestellung: "",
         versandkosten: 0,
+        versandart: "",
+        abholung: false,
         spende: 0,
         summe: inv.total,
         erstattet: inv.post_payment_credit_notes_amount || 0,

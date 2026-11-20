@@ -109,6 +109,7 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .pill.ok { background: var(--ok-bg); color: var(--ok); }
 .pill.alert { background: var(--alert-bg); color: var(--alert); }
 .pill.plain { background: var(--secondary-color); }
+.pill.pickup { background: var(--primary-color); color: var(--secondary-color); }
 address { font-style: normal; margin-top: 12px; white-space: pre-line; }
 .contact { margin: 4px 0 12px; overflow-wrap: anywhere; }
 .items { width: 100%; border-collapse: collapse; }
@@ -178,7 +179,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
 
     <section id="orders-view">
       <div class="stats" id="stats"></div>
-      <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer …" aria-label="Bestellungen durchsuchen">
+      <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer, Abholung …" aria-label="Bestellungen durchsuchen">
       <div class="orders" id="orders"></div>
     </section>
 
@@ -291,7 +292,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
       if (view === "offen" && o.versendet) return false;
       if (view === "versendet" && !o.versendet) return false;
       if (!q) return true;
-      const hay = [o.kunde, o.ansprechpartner, o.email, o.nummer, o.notiz, o.adresse?.ort,
+      const hay = [o.kunde, o.versandart, o.ansprechpartner, o.email, o.nummer, o.notiz, o.adresse?.ort,
         ...o.positionen.flatMap((p) => [p.name, p.groesse, p.farbe, p.variante])].join(" ").toLowerCase();
       return hay.includes(q);
     });
@@ -331,7 +332,8 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     }
     $("orders").innerHTML = list.map((o) => {
       const pills = [
-        o.versendet && `<span class="pill ok">Verschickt am ${esc(isoDatum(o.versendet))}</span>`,
+        o.abholung && `<span class="pill pickup">Abholung</span>`,
+        o.versendet && `<span class="pill ok">${o.abholung ? "Abgeholt" : "Verschickt"} am ${esc(isoDatum(o.versendet))}</span>`,
         o.vorbestellung && `<span class="pill">Vorbestellung, Versand ab ${esc(isoDatum(o.vorbestellung))}</span>`,
         o.art === "rechnung" && `<span class="pill plain">Rechnung ${esc(o.nummer)}</span>`,
         !o.bezahlt && `<span class="pill alert">${o.art === "rechnung" ? "Noch nicht bezahlt" : "Zahlung läuft noch"}</span>`,
@@ -345,7 +347,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
           <td class="price num">${euro(p.betrag)}</td>
         </tr>`).join("");
       const extras = [
-        o.art === "shop" && (o.versandkosten ? `Versand ${euro(o.versandkosten)}` : "Versand kostenlos"),
+        o.art === "shop" && (o.abholung ? esc(o.versandart) : o.versandkosten ? `Versand ${euro(o.versandkosten)}` : "Versand kostenlos"),
         o.spende > 0 && `Spende ${euro(o.spende)}`,
       ].filter(Boolean).join(" · ");
       return `
@@ -364,7 +366,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
           <div class="totals small"><span class="muted">${extras}</span><strong class="num">${euro(o.summe)}</strong></div>
         </div>
         <div class="order-foot">
-          <button class="${o.versendet ? "ghost-button" : "black-button"}" type="button" data-ship>${o.versendet ? "Doch nicht verschickt" : "Als verschickt markieren"}</button>
+          <button class="${o.versendet ? "ghost-button" : "black-button"}" type="button" data-ship>${o.abholung ? (o.versendet ? "Doch nicht abgeholt" : "Als abgeholt markieren") : (o.versendet ? "Doch nicht verschickt" : "Als verschickt markieren")}</button>
           <textarea data-note placeholder="Interne Notiz, z. B. Sendungsnummer" aria-label="Interne Notiz">${esc(o.notiz)}</textarea>
           <a href="${esc(o.stripeUrl)}" target="_blank" rel="noopener">In Stripe öffnen</a>
         </div>
@@ -421,7 +423,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     try {
       const result = await api("POST", { art: order.art, id: order.id, ...patch });
       Object.assign(order, result);
-      toast(patch.versendet !== undefined ? (result.versendet ? "Als verschickt gespeichert" : "Wieder als offen gespeichert") : "Notiz gespeichert");
+      toast(patch.versendet !== undefined ? (result.versendet ? (order.abholung ? "Als abgeholt gespeichert" : "Als verschickt gespeichert") : "Wieder als offen gespeichert") : "Notiz gespeichert");
       if (patch.versendet !== undefined) render();
     } catch (err) {
       toast("Nicht gespeichert: " + err.message);

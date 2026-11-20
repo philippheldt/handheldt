@@ -249,7 +249,7 @@ Passwortgeschützte Seite fürs Team mit allen Bestellungen direkt aus Stripe:
 - Ansichten **Offen**, **Verschickt**, **Alle** und **Spenden**, dazu eine Suche (Name, Produkt,
   Größe, Farbe, Nummer).
 - Jede Bestellung mit Lieferadresse (Kopier-Button), Positionen mit Größe/Farbe/Variante,
-  Vorbestellungsdatum, Versand und Spende.
+  Vorbestellungsdatum, Versandart (Abholungen sind markiert, Button „Als abgeholt markieren“) und Spende.
 - **Als verschickt markieren** und die **interne Notiz** (z. B. Sendungsnummer) werden in Stripe
   gespeichert (Metadaten `versendet` und `notiz` am Zahlungsvorgang bzw. an der Rechnung) und sind
   damit für alle im Team gleich.
