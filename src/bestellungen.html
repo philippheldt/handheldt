@@ -1,0 +1,425 @@
+---
+layout: false
+noindex: true
+sitemapExclude: true
+---
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Bestellungen | handheldt intern</title>
+<link rel="icon" href="/img/favicon_3.png">
+<style>
+@font-face { font-family: "Plus Jakarta Sans"; src: url(/fonts/plus-jakarta-sans-latin-wght-normal.woff2) format("woff2"); font-weight: 200 800; font-display: swap; }
+@font-face { font-family: "Plus Jakarta Sans"; src: url(/fonts/plus-jakarta-sans-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 200 800; font-display: swap; unicode-range: U+0100-02BA, U+1E00-1EFF; }
+@font-face { font-family: "Source Serif 4"; src: url(/fonts/source-serif-4-latin-opsz-normal.woff2) format("woff2"); font-weight: 200 900; font-display: swap; }
+
+:root {
+  --ink: #0c0b21;
+  --paper: #f8f7f4;
+  --card: #ffffff;
+  --muted: #6b6a7a;
+  --line: #e4e1da;
+  --accent: #ffecd0;
+  --accent-strong: #f3c98d;
+  --ok: #1f7a4d;
+  --ok-bg: #e2f3e9;
+  --warn: #9a5b00;
+  --warn-bg: #fff1d6;
+  --info-bg: #e7ecf7;
+  --info: #2d4a8a;
+  --radius: 0.4rem;
+  --sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --serif: "Source Serif 4", Georgia, serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--sans); }
+[hidden] { display: none !important; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: 2rem; margin: 0; line-height: 1.1; }
+h2 { font-family: var(--serif); font-weight: 600; font-size: 1.35rem; margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+.num { font-variant-numeric: tabular-nums; }
+
+.btn { border: 1px solid var(--ink); background: var(--ink); color: var(--paper); border-radius: var(--radius); padding: 0.5rem 0.9rem; font-weight: 600; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.small { padding: 0.3rem 0.6rem; font-size: 0.85rem; }
+.btn:disabled { opacity: 0.5; cursor: progress; }
+
+/* Login */
+.login { max-width: 360px; margin: 12vh auto 0; display: grid; gap: 12px; }
+.login input { padding: 0.6rem 0.8rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.error { color: #a32020; }
+
+/* Kopf */
+.top { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; justify-content: space-between; margin-bottom: 20px; }
+.top .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 24px; }
+.stat { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+.stat b { display: block; font-size: 1.6rem; font-family: var(--serif); line-height: 1.1; }
+
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 16px; }
+.tabs { display: inline-flex; border: 1px solid var(--ink); border-radius: var(--radius); overflow: hidden; }
+.tabs button { border: 0; background: transparent; padding: 0.45rem 0.85rem; font-weight: 600; }
+.tabs button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.toolbar input[type="search"] { flex: 1 1 200px; min-width: 0; padding: 0.45rem 0.75rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+.toolbar label { display: inline-flex; gap: 6px; align-items: center; }
+
+/* Packliste */
+.pack { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 28px; }
+.pack-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.pack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.pack-product { border-top: 2px solid var(--ink); padding-top: 8px; min-width: 0; }
+.pack-product h3 { margin: 0 0 6px; font-size: 1rem; display: flex; justify-content: space-between; gap: 8px; }
+.pack-product table { width: 100%; border-collapse: collapse; }
+.pack-product td { padding: 3px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.pack-product td:last-child { text-align: right; font-weight: 700; width: 3.5em; }
+
+/* Bestellungen */
+.orders { display: grid; gap: 12px; }
+.order { background: var(--card); border: 1px solid var(--line); border-left: 5px solid var(--accent-strong); border-radius: var(--radius); padding: 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; }
+.order.done { border-left-color: var(--ok); opacity: 0.85; }
+@media (max-width: 720px) { .order { grid-template-columns: 1fr; } }
+.order-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; }
+.order-head strong { font-size: 1.05rem; }
+.pill { display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 999px; letter-spacing: 0.02em; }
+.pill.pre { background: var(--warn-bg); color: var(--warn); }
+.pill.inv { background: var(--info-bg); color: var(--info); }
+.pill.unpaid { background: #fbe1e1; color: #a32020; }
+.pill.ok { background: var(--ok-bg); color: var(--ok); }
+address { font-style: normal; margin-top: 6px; white-space: pre-line; }
+.contact { margin-top: 4px; word-break: break-all; }
+.items { width: 100%; border-collapse: collapse; }
+.items td { padding: 4px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.items td.qty { width: 2.6em; font-weight: 700; }
+.items td.price { text-align: right; white-space: nowrap; padding-left: 8px; }
+.opt { display: inline-block; background: var(--accent); border-radius: 0.25rem; padding: 0 0.35rem; margin: 2px 4px 0 0; font-size: 0.82rem; }
+.totals { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+.order-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border-top: 1px dashed var(--line); padding-top: 10px; }
+.order-foot textarea { flex: 1 1 240px; min-width: 0; min-height: 2.4rem; resize: vertical; padding: 0.4rem 0.6rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); }
+.order-foot a { color: var(--muted); font-size: 0.85rem; }
+.empty { padding: 32px; text-align: center; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: var(--radius); }
+.toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 0.55rem 1rem; border-radius: var(--radius); font-weight: 600; }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <form class="login" id="login" hidden>
+    <h1>Bestellungen</h1>
+    <p class="muted">Interne Übersicht für handheldt. Bitte das Team-Passwort eingeben.</p>
+    <label for="pw" class="small">Passwort</label>
+    <input id="pw" type="password" autocomplete="current-password" required>
+    <button class="btn" type="submit">Anmelden</button>
+    <p class="error" id="login-error" hidden></p>
+  </form>
+
+  <div id="app" hidden>
+    <div class="top">
+      <div>
+        <h1>Bestellungen</h1>
+        <p class="muted small" id="stand">Wird geladen …</p>
+      </div>
+      <div class="actions">
+        <button class="btn ghost small" id="reload" type="button">Aktualisieren</button>
+        <button class="btn ghost small" id="logout" type="button">Abmelden</button>
+      </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="toolbar">
+      <div class="tabs" role="group" aria-label="Versandstatus">
+        <button type="button" data-filter="offen" aria-pressed="true">Offen</button>
+        <button type="button" data-filter="versendet" aria-pressed="false">Verschickt</button>
+        <button type="button" data-filter="alle" aria-pressed="false">Alle</button>
+      </div>
+      <input type="search" id="search" placeholder="Name, Produkt, Farbe, Nummer …" aria-label="Suchen">
+      <label class="small"><input type="checkbox" id="only-ready"> nur sofort versandbereit</label>
+    </div>
+
+    <section class="pack" aria-labelledby="pack-title">
+      <div class="pack-head">
+        <h2 id="pack-title">Was wird gebraucht?</h2>
+        <span class="muted small" id="pack-note"></span>
+      </div>
+      <div class="pack-grid" id="pack"></div>
+    </section>
+
+    <div class="orders" id="orders"></div>
+  </div>
+
+  <p class="error" id="load-error" hidden></p>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(() => {
+  const API = "/.netlify/functions/orders";
+  const KEY = "handheldt_bestellungen_pw";
+  const $ = (id) => document.getElementById(id);
+  const euro = (cent) => (cent / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+  const datum = (sek) => new Date(sek * 1000).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
+  const isoDatum = (iso) => iso ? iso.split("-").reverse().join(".") : "";
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  let pw = "";
+  try { pw = localStorage.getItem(KEY) || ""; } catch (e) {}
+  let orders = [];
+  let filter = "offen";
+
+  function toast(text) {
+    const t = $("toast");
+    t.textContent = text;
+    t.hidden = false;
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => (t.hidden = true), 2200);
+  }
+
+  async function api(method, body) {
+    const res = await fetch(API, {
+      method,
+      headers: { "x-passwort": pw, ...(body && { "Content-Type": "application/json" }) },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const err = new Error(data.error || "Fehler " + res.status);
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  }
+
+  function showLogin(message) {
+    $("app").hidden = true;
+    $("login").hidden = false;
+    $("login-error").hidden = !message;
+    $("login-error").textContent = message || "";
+    $("pw").focus();
+  }
+
+  async function load() {
+    $("reload").disabled = true;
+    $("stand").textContent = "Wird geladen …";
+    try {
+      const data = await api("GET");
+      orders = data.bestellungen;
+      $("login").hidden = true;
+      $("app").hidden = false;
+      $("load-error").hidden = true;
+      $("stand").textContent = "Stand " + new Date(data.stand * 1000).toLocaleString("de-DE", { dateStyle: "short", timeStyle: "short" }) + " · direkt aus Stripe";
+      render();
+    } catch (err) {
+      if (err.status === 401) {
+        try { localStorage.removeItem(KEY); } catch (e) {}
+        showLogin(pw ? "Das Passwort stimmt nicht." : "");
+      } else if (err.status === 503) {
+        showLogin(err.message);
+      } else {
+        $("load-error").hidden = false;
+        $("load-error").textContent = "Bestellungen konnten nicht geladen werden: " + err.message;
+        $("stand").textContent = "";
+      }
+    } finally {
+      $("reload").disabled = false;
+    }
+  }
+
+  // Vorbestellungen mit Versanddatum in der Zukunft sind noch nicht versandbereit
+  const today = new Date().toISOString().slice(0, 10);
+  const ready = (o) => !o.vorbestellung || o.vorbestellung <= today;
+
+  function visible() {
+    const q = $("search").value.trim().toLowerCase();
+    const onlyReady = $("only-ready").checked;
+    return orders.filter((o) => {
+      if (filter === "offen" && o.versendet) return false;
+      if (filter === "versendet" && !o.versendet) return false;
+      if (onlyReady && !ready(o)) return false;
+      if (!q) return true;
+      const hay = [o.kunde, o.email, o.nummer, o.notiz, o.adresse?.ort,
+        ...o.positionen.flatMap((p) => [p.name, p.groesse, p.farbe, p.variante])].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  function optionsOf(p) {
+    return [p.groesse && "Größe " + p.groesse, p.farbe, p.variante].filter(Boolean);
+  }
+
+  function renderStats() {
+    const open = orders.filter((o) => !o.versendet);
+    const openPieces = open.reduce((n, o) => n + o.positionen.reduce((m, p) => m + p.menge, 0), 0);
+    const openReady = open.filter(ready).length;
+    const revenue = orders.filter((o) => o.bezahlt).reduce((n, o) => n + o.summe, 0);
+    const tiles = [
+      ["Offene Bestellungen", open.length],
+      ["Davon versandbereit", openReady],
+      ["Offene Stück", openPieces],
+      ["Verschickt", orders.length - open.length],
+      ["Umsatz bezahlt", euro(revenue)],
+    ];
+    $("stats").innerHTML = tiles.map(([label, value]) => `<div class="stat"><b class="num">${esc(value)}</b><span class="small muted">${esc(label)}</span></div>`).join("");
+    document.querySelector('[data-filter="offen"]').textContent = `Offen (${open.length})`;
+    document.querySelector('[data-filter="versendet"]').textContent = `Verschickt (${orders.length - open.length})`;
+    document.querySelector('[data-filter="alle"]').textContent = `Alle (${orders.length})`;
+  }
+
+  function renderPack(list) {
+    const products = new Map();
+    for (const o of list) {
+      for (const p of o.positionen) {
+        const key = p.name;
+        if (!products.has(key)) products.set(key, { name: p.name, total: 0, variants: new Map() });
+        const prod = products.get(key);
+        const label = optionsOf(p).join(" · ") || "ohne Auswahl";
+        prod.total += p.menge;
+        prod.variants.set(label, (prod.variants.get(label) || 0) + p.menge);
+      }
+    }
+    const sorted = [...products.values()].sort((a, b) => b.total - a.total);
+    const scope = { offen: "offene Bestellungen", versendet: "verschickte Bestellungen", alle: "alle Bestellungen" }[filter];
+    $("pack-note").textContent = `Summe über ${list.length} ${scope}${$("search").value ? " (gefiltert)" : ""}`;
+    $("pack").innerHTML = sorted.length
+      ? sorted.map((prod) => `
+        <div class="pack-product">
+          <h3><span>${esc(prod.name)}</span><span class="num">${prod.total}×</span></h3>
+          <table><tbody>${[...prod.variants.entries()]
+            .sort((a, b) => a[0].localeCompare(b[0], "de", { numeric: true }))
+            .map(([label, n]) => `<tr><td>${esc(label)}</td><td class="num">${n}×</td></tr>`).join("")}</tbody></table>
+        </div>`).join("")
+      : `<p class="muted">Nichts zu tun.</p>`;
+  }
+
+  function addressText(o) {
+    const a = o.adresse;
+    if (!a) return "";
+    return [a.name, a.zeile1, a.zeile2, `${a.plz} ${a.ort}`.trim(), a.land && a.land !== "DE" ? a.land : ""].filter(Boolean).join("\n");
+  }
+
+  function renderOrders(list) {
+    if (!list.length) {
+      $("orders").innerHTML = `<div class="empty">${filter === "offen" ? "Alles verschickt. 🎉" : "Keine Bestellungen gefunden."}</div>`;
+      return;
+    }
+    $("orders").innerHTML = list.map((o) => {
+      const pills = [
+        o.art === "rechnung" && `<span class="pill inv">Rechnung ${esc(o.nummer)}</span>`,
+        !o.bezahlt && `<span class="pill unpaid">Zahlung offen</span>`,
+        o.vorbestellung && `<span class="pill pre">Vorbestellung · ab ${esc(isoDatum(o.vorbestellung))}</span>`,
+        o.versendet && `<span class="pill ok">Verschickt ${esc(isoDatum(o.versendet))}</span>`,
+      ].filter(Boolean).join(" ");
+      const items = o.positionen.map((p) => `
+        <tr>
+          <td class="qty num">${p.menge}×</td>
+          <td>${esc(p.name)}<br>${optionsOf(p).map((x) => `<span class="opt">${esc(x)}</span>`).join("")}</td>
+          <td class="price num">${euro(p.betrag)}</td>
+        </tr>`).join("");
+      const extras = [
+        o.versandkosten ? `Versand ${euro(o.versandkosten)}` : (o.art === "shop" ? "Versand kostenlos" : ""),
+        o.spende ? `Spende ${euro(o.spende)}` : "",
+      ].filter(Boolean).join(" · ");
+      return `
+      <article class="order ${o.versendet ? "done" : ""}" data-id="${esc(o.id)}">
+        <div>
+          <div class="order-head">
+            <strong>${esc(o.kunde || "Ohne Namen")}</strong>
+            <span class="muted small num">${datum(o.datum)}${o.art === "shop" ? " · #" + esc(o.nummer) : ""}</span>
+          </div>
+          <div>${pills}</div>
+          ${o.ansprechpartner ? `<div class="small">z. Hd. ${esc(o.ansprechpartner)}</div>` : ""}
+          <address>${esc(addressText(o))}</address>
+          <div class="contact small muted">${[o.email, o.telefon].filter(Boolean).map(esc).join(" · ")}</div>
+          ${o.adresse ? `<button class="btn ghost small" type="button" data-copy>Adresse kopieren</button>` : ""}
+        </div>
+        <div>
+          <table class="items"><tbody>${items}</tbody></table>
+          <div class="totals small"><span class="muted">${extras}</span><strong class="num">${euro(o.summe)}</strong></div>
+        </div>
+        <div class="order-foot">
+          <button class="btn ${o.versendet ? "ghost" : ""}" type="button" data-ship>${o.versendet ? "Doch nicht verschickt" : "Als verschickt markieren"}</button>
+          <textarea data-note placeholder="Interne Notiz, z. B. Sendungsnummer" aria-label="Interne Notiz">${esc(o.notiz)}</textarea>
+          <a href="${esc(o.stripeUrl)}" target="_blank" rel="noopener">In Stripe öffnen</a>
+        </div>
+      </article>`;
+    }).join("");
+  }
+
+  function render() {
+    const list = visible();
+    renderStats();
+    renderPack(list);
+    renderOrders(list);
+  }
+
+  async function save(order, patch, button) {
+    if (button) button.disabled = true;
+    try {
+      const result = await api("POST", { art: order.art, id: order.id, ...patch });
+      Object.assign(order, result);
+      toast(patch.versendet !== undefined ? (result.versendet ? "Als verschickt gespeichert" : "Wieder als offen gespeichert") : "Notiz gespeichert");
+      if (patch.versendet !== undefined) render();
+    } catch (err) {
+      toast("Nicht gespeichert: " + err.message);
+      if (button) button.disabled = false;
+    }
+  }
+
+  $("orders").addEventListener("click", async (event) => {
+    const card = event.target.closest(".order");
+    if (!card) return;
+    const order = orders.find((o) => o.id === card.dataset.id);
+    if (event.target.matches("[data-ship]")) save(order, { versendet: !order.versendet }, event.target);
+    if (event.target.matches("[data-copy]")) {
+      try {
+        await navigator.clipboard.writeText(addressText(order));
+        toast("Adresse kopiert");
+      } catch (e) {
+        const range = document.createRange();
+        range.selectNodeContents(card.querySelector("address"));
+        getSelection().removeAllRanges();
+        getSelection().addRange(range);
+      }
+    }
+  });
+  $("orders").addEventListener("change", (event) => {
+    if (!event.target.matches("[data-note]")) return;
+    const order = orders.find((o) => o.id === event.target.closest(".order").dataset.id);
+    if (event.target.value !== order.notiz) save(order, { notiz: event.target.value });
+  });
+
+  document.querySelectorAll("[data-filter]").forEach((btn) => btn.addEventListener("click", () => {
+    filter = btn.dataset.filter;
+    document.querySelectorAll("[data-filter]").forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
+    render();
+  }));
+  $("search").addEventListener("input", render);
+  $("only-ready").addEventListener("change", render);
+  $("reload").addEventListener("click", load);
+  $("logout").addEventListener("click", () => {
+    pw = "";
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    orders = [];
+    showLogin();
+  });
+  $("login").addEventListener("submit", (event) => {
+    event.preventDefault();
+    pw = $("pw").value;
+    try { localStorage.setItem(KEY, pw); } catch (e) {}
+    load();
+  });
+
+  if (pw) load(); else showLogin();
+})();
+</script>
+</body>
+</html>

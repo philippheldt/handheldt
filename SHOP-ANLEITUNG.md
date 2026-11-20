@@ -241,3 +241,22 @@ das Metadatum `spende_cent` (z. B. `260` = 2,60 €).
   die Spende bleibt gleich.
 - Die Spenden bitte gesammelt an die Sozial-Missionarische Arbeit des EC weiterleiten
   (Summe: in Stripe nach Positionen „Aufrundung“ filtern bzw. Metadatum `spende_cent`).
+
+## Interne Bestellübersicht (handheldt.de/bestellungen.html)
+
+Passwortgeschützte Seite fürs Team mit allen Bestellungen direkt aus Stripe:
+
+- **Was wird gebraucht?** zählt die Stück je Produkt und Größe/Farbe/Variante – standardmäßig
+  über alle noch nicht verschickten Bestellungen (Filter „Offen“, „Verschickt“, „Alle“, Suche und
+  „nur sofort versandbereit“ wirken mit).
+- Darunter jede Bestellung mit Lieferadresse (Kopier-Button), Positionen, Vorbestellungsdatum,
+  Versand und Spende.
+- **Als verschickt markieren** und die **interne Notiz** (z. B. Sendungsnummer) werden in Stripe
+  gespeichert (Metadaten `versendet` und `notiz` am Zahlungsvorgang bzw. an der Rechnung) und sind
+  damit für alle im Team gleich.
+- Separat abgerechnete Bestellungen (in Stripe als Rechnung angelegt) erscheinen ebenfalls, ohne
+  Aufschlüsselung nach Größe/Farbe.
+
+Einmalig einrichten: Netlify → **Project configuration → Environment variables** → Variable
+`BESTELLUNGEN_PASSWORT` mit dem Team-Passwort (Scope: Functions), danach neu deployen.
+Das Passwort bleibt im Browser gespeichert, bis man auf „Abmelden“ klickt.
