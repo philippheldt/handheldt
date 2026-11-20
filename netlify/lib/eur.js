@@ -35,6 +35,18 @@ const OTHER_LABELS = {
 // Jahresgrenzen in deutscher Zeit
 const startOfYear = (year) => Math.floor(Date.parse(`${year}-01-01T00:00:00+01:00`) / 1000);
 const shortId = (id) => (id ? id.slice(-8).toUpperCase() : "");
+// Betrag einer Rechnung, der außerhalb von Stripe bezahlt wurde (bar, Überweisung aufs eigene Konto).
+// Seit API-Version 2025-03-31 gibt es paid_out_of_band nicht mehr; neu ist amount_paid_off_stripe
+// (ab 2026-05-27), dazwischen bleibt nur der Abgleich mit den Zahlungen über Stripe.
+function offStripeAmount(inv) {
+  if (typeof inv.amount_paid_off_stripe === "number") return inv.amount_paid_off_stripe;
+  if (typeof inv.paid_out_of_band === "boolean") return inv.paid_out_of_band ? (inv.amount_paid ?? inv.total) : 0;
+  const viaStripe = (inv.payments?.data || [])
+    .filter((p) => p.payment?.type === "payment_intent" && p.status === "paid")
+    .reduce((sum, p) => sum + (p.amount_paid || 0), 0);
+  return Math.max(0, (inv.amount_paid || 0) - viaStripe);
+}
+
 const id = (value) => (typeof value === "object" && value ? value.id : value);
 
 function paymentLabel(charge) {
@@ -61,7 +73,9 @@ export async function loadEur(stripe, year) {
     stripe.checkout.sessions
       .list({ status: "complete", created: { lt: to }, limit: 100 })
       .autoPagingToArray({ limit: 10000 }),
-    stripe.invoices.list({ status: "paid", limit: 100 }).autoPagingToArray({ limit: 2000 }),
+    stripe.invoices
+      .list({ status: "paid", limit: 100, expand: ["data.amount_paid_off_stripe", "data.payments"] })
+      .autoPagingToArray({ limit: 2000 }),
   ]);
 
   const sessionByPayment = new Map(sessions.filter((s) => s.payment_intent).map((s) => [id(s.payment_intent), s]));
@@ -148,19 +162,20 @@ export async function loadEur(stripe, year) {
   // Rechnungen, die bar oder per Überweisung aufs eigene Konto bezahlt wurden
   for (const inv of invoices) {
     const paidAt = inv.status_transitions?.paid_at;
-    if (!inv.paid_out_of_band || !paidAt || paidAt < from || paidAt >= to) continue;
+    const amount = offStripeAmount(inv);
+    if (amount <= 0 || !paidAt || paidAt < from || paidAt >= to) continue;
     rows.push({
       datum: paidAt,
       beleg: inv.number || shortId(inv.id),
       art: "Rechnung (außerhalb Stripe bezahlt)",
       kunde: inv.customer_name || "",
       positionen: inv.lines.data.map((l) => `${l.quantity || 1}× ${l.description}`).join("; "),
-      warenwert: inv.total,
+      warenwert: amount,
       versand: 0,
       spende: 0,
-      brutto: inv.total,
+      brutto: amount,
       gebuehr: 0,
-      netto: inv.total,
+      netto: amount,
       zahlungsart: "bar / Überweisung",
       stripeId: inv.id,
     });
