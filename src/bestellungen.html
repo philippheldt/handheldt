@@ -97,6 +97,10 @@ button:disabled { opacity: 0.5; cursor: progress; }
 
 .stat.late { background: var(--alert-bg); color: var(--alert); }
 
+.export { display: grid; gap: 14px; margin-bottom: 20px; }
+.export h2 { margin-bottom: 6px; }
+.export p { margin: 0; }
+.export-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
 .search { flex: 1 1 260px; min-width: 0; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); }
 .sort { display: flex; align-items: center; gap: 8px; }
@@ -178,10 +182,25 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         <button type="button" data-view="spenden" aria-pressed="false">Spenden<span class="count" data-count="spenden"></span></button>
       </nav>
       <div class="bar-actions">
+        <button class="ghost-button small-button" id="export-toggle" type="button" aria-expanded="false" aria-controls="export">EÜR-Export</button>
         <button class="ghost-button small-button" id="reload" type="button">Aktualisieren</button>
         <button class="ghost-button small-button" id="logout" type="button">Abmelden</button>
       </div>
     </div>
+
+    <form class="white-frame export" id="export" hidden>
+      <div>
+        <h2>Einnahmen für die EÜR</h2>
+        <p class="small muted">Excel-Datei mit allen Zahlungen, Erstattungen und Stripe-Gebühren des Jahres, Spenden separat, dazu eine Monatsübersicht.</p>
+      </div>
+      <div class="export-controls">
+        <label class="sort small" for="export-year">Jahr
+          <select id="export-year"></select>
+        </label>
+        <button class="black-button" id="export-download" type="submit">Excel herunterladen</button>
+      </div>
+      <p class="small" id="export-status" role="status" hidden></p>
+    </form>
 
     <section id="orders-view">
       <div class="stats" id="stats"></div>
@@ -515,6 +534,47 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     renderOrders();
   });
   $("reload").addEventListener("click", load);
+
+  // EÜR-Export: Excel-Datei für ein Kalenderjahr
+  const thisYear = new Date().getFullYear();
+  for (let y = thisYear; y >= 2024; y--) $("export-year").add(new Option(String(y), String(y)));
+  // Im Januar ist meist das Vorjahr gemeint
+  if (new Date().getMonth() === 0) $("export-year").value = String(thisYear - 1);
+  $("export-toggle").addEventListener("click", () => {
+    const open = $("export").hidden;
+    $("export").hidden = !open;
+    $("export-toggle").setAttribute("aria-expanded", String(open));
+  });
+  $("export").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const year = $("export-year").value;
+    const status = $("export-status");
+    $("export-download").disabled = true;
+    status.hidden = false;
+    status.className = "small";
+    status.textContent = "Wird aus Stripe zusammengestellt, das kann einen Moment dauern …";
+    try {
+      const res = await fetch(`${API}?export=eur&jahr=${encodeURIComponent(year)}`, { headers: { "x-passwort": pw } });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Fehler " + res.status);
+      }
+      const url = URL.createObjectURL(await res.blob());
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `handheldt-EUER-${year}.xlsx`;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      status.textContent = `handheldt-EUER-${year}.xlsx wurde heruntergeladen.`;
+    } catch (err) {
+      status.className = "small error";
+      status.textContent = "Export fehlgeschlagen: " + err.message;
+    } finally {
+      $("export-download").disabled = false;
+    }
+  });
   $("logout").addEventListener("click", () => {
     pw = "";
     try { localStorage.removeItem(KEY); } catch (e) {}

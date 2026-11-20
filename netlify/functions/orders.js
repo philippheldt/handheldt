@@ -7,6 +7,8 @@
 // bei Rechnungen an der Rechnung, jeweils in den Metadaten "versendet" und "notiz".
 import { createHash, timingSafeEqual } from "node:crypto";
 import Stripe from "stripe";
+import { loadEur } from "../lib/eur.js";
+import { buildEurWorkbook } from "../lib/eur-xlsx.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -227,6 +229,21 @@ export const handler = async (event) => {
   if (!ok) return json(401, { error: "Falsches Passwort." });
 
   try {
+    if (event.httpMethod === "GET" && event.queryStringParameters?.export === "eur") {
+      const year = Number(event.queryStringParameters.jahr);
+      if (!Number.isInteger(year) || year < 2020 || year > 2100) return json(400, { error: "Ungültiges Jahr." });
+      const buffer = await buildEurWorkbook(await loadEur(stripe, year));
+      return {
+        statusCode: 200,
+        headers: {
+          "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "Content-Disposition": `attachment; filename="handheldt-EUER-${year}.xlsx"`,
+          "Cache-Control": "no-store",
+        },
+        body: Buffer.from(buffer).toString("base64"),
+        isBase64Encoded: true,
+      };
+    }
     if (event.httpMethod === "GET") {
       const [shop, rechnungen] = await Promise.all([loadSessionOrders(), loadInvoiceOrders()]);
       const bestellungen = [...shop, ...rechnungen].sort((a, b) => b.datum - a.datum);
