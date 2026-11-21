@@ -120,8 +120,13 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .export h2 { margin-bottom: 6px; }
 .export p { margin: 0; }
 .export-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
-.search { flex: 1 1 260px; min-width: 0; padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); }
+/* Sortierung und Suche in einer Zeile; die Suche klappt erst beim Antippen der Lupe auf */
+.filters { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+.filters select { flex: 0 1 auto; min-width: 0; padding: 0.6rem 2rem 0.6rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); font: inherit; color: inherit; }
+.filters.searching select { max-width: 50%; }
+.search::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+.search-box { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+.search { flex: 1 1 auto; min-width: 0; padding: 0.6rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); }
 .sort { display: flex; align-items: center; gap: 8px; }
 .sort select { padding: 0.7rem 2rem 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: var(--standard-radius); background: var(--frame); font: inherit; color: inherit; }
 
@@ -206,14 +211,18 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
       </div>
       <p class="small" id="export-status" role="status" hidden></p>
     </form>
-      <div class="filters">
-        <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer, Abholung …" aria-label="Bestellungen durchsuchen">
-        <label class="sort small" for="sort">Sortieren
-          <select id="sort">
-            <option value="versand">nach Versanddatum</option>
-            <option value="neu">neueste Bestellungen zuerst</option>
-          </select>
-        </label>
+      <div class="filters" id="filters">
+        <select id="sort" aria-label="Sortieren">
+          <option value="versand">Nach Versanddatum</option>
+          <option value="neu">Neueste zuerst</option>
+        </select>
+        <div class="search-box">
+          <input type="search" class="search" id="search" placeholder="Name, Produkt, Größe, Farbe, Nummer …" aria-label="Bestellungen durchsuchen" hidden>
+          <button class="icon-button" id="search-toggle" type="button" aria-label="Suchen" title="Suchen" aria-expanded="false" aria-controls="search">
+            <svg id="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+            <svg id="close-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" hidden><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
       </div>
       <div class="orders" id="orders"></div>
     </section>
@@ -474,6 +483,25 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
     render();
   }));
   $("search").addEventListener("input", renderOrders);
+  // Lupe öffnet das Suchfeld neben der Sortierung, X schließt und leert es
+  function setSearch(open) {
+    $("search").hidden = !open;
+    $("filters").classList.toggle("searching", open);
+    // SVG-Elemente haben keine hidden-Eigenschaft, deshalb das Attribut setzen
+    $("search-icon").toggleAttribute("hidden", open);
+    $("close-icon").toggleAttribute("hidden", !open);
+    $("search-toggle").setAttribute("aria-expanded", String(open));
+    $("search-toggle").setAttribute("aria-label", open ? "Suche schließen" : "Suchen");
+    if (open) $("search").focus();
+    else if ($("search").value) {
+      $("search").value = "";
+      renderOrders();
+    }
+  }
+  $("search-toggle").addEventListener("click", () => setSearch($("search").hidden));
+  $("search").addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setSearch(false);
+  });
   $("sort").value = sort;
   $("sort").addEventListener("change", () => {
     sort = $("sort").value;
