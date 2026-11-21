@@ -115,6 +115,10 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .stat b { display: block; font-size: 1.6rem; font-weight: 800; line-height: 1.15; }
 
 .stat.late { background: var(--alert-bg); color: var(--alert); }
+.stat .change { display: block; margin-top: 6px; font-size: 0.78rem; color: var(--muted); }
+.stat .change strong { font-weight: 700; }
+.stat .change.up strong { color: var(--ok); }
+.stat .change.down strong { color: var(--alert); }
 
 .export { display: grid; gap: 14px; margin-bottom: 20px; }
 .export h2 { margin-bottom: 6px; }
@@ -362,18 +366,42 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
   function renderStats() {
     const open = orders.filter((o) => !o.versendet);
     const paid = orders.filter((o) => o.bezahlt);
-    // Umsatz ohne Spenden und Erstattungen: letzte 7 Tage und laufendes Kalenderjahr
-    const weekAgo = Date.now() / 1000 - 7 * 86400;
+    // Umsatz ohne Spenden und Erstattungen, jeweils mit Vergleich zum Zeitraum davor
+    const now = Date.now() / 1000;
+    const DAY = 86400;
+    const total = (from, to) => paid.filter((o) => o.datum >= from && o.datum < to).reduce((n, o) => n + revenue(o), 0);
     const year = new Date().getFullYear();
-    const sum = (list) => euro(list.reduce((n, o) => n + revenue(o), 0));
+    const startOfYear = (y) => new Date(y, 0, 1).getTime() / 1000;
+    // Vorjahr bis zum selben Tag und zur selben Uhrzeit wie heute
+    const sameDayLastYear = (() => { const d = new Date(); d.setFullYear(year - 1); return d.getTime() / 1000; })();
+
+    const week = total(now - 7 * DAY, now + 1);
+    const weekBefore = total(now - 14 * DAY, now - 7 * DAY);
+    const ytd = total(startOfYear(year), now + 1);
+    const ytdBefore = total(startOfYear(year - 1), sameDayLastYear);
+
+    const late = open.filter((o) => dueState(o) === "late").length;
     const tiles = [
-      ["Überfällig", open.filter((o) => dueState(o) === "late").length, open.some((o) => dueState(o) === "late") ? "late" : ""],
-      ["Umsatz letzte 7 Tage", sum(paid.filter((o) => o.datum >= weekAgo))],
-      [`Umsatz ${year}`, sum(paid.filter((o) => new Date(o.datum * 1000).getFullYear() === year))],
-      ["Spenden", euro(paid.reduce((n, o) => n + o.spende, 0))],
+      { label: "Überfällig", value: late, cls: late ? "late" : "" },
+      { label: "Spenden", value: euro(paid.reduce((n, o) => n + o.spende, 0)) },
+      { label: "Umsatz letzte 7 Tage", value: euro(week), change: changeOf(week, weekBefore, "zur Vorwoche") },
+      { label: `Umsatz ${year}`, value: euro(ytd), change: changeOf(ytd, ytdBefore, "zum Vorjahr") },
     ];
-    $("stats").innerHTML = tiles.map(([label, value, hi]) =>
-      `<div class="stat${hi ? " " + hi : ""}"><b class="num">${esc(value)}</b><span class="small">${esc(label)}</span></div>`).join("");
+    $("stats").innerHTML = tiles.map((t) => `
+      <div class="stat${t.cls ? " " + t.cls : ""}">
+        <b class="num">${esc(t.value)}</b>
+        <span class="small">${esc(t.label)}</span>
+        ${t.change || ""}
+      </div>`).join("");
+  }
+
+  // "+12 %" / "−8 %" im Vergleich zum Zeitraum davor; ohne Vergleichswert kein Prozent
+  function changeOf(current, before, text) {
+    if (before <= 0) return current > 0 ? `<span class="change">neu ${esc(text)}</span>` : "";
+    const pct = Math.round(((current - before) / before) * 100);
+    const cls = pct > 0 ? "up" : pct < 0 ? "down" : "";
+    const sign = pct > 0 ? "+" : pct < 0 ? "−" : "±";
+    return `<span class="change ${cls}" title="${esc(text)}"><strong class="num">${sign}${Math.abs(pct)} %</strong> ${esc(text)}</span>`;
   }
 
   function addressText(o) {
