@@ -419,8 +419,8 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
     const tiles = [
       { label: "Überfällig", value: late, cls: late ? "late" : "" },
       { label: "Spenden", value: euro(paid.reduce((n, o) => n + o.spende, 0)) },
-      { label: "Umsatz 7 Tage", value: euro(week), change: changeOf(week, weekBefore, "zur Vorwoche"), chart: "woche" },
-      { label: `Umsatz ${year}`, value: euro(ytd), change: changeOf(ytd, ytdBefore, "zum Vorjahr"), chart: "jahr" },
+      { label: "Letzte 7 Tage", value: euro(week), change: changeOf(week, weekBefore, "zur Vorwoche"), chart: "woche" },
+      { label: String(year), value: euro(ytd), change: changeOf(ytd, ytdBefore, "zum Vorjahr"), chart: "jahr" },
     ];
     $("stats").innerHTML = tiles.map((t) => {
       const tag = t.chart ? "button" : "div";
