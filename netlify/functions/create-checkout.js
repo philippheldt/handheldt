@@ -228,6 +228,9 @@ export const handler = async (event) => {
       line_items: line_items,
       mode: "payment",
       locale: "de",
+      // Feld "Gutscheincode hinzufügen" an der Kasse. Codes werden in Stripe unter
+      // Produktkatalog → Gutscheine angelegt (siehe SHOP-ANLEITUNG.md)
+      allow_promotion_codes: true,
       // Lieferadresse wird für den Versand benötigt
       shipping_address_collection: {
         allowed_countries: ["DE"],

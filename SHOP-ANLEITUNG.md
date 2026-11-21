@@ -278,3 +278,24 @@ Grundlage sind die Buchungen im Stripe-Guthaben (Datum = Tag der Zahlung in Stri
 Auszahlungen aufs Bankkonto sind Umbuchungen und erscheinen nicht. Bar-Einnahmen ohne Stripe-Rechnung
 fehlen. Falls `STRIPE_SECRET_KEY` ein eingeschränkter Schlüssel ist, braucht er Leserechte für
 Balance transactions, Checkout Sessions und Invoices.
+
+## Gutscheincodes
+
+An der Kasse gibt es das Feld **„Gutscheincode hinzufügen“**. Codes legt ihr in Stripe an:
+
+1. Stripe → **Produktkatalog → Gutscheine** → **Gutschein erstellen**
+2. Rabatt wählen: Prozent (z. B. 10 %) oder fester Betrag (z. B. 5 €), dazu die Laufzeit
+   (einmalig ist für den Shop egal, es gibt keine Abos)
+3. Im Gutschein unter **Promotion-Codes** einen Code anlegen, den die Kundschaft eintippt,
+   z. B. `WEIHNACHTEN10`. Dort lässt sich auch einstellen: Ablaufdatum, maximale Anzahl
+   Einlösungen, nur für Erstbestellungen, Mindestbestellwert
+
+Gut zu wissen:
+
+- Der Rabatt gilt auf die Artikel, nicht auf die Versandkosten.
+- Ob der Versand kostenlos ist (ab 50 €), wird vor dem Gutschein berechnet. Wer für 52 € bestellt
+  und 10 % Rabatt hat, zahlt also trotzdem keinen Versand.
+- Ein Gutschein **verringert auch die Aufrundungsspende** anteilig, weil Stripe den Rabatt auf alle
+  Positionen verteilt (bei Prozent- und bei festen Beträgen). In der Bestellübersicht und im EÜR-Export
+  steht immer die tatsächlich gezahlte Spende.
+- In der Bestellübersicht steht bei Bestellungen mit Gutschein „Gutschein −X €“.

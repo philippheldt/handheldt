@@ -405,6 +405,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         o.art === "rechnung" && `<span class="pill plain">Rechnung ${esc(o.nummer)}</span>`,
         !o.bezahlt && `<span class="pill alert">${o.art === "rechnung" ? "Noch nicht bezahlt" : "Zahlung läuft noch"}</span>`,
         o.erstattet > 0 && `<span class="pill alert">${euro(o.erstattet)} erstattet</span>`,
+        o.rabatt > 0 && `<span class="pill plain">Gutschein −${euro(o.rabatt)}</span>`,
         o.spende > 0 && `<span class="pill plain">Spende ${euro(o.spende)}</span>`,
       ].filter(Boolean).join("");
       const items = o.positionen.map((p) => `
@@ -416,6 +417,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
       const extras = [
         o.art === "shop" && (o.abholung ? esc(o.versandart) : o.versandkosten ? `Versand ${euro(o.versandkosten)}` : "Versand kostenlos"),
         o.spende > 0 && `Spende ${euro(o.spende)}`,
+        o.rabatt > 0 && `Gutschein −${euro(o.rabatt)}`,
       ].filter(Boolean).join(" · ");
       return `
       <article class="white-frame order${o.versendet ? " done" : ""}${dueState(o) ? " due-" + dueState(o) : ""}" data-id="${esc(o.id)}">
