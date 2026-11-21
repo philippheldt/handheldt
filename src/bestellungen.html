@@ -303,7 +303,6 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
   }
 
   const optionsOf = (p) => [p.groesse && "Größe " + p.groesse, p.farbe, p.variante].filter(Boolean);
-  const pieces = (o) => o.positionen.reduce((n, p) => n + p.menge, 0);
   // Umsatz ohne Spende, abzüglich Erstattungen
   const revenue = (o) => o.summe - o.spende - (o.erstattet || 0);
   // Versandfrist: überfällig, bis morgen raus, im Plan
@@ -354,10 +353,14 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
   function renderStats() {
     const open = orders.filter((o) => !o.versendet);
     const paid = orders.filter((o) => o.bezahlt);
+    // Umsatz ohne Spenden und Erstattungen: letzte 7 Tage und laufendes Kalenderjahr
+    const weekAgo = Date.now() / 1000 - 7 * 86400;
+    const year = new Date().getFullYear();
+    const sum = (list) => euro(list.reduce((n, o) => n + revenue(o), 0));
     const tiles = [
       ["Überfällig", open.filter((o) => dueState(o) === "late").length, open.some((o) => dueState(o) === "late") ? "late" : ""],
-      ["Offene Stück", open.reduce((n, o) => n + pieces(o), 0)],
-      ["Umsatz (bezahlt)", euro(paid.reduce((n, o) => n + revenue(o), 0))],
+      ["Umsatz letzte 7 Tage", sum(paid.filter((o) => o.datum >= weekAgo))],
+      [`Umsatz ${year}`, sum(paid.filter((o) => new Date(o.datum * 1000).getFullYear() === year))],
       ["Spenden", euro(paid.reduce((n, o) => n + o.spende, 0))],
     ];
     $("stats").innerHTML = tiles.map(([label, value, hi]) =>
