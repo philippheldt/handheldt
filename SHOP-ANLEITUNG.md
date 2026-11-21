@@ -295,7 +295,7 @@ Gut zu wissen:
 - Der Rabatt gilt auf die Artikel, nicht auf die Versandkosten.
 - Ob der Versand kostenlos ist (ab 50 €), wird vor dem Gutschein berechnet. Wer für 52 € bestellt
   und 10 % Rabatt hat, zahlt also trotzdem keinen Versand.
-- Ein **Prozent-Gutschein verringert auch die Aufrundungsspende** anteilig, weil Stripe den Rabatt
-  auf alle Positionen verteilt. In der Bestellübersicht und im EÜR-Export steht immer die tatsächlich
-  gezahlte Spende. Wer das vermeiden will, nimmt feste Beträge.
+- Ein Gutschein **verringert auch die Aufrundungsspende** anteilig, weil Stripe den Rabatt auf alle
+  Positionen verteilt (bei Prozent- und bei festen Beträgen). In der Bestellübersicht und im EÜR-Export
+  steht immer die tatsächlich gezahlte Spende.
 - In der Bestellübersicht steht bei Bestellungen mit Gutschein „Gutschein −X €“.
