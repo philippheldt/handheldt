@@ -136,6 +136,8 @@ async function loadSessionOrders() {
           adresse: addressOf(shipping) || addressOf(session.customer_details),
           vorbestellung: session.metadata?.vorbestellung || "",
           versandkosten: session.shipping_cost?.amount_total ?? session.total_details?.amount_shipping ?? 0,
+          // Rabatt durch Gutscheincode (steckt schon in den Positionsbeträgen und der Summe)
+          rabatt: session.total_details?.amount_discount || 0,
           // Gewählte Versandart an der Kasse, z. B. "DHL Versand" oder "Abholung in Teningen (nach Absprache)"
           versandart: rate?.display_name || "",
           abholung,
@@ -184,6 +186,7 @@ async function loadInvoiceOrders() {
         vorbestellung: "",
         versandkosten: 0,
         versandart: "",
+        rabatt: inv.total_discount_amounts?.reduce((sum, d) => sum + d.amount, 0) || 0,
         abholung: false,
         frist: "",
         spende: 0,
