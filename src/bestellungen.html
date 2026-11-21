@@ -11,6 +11,12 @@ sitemapExclude: true
 <meta name="robots" content="noindex, nofollow">
 <title>Bestellungen | handheldt intern</title>
 <link rel="icon" href="/img/favicon_3.png" type="image/png">
+<link rel="apple-touch-icon" href="/img/icons/apple-touch-icon-bestellungen.png">
+<meta name="apple-mobile-web-app-title" content="Bestellungen">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#f8f7f4">
 <link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* Schriften wie auf der Hauptseite: Plus Jakarta Sans, Source Serif 4 nur kursiv für Akzente */
@@ -81,7 +87,20 @@ button:disabled { opacity: 0.5; cursor: progress; }
 
 /* Leiste oben: Reiter und Aktionen */
 .bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.bar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.bar { flex-wrap: nowrap; }
+.bar .tabs { min-width: 0; }
+.icon-button { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; transition: background 0.2s, color 0.2s; }
+.icon-button:hover { background: var(--frame); color: var(--primary-color); }
+.icon-button svg { width: 22px; height: 22px; }
+.text-link { display: inline-block; margin: -16px 0 20px; padding: 0; border: 0; background: none; color: var(--muted); font-size: 0.875rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.text-link:hover { color: var(--primary-color); }
+/* Zum Aktualisieren nach unten ziehen */
+.ptr { position: fixed; top: calc(env(safe-area-inset-top, 0px) + 8px); left: 50%; z-index: 20; display: flex; align-items: center; gap: 8px; padding: 0.4rem 0.9rem; border-radius: 2rem; background: var(--frame); box-shadow: 0 6px 24px rgba(12, 11, 33, 0.12); font-size: 0.85rem; color: var(--muted); transform: translate(-50%, -80px); transition: transform 0.2s; pointer-events: none; }
+.ptr.pulling { transition: none; }
+.ptr svg { width: 16px; height: 16px; transition: transform 0.2s; }
+.ptr.ready svg { transform: rotate(180deg); }
+.ptr.loading svg { animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* Navigation: Pille wie die Seitennavigation */
 .tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 5px; background: var(--frame); border-radius: 200px; box-shadow: 0 0 60px rgba(0, 0, 0, 0.08); width: fit-content; max-width: 100%; }
@@ -113,9 +132,6 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .order.due-soon { border-left-color: var(--due-soon); }
 .order.due-late { border-left-color: var(--due-late); }
 .order.done { opacity: 0.75; border-left-color: var(--due-none); }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: -14px 0 18px; }
-.legend span { display: inline-flex; align-items: center; gap: 6px; }
-.legend i { width: 6px; height: 16px; border-radius: 2px; display: inline-block; }
 @media (max-width: 720px) { .order { grid-template-columns: 1fr; } h1 { font-size: 2rem; } }
 .order h3 { font-size: 1.15rem; }
 .meta { margin-top: 2px; }
@@ -145,17 +161,6 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
 .empty { text-align: center; padding: 48px 24px; }
 
 /* Spenden */
-.donation-head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; margin-bottom: 14px; }
-@media (max-width: 720px) { .donation-head { grid-template-columns: 1fr; } }
-.donation-total { background: var(--accent-color); border-radius: var(--standard-radius); padding: 24px; }
-.donation-total b { display: block; font-size: 3rem; font-weight: 800; line-height: 1; margin: 8px 0; }
-.table-wrap { overflow-x: auto; }
-table.list { width: 100%; border-collapse: collapse; }
-table.list th { text-align: left; font-size: 0.8rem; font-weight: 600; color: var(--muted); padding: 0 12px 8px 0; border-bottom: 2px solid var(--primary-color); }
-table.list td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); }
-table.list .right { text-align: right; padding-right: 0; }
-table.list tfoot td { font-weight: 800; border-bottom: 0; }
-
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--primary-color); color: var(--secondary-color); padding: 0.6rem 1.1rem; border-radius: var(--standard-radius); font-weight: 500; box-shadow: 0 10px 40px rgba(12, 11, 33, 0.25); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -179,16 +184,16 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         <button type="button" data-view="offen" aria-pressed="true">Offen<span class="count" data-count="offen"></span></button>
         <button type="button" data-view="versendet" aria-pressed="false">Verschickt<span class="count" data-count="versendet"></span></button>
         <button type="button" data-view="alle" aria-pressed="false">Alle<span class="count" data-count="alle"></span></button>
-        <button type="button" data-view="spenden" aria-pressed="false">Spenden<span class="count" data-count="spenden"></span></button>
       </nav>
-      <div class="bar-actions">
-        <button class="ghost-button small-button" id="export-toggle" type="button" aria-expanded="false" aria-controls="export">EÜR-Export</button>
-        <button class="ghost-button small-button" id="reload" type="button">Aktualisieren</button>
-        <button class="ghost-button small-button" id="logout" type="button">Abmelden</button>
-      </div>
+      <button class="icon-button" id="logout" type="button" aria-label="Abmelden" title="Abmelden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l-5-5 5-5"/><path d="M5 12h11"/></svg>
+      </button>
     </div>
 
-    <form class="white-frame export" id="export" hidden>
+    <section id="orders-view">
+      <div class="stats" id="stats"></div>
+      <button class="text-link" id="export-toggle" type="button" aria-expanded="false" aria-controls="export">EÜR-Export</button>
+      <form class="white-frame export" id="export" hidden>
       <div>
         <h2>Einnahmen für die EÜR</h2>
         <p class="small muted">Excel-Datei mit allen Zahlungen, Erstattungen und Stripe-Gebühren des Jahres, Spenden separat, dazu eine Monatsübersicht.</p>
@@ -201,15 +206,6 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
       </div>
       <p class="small" id="export-status" role="status" hidden></p>
     </form>
-
-    <section id="orders-view">
-      <div class="stats" id="stats"></div>
-      <div class="legend small muted" aria-label="Farben am Rand">
-        <span><i style="background:var(--due-ok)"></i>im Plan</span>
-        <span><i style="background:var(--due-soon)"></i>bis morgen raus</span>
-        <span><i style="background:var(--due-late)"></i>überfällig</span>
-        <span><i style="background:var(--due-none)"></i>ohne Frist (Abholung, Rechnung) oder erledigt</span>
-      </div>
       <div class="filters">
         <input type="search" class="search" id="search" placeholder="Suchen nach Name, Produkt, Größe, Farbe, Nummer, Abholung …" aria-label="Bestellungen durchsuchen">
         <label class="sort small" for="sort">Sortieren
@@ -221,30 +217,15 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
       </div>
       <div class="orders" id="orders"></div>
     </section>
-
-    <section id="donations-view" hidden>
-      <div class="donation-head">
-        <div class="donation-total">
-          <span class="small">Gesammelte Spenden</span>
-          <b class="num" id="donation-sum"></b>
-          <span class="slanted">geht vollständig an die Sozial-Missionarische Arbeit des EC Deutschlands in Nepal</span>
-        </div>
-        <div class="white-frame">
-          <h2>Pro Monat</h2>
-          <div class="table-wrap"><table class="list" id="donation-months"></table></div>
-        </div>
-      </div>
-      <div class="white-frame">
-        <h2>Alle Spenden</h2>
-        <p class="small muted" style="margin-top:-6px">Aus Shop-Bestellungen mit Spende. Komplett erstattete Bestellungen zählen nicht mit.</p>
-        <div class="table-wrap"><table class="list" id="donation-list"></table></div>
-      </div>
-    </section>
   </div>
 
   <p class="error" id="load-error" hidden></p>
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
+<div class="ptr" id="ptr" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+  <span id="ptr-text">Zum Aktualisieren ziehen</span>
+</div>
 
 <script>
 (() => {
@@ -295,8 +276,10 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     $("pw").focus();
   }
 
+  let loading = false;
   async function load() {
-    $("reload").disabled = true;
+    if (loading) return;
+    loading = true;
     try {
       const data = await api("GET");
       orders = data.bestellungen;
@@ -315,7 +298,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
         $("load-error").textContent = "Bestellungen konnten nicht geladen werden: " + err.message;
       }
     } finally {
-      $("reload").disabled = false;
+      loading = false;
     }
   }
 
@@ -341,7 +324,6 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
       : `raus bis ${isoDatum(o.frist)}`;
     return `<span class="pill due-${state}">${esc(text)}</span>`;
   }
-  const donations = () => orders.filter((o) => o.spende > 0).sort((a, b) => b.datum - a.datum);
 
   function visibleOrders() {
     const q = $("search").value.trim().toLowerCase();
@@ -365,7 +347,7 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
 
   function renderCounts() {
     const open = orders.filter((o) => !o.versendet).length;
-    const counts = { offen: open, versendet: orders.length - open, alle: orders.length, spenden: donations().length };
+    const counts = { offen: open, versendet: orders.length - open, alle: orders.length };
     document.querySelectorAll("[data-count]").forEach((el) => (el.textContent = counts[el.dataset.count]));
   }
 
@@ -373,10 +355,8 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     const open = orders.filter((o) => !o.versendet);
     const paid = orders.filter((o) => o.bezahlt);
     const tiles = [
-      ["Offene Bestellungen", open.length],
       ["Überfällig", open.filter((o) => dueState(o) === "late").length, open.some((o) => dueState(o) === "late") ? "late" : ""],
       ["Offene Stück", open.reduce((n, o) => n + pieces(o), 0)],
-      ["Verschickt", orders.length - open.length],
       ["Umsatz (bezahlt)", euro(paid.reduce((n, o) => n + revenue(o), 0))],
       ["Spenden", euro(paid.reduce((n, o) => n + o.spende, 0))],
     ];
@@ -443,48 +423,10 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     }).join("");
   }
 
-  function renderDonations() {
-    const list = donations();
-    const total = list.reduce((n, o) => n + o.spende, 0);
-    $("donation-sum").textContent = euro(total);
-
-    const months = new Map();
-    for (const o of list) {
-      const d = new Date(o.datum * 1000);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-      const m = months.get(key) || { label: d.toLocaleDateString("de-DE", { month: "long", year: "numeric" }), n: 0, sum: 0 };
-      m.n += 1;
-      m.sum += o.spende;
-      months.set(key, m);
-    }
-    $("donation-months").innerHTML = list.length
-      ? `<thead><tr><th>Monat</th><th class="right">Anzahl</th><th class="right">Betrag</th></tr></thead><tbody>${
-          [...months.entries()].sort((a, b) => b[0].localeCompare(a[0])).map(([, m]) =>
-            `<tr><td>${esc(m.label)}</td><td class="right num">${m.n}</td><td class="right num">${euro(m.sum)}</td></tr>`).join("")
-        }</tbody>`
-      : `<tbody><tr><td class="muted">Noch keine Spenden.</td></tr></tbody>`;
-
-    $("donation-list").innerHTML = list.length
-      ? `<thead><tr><th>Datum</th><th>Name</th><th>Bestellung</th><th class="right">Spende</th></tr></thead><tbody>${
-          list.map((o) => `<tr>
-            <td class="num">${datum(o.datum)}</td>
-            <td>${esc(o.kunde || "Ohne Namen")}${o.bezahlt ? "" : ` <span class="pill alert">Zahlung läuft noch</span>`}</td>
-            <td class="num"><a href="${esc(o.stripeUrl)}" target="_blank" rel="noopener">Nr. ${esc(o.nummer)}</a></td>
-            <td class="right num">${euro(o.spende)}</td></tr>`).join("")
-        }</tbody><tfoot><tr><td colspan="3">Gesamt</td><td class="right num">${euro(total)}</td></tr></tfoot>`
-      : `<tbody><tr><td class="muted">Sobald jemand im Warenkorb spendet, steht es hier.</td></tr></tbody>`;
-  }
-
   function render() {
     renderCounts();
-    const donationsView = view === "spenden";
-    $("orders-view").hidden = donationsView;
-    $("donations-view").hidden = !donationsView;
-    if (donationsView) renderDonations();
-    else {
-      renderStats();
-      renderOrders();
-    }
+    renderStats();
+    renderOrders();
   }
 
   async function save(order, patch, button) {
@@ -535,7 +477,44 @@ table.list tfoot td { font-weight: 800; border-bottom: 0; }
     try { localStorage.setItem(SORT_KEY, sort); } catch (e) {}
     renderOrders();
   });
-  $("reload").addEventListener("click", load);
+  // Zum Aktualisieren nach unten ziehen (auch in der Web-App vom Home-Bildschirm)
+  const ptr = $("ptr");
+  const PULL = 70;
+  let startY = null;
+  let pulled = 0;
+  window.addEventListener("touchstart", (e) => {
+    startY = window.scrollY <= 0 && !$("app").hidden && !loading ? e.touches[0].clientY : null;
+    pulled = 0;
+  }, { passive: true });
+  window.addEventListener("touchmove", (e) => {
+    if (startY === null) return;
+    pulled = Math.max(0, e.touches[0].clientY - startY);
+    if (pulled <= 0) return;
+    const shift = Math.min(pulled, PULL * 1.4) - 80;
+    ptr.classList.add("pulling");
+    ptr.classList.toggle("ready", pulled >= PULL);
+    ptr.style.transform = `translate(-50%, ${shift}px)`;
+    $("ptr-text").textContent = pulled >= PULL ? "Loslassen zum Aktualisieren" : "Zum Aktualisieren ziehen";
+  }, { passive: true });
+  window.addEventListener("touchend", async () => {
+    if (startY === null) return;
+    startY = null;
+    ptr.classList.remove("pulling", "ready");
+    if (pulled < PULL) {
+      ptr.style.transform = "";
+      return;
+    }
+    ptr.classList.add("loading");
+    ptr.style.transform = "translate(-50%, 0)";
+    $("ptr-text").textContent = "Wird aktualisiert …";
+    await load();
+    ptr.classList.remove("loading");
+    ptr.style.transform = "";
+  });
+  // Beim Zurückkehren in die App (z. B. vom Home-Bildschirm) still neu laden
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && pw && !$("app").hidden) load();
+  });
 
   // EÜR-Export: Excel-Datei für ein Kalenderjahr
   const thisYear = new Date().getFullYear();
