@@ -112,7 +112,7 @@ button:disabled { opacity: 0.5; cursor: progress; }
 
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 10px; margin-bottom: 28px; }
 .stat { background: var(--frame); border-radius: var(--standard-radius); padding: 14px 16px; }
-.stat b { display: block; font-size: 1.6rem; font-weight: 800; line-height: 1.15; }
+.stat b { display: block; font-size: clamp(1.15rem, 5.4vw, 1.6rem); white-space: nowrap; font-weight: 800; line-height: 1.15; }
 
 .stat.late { background: var(--alert-bg); color: var(--alert); }
 .stat .change { display: block; margin-top: 6px; font-size: 0.78rem; color: var(--muted); }
@@ -123,8 +123,8 @@ button:disabled { opacity: 0.5; cursor: progress; }
 button.stat { font: inherit; color: inherit; text-align: left; border: 2px solid transparent; cursor: pointer; transition: border-color 0.2s; }
 button.stat:hover { border-color: var(--line); }
 button.stat[aria-expanded="true"] { border-color: var(--primary-color); }
-button.stat { position: relative; padding-right: 30px; }
-.stat .hint { position: absolute; top: 12px; right: 12px; color: var(--muted); }
+.stat .label { white-space: nowrap; }
+.stat .hint { margin-left: 4px; color: var(--muted); font-size: 0.75em; }
 .chart-panel { margin: -16px 0 28px; padding: 18px 18px 10px; }
 .chart-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin-bottom: 8px; }
 .chart-head h2 { font-size: 1.05rem; }
@@ -419,7 +419,7 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
     const tiles = [
       { label: "Überfällig", value: late, cls: late ? "late" : "" },
       { label: "Spenden", value: euro(paid.reduce((n, o) => n + o.spende, 0)) },
-      { label: "Umsatz letzte 7 Tage", value: euro(week), change: changeOf(week, weekBefore, "zur Vorwoche"), chart: "woche" },
+      { label: "Umsatz 7 Tage", value: euro(week), change: changeOf(week, weekBefore, "zur Vorwoche"), chart: "woche" },
       { label: `Umsatz ${year}`, value: euro(ytd), change: changeOf(ytd, ytdBefore, "zum Vorjahr"), chart: "jahr" },
     ];
     $("stats").innerHTML = tiles.map((t) => {
@@ -427,9 +427,8 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
       const attrs = t.chart ? ` type="button" data-chart="${t.chart}" aria-controls="chart" aria-expanded="${chartMode === t.chart}"` : "";
       return `
       <${tag} class="stat${t.cls ? " " + t.cls : ""}"${attrs}>
-        ${t.chart ? `<span class="hint" aria-hidden="true">${chartMode === t.chart ? "▴" : "▾"}</span>` : ""}
         <b class="num">${esc(t.value)}</b>
-        <span class="small">${esc(t.label)}</span>
+        <span class="small label">${esc(t.label)}${t.chart ? `<span class="hint" aria-hidden="true">${chartMode === t.chart ? "▲" : "▼"}</span>` : ""}</span>
         ${t.change || ""}
       </${tag}>`;
     }).join("");
