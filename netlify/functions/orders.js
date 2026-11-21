@@ -44,15 +44,17 @@ function addressOf(details) {
 // Datum als "2026-11-25" in deutscher Zeit
 const isoDay = (date) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(date);
 
-// Zusage aus der Kasse (z. B. 1–5 Werktage, 1–14 Tage) ab Bestelldatum weiterzählen
+// Zusage aus der Kasse (z. B. 1–5 Werktage, 1–14 Tage) ab Bestelldatum weiterzählen.
+// Werktage wie in den AGB (§ 5) im üblichen Sinn: Montag bis Samstag, gezählt ab dem Tag nach der
+// Bestellung. Bestellung am Montag + 5 Werktage = Samstag. Feiertage werden nicht berücksichtigt.
 function addEstimate(createdSec, { unit, value }) {
-  const date = new Date(createdSec * 1000);
+  // Mit dem Kalendertag in deutscher Zeit rechnen (Mittag, damit Zeitzonen nichts verschieben)
+  const date = new Date(`${isoDay(new Date(createdSec * 1000))}T12:00:00Z`);
   if (unit === "business_day") {
     let left = value;
     while (left > 0) {
       date.setUTCDate(date.getUTCDate() + 1);
-      const day = date.getUTCDay();
-      if (day !== 0 && day !== 6) left -= 1;
+      if (date.getUTCDay() !== 0) left -= 1;
     }
   } else if (unit === "week") date.setUTCDate(date.getUTCDate() + 7 * value);
   else if (unit === "month") date.setUTCMonth(date.getUTCMonth() + value);
