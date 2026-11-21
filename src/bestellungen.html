@@ -119,6 +119,32 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .stat .change strong { font-weight: 700; }
 .stat .change.up strong { color: var(--ok); }
 .stat .change.down strong { color: var(--alert); }
+/* Umsatz-Kacheln sind antippbar und klappen den Verlauf auf */
+button.stat { font: inherit; color: inherit; text-align: left; border: 2px solid transparent; cursor: pointer; transition: border-color 0.2s; }
+button.stat:hover { border-color: var(--line); }
+button.stat[aria-expanded="true"] { border-color: var(--primary-color); }
+button.stat { position: relative; padding-right: 30px; }
+.stat .hint { position: absolute; top: 12px; right: 12px; color: var(--muted); }
+.chart-panel { margin: -16px 0 28px; padding: 18px 18px 10px; }
+.chart-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 6px 16px; margin-bottom: 8px; }
+.chart-head h2 { font-size: 1.05rem; }
+.chart-legend { display: flex; gap: 14px; font-size: 0.8rem; color: var(--muted); }
+.chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.chart-legend svg { width: 22px; height: 6px; }
+.chart-wrap { position: relative; }
+.chart-wrap svg.chart { display: block; width: 100%; height: 220px; touch-action: pan-y; }
+.chart text { font: 11px "Plus Jakarta Sans", sans-serif; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .line-now { fill: none; stroke: var(--primary-color); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.chart .line-before { fill: none; stroke: #a8a59c; stroke-width: 2; stroke-dasharray: 5 4; stroke-linejoin: round; }
+.chart .area-now { fill: var(--accent-color); opacity: 0.55; }
+.chart .cross { stroke: var(--muted); stroke-width: 1; }
+.chart .dot-now { fill: var(--primary-color); stroke: var(--frame); stroke-width: 2; }
+.chart .dot-before { fill: #a8a59c; stroke: var(--frame); stroke-width: 2; }
+.chart .end-label { fill: var(--primary-color); font-weight: 700; }
+.chart-tip { position: absolute; top: 0; pointer-events: none; background: var(--primary-color); color: var(--secondary-color); border-radius: var(--standard-radius); padding: 6px 9px; font-size: 0.8rem; line-height: 1.35; white-space: nowrap; transform: translateX(-50%); box-shadow: 0 6px 20px rgba(12, 11, 33, 0.2); }
+.chart-tip b { font-weight: 700; }
+.chart-tip .prev { opacity: 0.75; }
 
 .export { display: grid; gap: 14px; margin-bottom: 20px; }
 .export h2 { margin-bottom: 6px; }
@@ -170,6 +196,7 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
 .empty { text-align: center; padding: 48px 24px; }
 
 /* Spenden */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--primary-color); color: var(--secondary-color); padding: 0.6rem 1.1rem; border-radius: var(--standard-radius); font-weight: 500; box-shadow: 0 10px 40px rgba(12, 11, 33, 0.25); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
@@ -201,6 +228,14 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
 
     <section id="orders-view">
       <div class="stats" id="stats"></div>
+      <section class="white-frame chart-panel" id="chart" aria-live="polite" hidden>
+        <div class="chart-head">
+          <h2 id="chart-title"></h2>
+          <div class="chart-legend" id="chart-legend"></div>
+        </div>
+        <div class="chart-wrap" id="chart-wrap"></div>
+        <table class="visually-hidden" id="chart-table"></table>
+      </section>
       <button class="text-link" id="export-toggle" type="button" aria-expanded="false" aria-controls="export">EÜR-Export</button>
       <form class="white-frame export" id="export" hidden>
       <div>
@@ -384,15 +419,21 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
     const tiles = [
       { label: "Überfällig", value: late, cls: late ? "late" : "" },
       { label: "Spenden", value: euro(paid.reduce((n, o) => n + o.spende, 0)) },
-      { label: "Umsatz letzte 7 Tage", value: euro(week), change: changeOf(week, weekBefore, "zur Vorwoche") },
-      { label: `Umsatz ${year}`, value: euro(ytd), change: changeOf(ytd, ytdBefore, "zum Vorjahr") },
+      { label: "Umsatz letzte 7 Tage", value: euro(week), change: changeOf(week, weekBefore, "zur Vorwoche"), chart: "woche" },
+      { label: `Umsatz ${year}`, value: euro(ytd), change: changeOf(ytd, ytdBefore, "zum Vorjahr"), chart: "jahr" },
     ];
-    $("stats").innerHTML = tiles.map((t) => `
-      <div class="stat${t.cls ? " " + t.cls : ""}">
+    $("stats").innerHTML = tiles.map((t) => {
+      const tag = t.chart ? "button" : "div";
+      const attrs = t.chart ? ` type="button" data-chart="${t.chart}" aria-controls="chart" aria-expanded="${chartMode === t.chart}"` : "";
+      return `
+      <${tag} class="stat${t.cls ? " " + t.cls : ""}"${attrs}>
+        ${t.chart ? `<span class="hint" aria-hidden="true">${chartMode === t.chart ? "▴" : "▾"}</span>` : ""}
         <b class="num">${esc(t.value)}</b>
         <span class="small">${esc(t.label)}</span>
         ${t.change || ""}
-      </div>`).join("");
+      </${tag}>`;
+    }).join("");
+    if (chartMode) renderChart();
   }
 
   // "+12 %" / "−8 %" im Vergleich zum Zeitraum davor; ohne Vergleichswert kein Prozent
@@ -462,6 +503,142 @@ address { font-style: normal; margin-top: 12px; white-space: pre-line; }
       </article>`;
     }).join("");
   }
+
+  // ---------- Umsatzverlauf (Liniendiagramm unter den Kacheln) ----------
+  let chartMode = "";
+  const DAY_MS = 86400000;
+  const dayStart = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const short = (cent) => Math.round(cent / 100).toLocaleString("de-DE") + " €";
+
+  // Liefert Beschriftungen und zwei Reihen: aktueller Zeitraum und Vergleichszeitraum
+  function chartData(mode) {
+    const paid = orders.filter((o) => o.bezahlt);
+    if (mode === "woche") {
+      const today = dayStart(new Date());
+      const labels = [], now = [], before = [], tipLabels = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today.getTime() - i * DAY_MS);
+        const sumDay = (start) => paid
+          .filter((o) => o.datum * 1000 >= start && o.datum * 1000 < start + DAY_MS)
+          .reduce((n, o) => n + revenue(o), 0);
+        labels.push(d.toLocaleDateString("de-DE", { weekday: "short" }).replace(".", ""));
+        tipLabels.push(d.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "numeric" }));
+        now.push(sumDay(d.getTime()));
+        before.push(sumDay(d.getTime() - 7 * DAY_MS));
+      }
+      return { title: "Umsatz pro Tag, letzte 7 Tage", labels, tipLabels, now, before, nowName: "Diese Woche", beforeName: "Woche davor" };
+    }
+    // Jahr: kumuliert pro Monat, laufendes Jahr nur bis zum aktuellen Monat
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth();
+    const cumulative = (y, upTo) => {
+      const out = [];
+      let running = 0;
+      for (let m = 0; m <= upTo; m++) {
+        running += paid.filter((o) => {
+          const d = new Date(o.datum * 1000);
+          return d.getFullYear() === y && d.getMonth() === m;
+        }).reduce((n, o) => n + revenue(o), 0);
+        out.push(running);
+      }
+      return out;
+    };
+    const labels = Array.from({ length: 12 }, (_, m) => new Date(year, m, 1).toLocaleDateString("de-DE", { month: "short" }).replace(".", ""));
+    const tipLabels = Array.from({ length: 12 }, (_, m) => "bis Ende " + new Date(year, m, 1).toLocaleDateString("de-DE", { month: "long" }));
+    tipLabels[month] = "bis heute";
+    return { title: `Umsatz ${year}, aufsummiert`, labels, tipLabels, now: cumulative(year, month), before: cumulative(year - 1, 11), nowName: String(year), beforeName: String(year - 1) };
+  }
+
+  function renderChart() {
+    const data = chartData(chartMode);
+    $("chart-title").textContent = data.title;
+    $("chart-legend").innerHTML = `
+      <span><svg viewBox="0 0 22 6" aria-hidden="true"><path d="M1 3h20" stroke="var(--primary-color)" stroke-width="2.5" stroke-linecap="round"/></svg>${esc(data.nowName)}</span>
+      <span><svg viewBox="0 0 22 6" aria-hidden="true"><path d="M1 3h20" stroke="#a8a59c" stroke-width="2.5" stroke-dasharray="5 4"/></svg>${esc(data.beforeName)}</span>`;
+
+    const wrap = $("chart-wrap");
+    const W = Math.max(280, wrap.clientWidth || 600);
+    const H = 220;
+    const m = { top: 14, right: 16, bottom: 26, left: 64 };
+    const n = data.labels.length;
+    const maxVal = Math.max(100, ...data.now, ...data.before);
+    // runde Schritte für die y-Achse (in Cent, ganze Euro-Beträge)
+    const rough = maxVal / 4;
+    const step10 = Math.pow(10, Math.floor(Math.log10(rough)));
+    const tickStep = [1, 2, 2.5, 5, 10].map((f) => f * step10).find((v) => v >= rough);
+    const top = tickStep * Math.ceil(maxVal / tickStep);
+    const x = (i) => m.left + (n === 1 ? 0 : (i * (W - m.left - m.right)) / (n - 1));
+    const y = (v) => m.top + (1 - v / top) * (H - m.top - m.bottom);
+    const path = (vals) => vals.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+
+    const ticks = Array.from({ length: Math.round(top / tickStep) + 1 }, (_, i) => i * tickStep);
+    const grid = ticks.map((t) => `<line class="grid" x1="${m.left}" x2="${W - m.right}" y1="${y(t)}" y2="${y(t)}"/><text x="${m.left - 8}" y="${y(t) + 4}" text-anchor="end">${esc(short(t))}</text>`).join("");
+    const everyNth = W < 420 && n > 7 ? 2 : 1;
+    const xLabels = data.labels.map((l, i) => (i % everyNth ? "" : `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${esc(l)}</text>`)).join("");
+    const last = data.now.length - 1;
+    const area = `M${x(0)},${y(0)}` + data.now.map((v, i) => `L${x(i)},${y(v)}`).join("") + `L${x(last)},${y(0)}Z`;
+
+    wrap.innerHTML = `
+      <svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(data.title)}">
+        ${grid}${xLabels}
+        <path class="area-now" d="${area}"/>
+        <path class="line-before" d="${path(data.before)}"/>
+        <path class="line-now" d="${path(data.now)}"/>
+        <circle class="dot-now" cx="${x(last)}" cy="${y(data.now[last])}" r="4.5"/>
+        <g id="chart-hover" hidden>
+          <line class="cross" id="chart-cross" y1="${m.top}" y2="${H - m.bottom}"/>
+          <circle class="dot-before" id="chart-dot-before" r="4.5"/>
+          <circle class="dot-now" id="chart-dot-now" r="4.5"/>
+        </g>
+      </svg>
+      <div class="chart-tip" id="chart-tip" hidden></div>`;
+
+    // Barrierefrei: dieselben Zahlen als Tabelle
+    $("chart-table").innerHTML = `<caption>${esc(data.title)}</caption><tr><th>Zeitraum</th><th>${esc(data.nowName)}</th><th>${esc(data.beforeName)}</th></tr>` +
+      data.tipLabels.map((l, i) => `<tr><td>${esc(l)}</td><td>${i <= last ? euro(data.now[i]) : "–"}</td><td>${euro(data.before[i])}</td></tr>`).join("");
+
+    // Fadenkreuz und Tooltip
+    const svg = wrap.querySelector("svg");
+    const show = (clientX) => {
+      const rect = svg.getBoundingClientRect();
+      const px = ((clientX - rect.left) / rect.width) * W;
+      const i = Math.max(0, Math.min(n - 1, Math.round(((px - m.left) / (W - m.left - m.right)) * (n - 1))));
+      const hasNow = i <= last;
+      $("chart-hover").removeAttribute("hidden");
+      $("chart-cross").setAttribute("x1", x(i));
+      $("chart-cross").setAttribute("x2", x(i));
+      $("chart-dot-before").setAttribute("cx", x(i));
+      $("chart-dot-before").setAttribute("cy", y(data.before[i]));
+      $("chart-dot-now").setAttribute("cx", x(i));
+      $("chart-dot-now").setAttribute("cy", hasNow ? y(data.now[i]) : -20);
+      const tip = $("chart-tip");
+      tip.hidden = false;
+      tip.innerHTML = `<b>${esc(data.tipLabels[i])}</b><br>${esc(data.nowName)}: ${hasNow ? euro(data.now[i]) : "–"}<br><span class="prev">${esc(data.beforeName)}: ${euro(data.before[i])}</span>`;
+      const left = (x(i) / W) * rect.width;
+      const half = tip.offsetWidth / 2;
+      tip.style.left = Math.max(half, Math.min(rect.width - half, left)) + "px";
+    };
+    const hide = () => {
+      $("chart-hover").setAttribute("hidden", "");
+      $("chart-tip").hidden = true;
+    };
+    svg.addEventListener("pointermove", (e) => show(e.clientX));
+    svg.addEventListener("pointerdown", (e) => show(e.clientX));
+    svg.addEventListener("pointerleave", hide);
+  }
+
+  $("stats").addEventListener("click", (event) => {
+    const tile = event.target.closest("[data-chart]");
+    if (!tile) return;
+    chartMode = chartMode === tile.dataset.chart ? "" : tile.dataset.chart;
+    $("chart").hidden = !chartMode;
+    renderStats();
+  });
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => chartMode && renderChart(), 150);
+  });
 
   function render() {
     renderCounts();
