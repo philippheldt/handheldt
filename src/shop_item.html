@@ -2,7 +2,7 @@
 title: "Produkt | handheldt"
 description: "Produkt aus dem handheldt-Shop – mit Liebe gestaltet."
 styles: ["fade.css", "shop.css", "shop_gallery.css"]
-bodyScripts: ["js/preorder.js", "js/shop.js", "js/shop_gallery.js"]
+bodyScripts: ["js/preorder.js", "js/size_chart.js", "js/shop.js", "js/shop_gallery.js"]
 sitemapExclude: true
 ---
     <section class="top-distance"></section>
@@ -43,6 +43,10 @@ sitemapExclude: true
                         <div class="option-head">
                             <span class="option-label" id="size-label">Größe</span>
                             <span class="option-value" id="size-value"></span>
+                            <button type="button" class="size-chart-link" id="size-chart-btn" aria-haspopup="dialog" hidden>
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18v8H3zM7 8v3M11 8v4M15 8v3M19 8v4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                                Größentabelle
+                            </button>
                         </div>
                         <div id="size-container" class="option-chips" role="group" aria-labelledby="size-label"></div>
                     </div>
@@ -112,6 +116,38 @@ sitemapExclude: true
             </div>
         </div>
     </section>
+
+    <dialog class="size-chart" id="size-chart" aria-labelledby="size-chart-title">
+        <div class="size-chart-inner">
+            <div class="size-chart-head">
+                <div>
+                    <p class="size-chart-title" id="size-chart-title">Größentabelle</p>
+                    <p class="size-chart-product" id="size-chart-product"></p>
+                </div>
+                <button type="button" class="size-chart-close" data-close aria-label="Größentabelle schließen">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+
+            <p class="size-chart-hint" id="size-chart-hint" hidden></p>
+
+            <div class="size-chart-layout">
+                <figure class="size-chart-figure" id="size-chart-figure"></figure>
+                <ul class="size-chart-legend" id="size-chart-legend"></ul>
+            </div>
+
+            <div class="size-chart-table-wrap" tabindex="0" aria-label="Maßtabelle, seitlich scrollbar">
+                <table class="size-chart-table" id="size-chart-table"></table>
+            </div>
+            <p class="size-chart-small" id="size-chart-select-hint">Tippe auf eine Größe, um sie auszuwählen.</p>
+
+            <p class="size-chart-tip"><strong>So findest du deine Größe:</strong> Leg ein Oberteil, das dir gut
+                passt, flach hin und miss Breite und Länge wie in der Skizze. Die Größe mit den ähnlichsten Werten
+                passt dir am besten.</p>
+            <p class="size-chart-small">Alle Angaben in Zentimetern, flach liegend gemessen. Herstellungsbedingt
+                können die Maße um ca. 5&nbsp;% abweichen.</p>
+        </div>
+    </dialog>
 
     <section class="white related-products" id="related" hidden>
         <div class="content-wrapper">

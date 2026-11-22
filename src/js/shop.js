@@ -177,6 +177,7 @@ function renderProduct() {
         selectedSize = value;
         updatePrice();
         updateAvailability();
+        window.handheldtSizeChart?.update(selectedSize);
       },
       selectedSize,
     );
@@ -233,6 +234,9 @@ function renderProduct() {
   }
 
   initBuyRow();
+
+  // Größentabelle (js/size_chart.js), wenn in Stripe "groessentabelle" gesetzt ist
+  window.handheldtSizeChart?.init(currentProduct, selectedSize);
 }
 
 // Preis inkl. Aufpreisen der gewählten Optionen (abgerechnet wird serverseitig mit den Stripe-Daten)
@@ -258,6 +262,7 @@ function renderChips(type, options, onSelect, selectedValue = options[0].value) 
     const chip = document.createElement("button");
     chip.type = "button";
     chip.className = `chip${isSelected ? " active" : ""}${option.disabled ? " sold-out" : ""}`;
+    chip.dataset.value = option.value;
     chip.setAttribute("aria-pressed", isSelected);
     if (option.disabled) {
       chip.disabled = true;
