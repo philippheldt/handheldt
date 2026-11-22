@@ -87,13 +87,17 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .topbar { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; margin-bottom: var(--gap-2); }
 .topbar h1 { font-size: 1rem; font-weight: 700; text-align: center; }
 /* Tab-Leiste: schwebt unten wie die Leiste in iOS-Apps */
-.tabbar { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 30; transform: translateX(-50%); display: flex; gap: 2px; padding: 5px; width: max-content; max-width: calc(100vw - 24px); background: rgba(255, 255, 255, 0.86); -webkit-backdrop-filter: blur(18px) saturate(1.6); backdrop-filter: blur(18px) saturate(1.6); border-radius: 2rem; box-shadow: 0 10px 34px rgba(12, 11, 33, 0.16), 0 0 0 1px rgba(12, 11, 33, 0.05); }
+.dock { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 30; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; width: max-content; max-width: calc(100vw - 24px); }
+.tabbar, .sort-toggle { background: rgba(255, 255, 255, 0.86); -webkit-backdrop-filter: blur(18px) saturate(1.6); backdrop-filter: blur(18px) saturate(1.6); box-shadow: 0 10px 34px rgba(12, 11, 33, 0.16), 0 0 0 1px rgba(12, 11, 33, 0.05); }
+.tabbar { display: flex; gap: 2px; padding: 5px; min-width: 0; border-radius: 2rem; }
 .tabbar button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 76px; padding: 7px 10px 6px; border: 0; border-radius: 1.6rem; background: transparent; color: var(--muted); font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; }
 .tabbar button svg { width: 24px; height: 24px; }
 .tabbar button[aria-pressed="true"] { background: var(--primary-color); color: var(--secondary-color); }
 .tabbar .count { font-variant-numeric: tabular-nums; opacity: 0.7; margin-left: 3px; }
-.tabbar .sort-toggle { color: var(--primary-color); }
-.tabbar .sort-toggle:hover { background: var(--secondary-color); }
+/* Runder Knopf neben der Leiste: wechselt die Sortierung */
+.sort-toggle { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; padding: 0; border: 0; border-radius: 50%; color: var(--primary-color); cursor: pointer; transition: transform 0.15s; }
+.sort-toggle:active { transform: scale(0.94); }
+.sort-toggle svg { width: 24px; height: 24px; }
 .icon-button { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--muted); cursor: pointer; transition: background 0.2s, color 0.2s; }
 .icon-button:hover { background: var(--frame); color: var(--primary-color); }
 .icon-button svg { width: 22px; height: 22px; }
@@ -219,7 +223,6 @@ select.field { appearance: auto; }
 
 /* ---------- Herstellen: was aus den offenen Bestellungen gebraucht wird ---------- */
 .production { display: grid; gap: var(--gap-2); }
-.production-intro { margin: 0 0 var(--gap-1); color: var(--muted); font-size: 0.875rem; }
 .product { padding: 20px; display: grid; gap: var(--gap-2); border-left: 6px solid var(--due-none); }
 .product.due-ok { border-left-color: var(--due-ok); }
 .product.due-soon { border-left-color: var(--due-soon); }
@@ -296,7 +299,6 @@ select.field { appearance: auto; }
     </section>
 
     <section id="production-view" hidden>
-      <p class="production-intro">Alle Produkte aus den offenen Bestellungen, nach Größe, Farbe und Variante zusammengezählt. Oben steht, was zuerst raus muss.</p>
       <div class="production" id="production"></div>
     </section>
   </div>
@@ -304,7 +306,8 @@ select.field { appearance: auto; }
   <p class="error" id="load-error" hidden></p>
 </main>
 <div class="toast" id="toast" role="status" hidden></div>
-<nav class="tabbar" id="tabbar" aria-label="Ansicht" hidden>
+<div class="dock" id="tabbar" hidden>
+<nav class="tabbar" aria-label="Ansicht">
   <button type="button" data-view="offen" aria-pressed="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
     <span>Offen<span class="count" data-count="offen"></span></span>
@@ -313,16 +316,16 @@ select.field { appearance: auto; }
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h11v10H2z"/><path d="M13 9h4l4 4v3h-8"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
     <span>Verschickt<span class="count" data-count="versendet"></span></span>
   </button>
-  <button type="button" data-view="herstellen" aria-pressed="false">
+  <button type="button" data-view="produkte" aria-pressed="false" title="Produktübersicht: was aus den offenen Bestellungen hergestellt werden muss">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11M9 12h11M9 19h11"/><path d="M4 5h.01M4 12h.01M4 19h.01"/></svg>
-    <span>Herstellen</span>
+    <span>Produkte</span>
   </button>
+</nav>
   <button type="button" class="sort-toggle" id="sort-toggle" aria-label="Sortierung wechseln">
     <svg id="sort-icon-versand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>
     <svg id="sort-icon-neu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M7 4v16"/><path d="M3 16l4 4 4-4"/><path d="M14 6h7M14 11h5M14 16h3"/></svg>
-    <span id="sort-label">Bald fällig</span>
   </button>
-</nav>
+</div>
 <div class="ptr" id="ptr" aria-hidden="true">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
   <span id="ptr-text">Zum Aktualisieren ziehen</span>
@@ -779,10 +782,11 @@ select.field { appearance: auto; }
 
   function render() {
     renderCounts();
-    const production = view === "herstellen";
+    const production = view === "produkte";
     $("orders-view").hidden = production;
     $("production-view").hidden = !production;
     $("sort-toggle").hidden = production;
+    document.querySelector(".topbar h1").textContent = production ? "Produktübersicht" : "Bestellungen";
     if (production) renderProduction();
     else {
       renderStats();
@@ -853,10 +857,11 @@ select.field { appearance: auto; }
   });
   // Dritter Tab wechselt die Sortierung: bald fällig (nach Versandfrist) <-> neueste Bestellungen
   function showSort() {
-    $("sort-label").textContent = sort === "neu" ? "Neueste" : "Bald fällig";
     $("sort-icon-versand").toggleAttribute("hidden", sort === "neu");
     $("sort-icon-neu").toggleAttribute("hidden", sort !== "neu");
-    $("sort-toggle").title = sort === "neu" ? "Sortiert nach neuesten Bestellungen – tippen für „bald fällig“" : "Sortiert nach Versandfrist – tippen für „neueste“";
+    const label = sort === "neu" ? "Sortiert nach neuesten Bestellungen. Tippen für: bald fällig zuerst" : "Sortiert nach Versandfrist. Tippen für: neueste zuerst";
+    $("sort-toggle").title = label;
+    $("sort-toggle").setAttribute("aria-label", label);
   }
   showSort();
   $("sort-toggle").addEventListener("click", () => {
@@ -864,6 +869,7 @@ select.field { appearance: auto; }
     try { localStorage.setItem(SORT_KEY, sort); } catch (e) {}
     showSort();
     renderOrders();
+    toast(sort === "neu" ? "Neueste zuerst" : "Bald fällig zuerst");
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
   // Zum Aktualisieren nach unten ziehen (auch in der Web-App vom Home-Bildschirm)
