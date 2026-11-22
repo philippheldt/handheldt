@@ -498,7 +498,7 @@ html:has(dialog.size-chart[open]) {
   margin: 0;
   padding: 0.75rem 1rem;
   border-radius: var(--standard-radius);
-  background: var(--accent-color);
+  background: var(--secondary-color);
   line-height: 1.5;
 }
 
@@ -539,13 +539,13 @@ html:has(dialog.size-chart[open]) {
 }
 
 .sc-measure {
-  stroke: #c9731b;
+  stroke: var(--primary-color);
   stroke-width: 1.6;
   stroke-dasharray: 4 3;
 }
 
 .sc-arrowhead {
-  fill: #c9731b;
+  fill: var(--primary-color);
 }
 
 .sc-marker circle {
@@ -663,12 +663,12 @@ html:has(dialog.size-chart[open]) {
 }
 
 .size-chart-table .is-selected {
-  background: var(--accent-color);
+  background: #ecebe6;
   font-weight: 700;
 }
 
 .size-chart-table thead th.is-selected {
-  background: var(--darker-accent-color);
+  background: #e2e0da;
 }
 
 .size-chart-table thead th.is-selected button {
