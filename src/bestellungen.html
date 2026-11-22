@@ -223,7 +223,6 @@ select.field { appearance: auto; }
 
 /* ---------- Herstellen: was aus den offenen Bestellungen gebraucht wird ---------- */
 .production { display: grid; gap: var(--gap-2); }
-.production-intro { margin: 0 0 var(--gap-1); color: var(--muted); font-size: 0.875rem; }
 .product { padding: 20px; display: grid; gap: var(--gap-2); border-left: 6px solid var(--due-none); }
 .product.due-ok { border-left-color: var(--due-ok); }
 .product.due-soon { border-left-color: var(--due-soon); }
@@ -300,7 +299,6 @@ select.field { appearance: auto; }
     </section>
 
     <section id="production-view" hidden>
-      <p class="production-intro">Alle Produkte aus den offenen Bestellungen, nach Größe, Farbe und Variante zusammengezählt. Oben steht, was zuerst raus muss.</p>
       <div class="production" id="production"></div>
     </section>
   </div>
