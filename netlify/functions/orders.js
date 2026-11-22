@@ -167,10 +167,30 @@ async function loadInvoiceOrders() {
     .list({ limit: 100, expand: ["data.customer"] })
     .autoPagingToArray({ limit: MAX_ORDERS });
 
-  return invoices
+  const relevant = invoices
     // Offen oder bezahlt; per Gutschrift komplett zurückgenommene Rechnungen ausblenden
     .filter((inv) => ["open", "paid"].includes(inv.status) && inv.billing_reason === "manual")
-    .filter((inv) => (inv.post_payment_credit_notes_amount || 0) + (inv.pre_payment_credit_notes_amount || 0) < inv.total)
+    .filter((inv) => (inv.post_payment_credit_notes_amount || 0) + (inv.pre_payment_credit_notes_amount || 0) < inv.total);
+
+  // Rechnungspositionen dem Shop-Produkt zuordnen, damit sie in der Produktübersicht mit den
+  // Shop-Bestellungen zusammengezählt werden (z. B. "Siehe dein König | Gold – Postkarte (Großbestellung)"
+  // gehört zu "Siehe dein König | Gold"). Verknüpft über das Produkt am Rechnungspreis bzw. dessen
+  // Metadatum product_id; ohne Verknüpfung bleibt der Text der Position.
+  const lineProduct = (line) => line.pricing?.price_details?.product || line.price?.product || null;
+  const ids = [...new Set(relevant.flatMap((inv) => inv.lines.data.map(lineProduct)).filter((id) => typeof id === "string"))];
+  const products = new Map();
+  for (let i = 0; i < ids.length; i += 100) {
+    const page = await stripe.products.list({ ids: ids.slice(i, i + 100), limit: 100 });
+    for (const product of page.data) products.set(product.id, product);
+  }
+  const shopProductFor = (line) => {
+    const product = products.get(lineProduct(line));
+    if (!product) return null;
+    if (product.active) return product;
+    return products.get(product.metadata?.product_id) || (product.metadata?.product_id ? { id: product.metadata.product_id, name: product.name } : null);
+  };
+
+  return relevant
     .map((inv) => {
       const customer = typeof inv.customer === "object" ? inv.customer : null;
       const shipping = inv.customer_shipping || customer?.shipping;
@@ -194,15 +214,21 @@ async function loadInvoiceOrders() {
         spende: 0,
         summe: inv.total,
         erstattet: inv.post_payment_credit_notes_amount || 0,
-        positionen: inv.lines.data.map((line) => ({
-          produktId: null,
-          name: line.description || "Position",
+        positionen: inv.lines.data.map((line) => {
+          const shop = shopProductFor(line);
+          const text = line.description || "Position";
+          return {
+          produktId: shop?.id || null,
+          name: shop?.name || text,
+          // Eigener Text der Rechnungsposition, falls er vom Produktnamen abweicht
+          hinweis: shop && shop.name !== text ? text : "",
           groesse: "",
           farbe: "",
           variante: "",
           menge: line.quantity || 1,
           betrag: line.amount,
-        })),
+          };
+        }),
         versendet: inv.metadata?.versendet || "",
         notiz: inv.metadata?.notiz || "",
         stripeUrl: `https://dashboard.stripe.com/invoices/${inv.id}`,
