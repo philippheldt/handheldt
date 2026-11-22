@@ -88,7 +88,7 @@ button:disabled { opacity: 0.5; cursor: progress; }
 .topbar h1 { font-size: 1rem; font-weight: 700; text-align: center; }
 /* Tab-Leiste: schwebt unten wie die Leiste in iOS-Apps */
 .tabbar { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); z-index: 30; transform: translateX(-50%); display: flex; gap: 2px; padding: 5px; width: max-content; max-width: calc(100vw - 24px); background: rgba(255, 255, 255, 0.86); -webkit-backdrop-filter: blur(18px) saturate(1.6); backdrop-filter: blur(18px) saturate(1.6); border-radius: 2rem; box-shadow: 0 10px 34px rgba(12, 11, 33, 0.16), 0 0 0 1px rgba(12, 11, 33, 0.05); }
-.tabbar button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 88px; padding: 7px 12px 6px; border: 0; border-radius: 1.6rem; background: transparent; color: var(--muted); font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.tabbar button { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 76px; padding: 7px 10px 6px; border: 0; border-radius: 1.6rem; background: transparent; color: var(--muted); font-size: 0.72rem; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; }
 .tabbar button svg { width: 24px; height: 24px; }
 .tabbar button[aria-pressed="true"] { background: var(--primary-color); color: var(--secondary-color); }
 .tabbar .count { font-variant-numeric: tabular-nums; opacity: 0.7; margin-left: 3px; }
@@ -217,6 +217,21 @@ select.field { appearance: auto; }
 .empty { text-align: center; padding: 48px 24px; }
 .empty h2 { font-size: 1.2rem; }
 
+/* ---------- Herstellen: was aus den offenen Bestellungen gebraucht wird ---------- */
+.production { display: grid; gap: var(--gap-2); }
+.production-intro { margin: 0 0 var(--gap-1); color: var(--muted); font-size: 0.875rem; }
+.product { padding: 20px; display: grid; gap: var(--gap-2); border-left: 6px solid var(--due-none); }
+.product.due-ok { border-left-color: var(--due-ok); }
+.product.due-soon { border-left-color: var(--due-soon); }
+.product.due-late { border-left-color: var(--due-late); }
+.product-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--gap-2); }
+.product-head h3 { font-size: 1.1rem; }
+.product-head .total { font-size: 1.4rem; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.product .pills { margin-top: 0; }
+.variants { width: 100%; border-collapse: collapse; }
+.variants td { padding: 10px 0; border-top: 1px solid var(--line); vertical-align: middle; }
+.variants td.qty { width: 3.5em; text-align: right; font-weight: 800; font-variant-numeric: tabular-nums; }
+.variants .who { display: block; margin-top: 2px; line-height: 1.4; font-size: 0.8rem; color: var(--muted); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .toast { position: fixed; z-index: 40; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--primary-color); color: var(--secondary-color); padding: 0.6rem 1.1rem; border-radius: var(--standard-radius); font-weight: 500; box-shadow: 0 10px 40px rgba(12, 11, 33, 0.25); }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -279,6 +294,11 @@ select.field { appearance: auto; }
       </div>
       <div class="orders" id="orders"></div>
     </section>
+
+    <section id="production-view" hidden>
+      <p class="production-intro">Alle Produkte aus den offenen Bestellungen, nach Größe, Farbe und Variante zusammengezählt. Oben steht, was zuerst raus muss.</p>
+      <div class="production" id="production"></div>
+    </section>
   </div>
 
   <p class="error" id="load-error" hidden></p>
@@ -292,6 +312,10 @@ select.field { appearance: auto; }
   <button type="button" data-view="versendet" aria-pressed="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h11v10H2z"/><path d="M13 9h4l4 4v3h-8"/><circle cx="6" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>
     <span>Verschickt<span class="count" data-count="versendet"></span></span>
+  </button>
+  <button type="button" data-view="herstellen" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11M9 12h11M9 19h11"/><path d="M4 5h.01M4 12h.01M4 19h.01"/></svg>
+    <span>Herstellen</span>
   </button>
   <button type="button" class="sort-toggle" id="sort-toggle" aria-label="Sortierung wechseln">
     <svg id="sort-icon-versand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>
@@ -698,10 +722,72 @@ select.field { appearance: auto; }
     resizeTimer = setTimeout(() => chartMode && renderChart(), 150);
   });
 
+  // Reihenfolge der Größen für die Liste "Herstellen"
+  const SIZE_ORDER = ["XXS", "XS", "S", "M", "L", "XL", "XXL", "2XL", "3XL", "4XL", "5XL"];
+  function sizeRank(size) {
+    const i = SIZE_ORDER.indexOf(String(size).toUpperCase());
+    if (i >= 0) return i;
+    const n = parseFloat(size); // Babygrößen wie "6–12m/68–80cm"
+    return Number.isNaN(n) ? 100 : 20 + n;
+  }
+
+  function renderProduction() {
+    const open = orders.filter((o) => !o.versendet);
+    const products = new Map();
+    for (const o of open) {
+      for (const p of o.positionen) {
+        const prod = products.get(p.name) || { name: p.name, total: 0, frist: "", late: false, variants: new Map() };
+        const key = [p.groesse, p.farbe, p.variante].join("|");
+        const v = prod.variants.get(key) || { p, menge: 0, frist: "", kunden: [] };
+        v.menge += p.menge;
+        v.kunden.push(o.kunde || "Ohne Namen");
+        if (o.frist && (!v.frist || o.frist < v.frist)) v.frist = o.frist;
+        if (o.frist && (!prod.frist || o.frist < prod.frist)) prod.frist = o.frist;
+        prod.total += p.menge;
+        prod.variants.set(key, v);
+        products.set(p.name, prod);
+      }
+    }
+    // Dringendstes Produkt zuerst, ohne Frist ans Ende, sonst nach Menge
+    const list = [...products.values()].sort((a, b) =>
+      (a.frist || "9999").localeCompare(b.frist || "9999") || b.total - a.total || a.name.localeCompare(b.name, "de"));
+    if (!list.length) {
+      $("production").innerHTML = `<div class="white-frame empty"><h2>Nichts herzustellen.</h2></div>`;
+      return;
+    }
+    $("production").innerHTML = list.map((prod) => {
+      const variants = [...prod.variants.values()].sort((a, b) =>
+        (a.p.farbe || "").localeCompare(b.p.farbe || "", "de") || sizeRank(a.p.groesse) - sizeRank(b.p.groesse) || (a.p.variante || "").localeCompare(b.p.variante || "", "de"));
+      const state = dueState({ frist: prod.frist });
+      const due = prod.frist ? duePill({ frist: prod.frist }) : "";
+      return `
+      <article class="white-frame product${state ? " due-" + state : ""}">
+        <div class="product-head">
+          <h3>${esc(prod.name)}</h3>
+          <span class="total">${prod.total}×</span>
+        </div>
+        ${due ? `<div class="pills">${due}</div>` : ""}
+        <table class="variants"><tbody>${variants.map((v) => `
+          <tr>
+            <td>${optionsOf(v.p).length ? `<div class="opts">${optionsOf(v.p).map((x) => `<span class="opt">${esc(x)}</span>`).join("")}</div>` : ""}
+              <span class="who">${esc([...new Set(v.kunden)].join(", "))}</span></td>
+            <td class="qty">${v.menge}×</td>
+          </tr>`).join("")}</tbody></table>
+      </article>`;
+    }).join("");
+  }
+
   function render() {
     renderCounts();
-    renderStats();
-    renderOrders();
+    const production = view === "herstellen";
+    $("orders-view").hidden = production;
+    $("production-view").hidden = !production;
+    $("sort-toggle").hidden = production;
+    if (production) renderProduction();
+    else {
+      renderStats();
+      renderOrders();
+    }
   }
 
   async function save(order, patch, button) {
