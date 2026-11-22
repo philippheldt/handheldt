@@ -29,6 +29,7 @@ Unter **Metadaten** (im Produkt ganz unten) kannst du zusätzlich eintragen:
 | `vorbestellung` | `2026-12-15` oder `15.12.2026` | Vorbestellung: Versand erst ab diesem Datum statt in 5 bzw. 14 Tagen. Ist das Datum erreicht, gilt das Produkt automatisch wieder als normal lieferbar |
 | `herstellung` | `Im Digitaldruck gedruckt` oder `nein` | Ersetzt auf der Produktseite den Hinweis „Von Hand im Siebdruck bedruckt“; `nein` blendet ihn aus. Leer lassen = Siebdruck-Text |
 | `bestand` | `20`, `S:5, M:10, L:0` oder `Blau:3, Rot:0` | Lagerbestand insgesamt bzw. je Größe, Farbe oder Variante (siehe unten). Kein Eintrag = unbegrenzt |
+| `groessentabelle` | `hoodie`, `sweater` oder `tshirt` | Zeigt neben der Größenauswahl den Link „Größentabelle“ (siehe unten) |
 | `bildordner` | `hoodie` | Weitere Produktbilder aus dem Ordner `src/img/produkte/hoodie/` (siehe unten) |
 | `versandfrei` | `ja` | z. B. Postkarten: Wird nur so etwas bestellt, ist der Versand kostenlos (per Post). Zusammen mit anderen Produkten gilt die normale Pauschale (4,90 € bis 50 €), der Preis zählt zum Warenwert |
 
@@ -39,6 +40,24 @@ vor einem kleingeschriebenen Wort geht mit `/n ` und Leerzeichen danach. `\n` fu
 
 Alle Felder sind optional. Ohne `groessen`, `farben` oder `varianten` wird die
 jeweilige Auswahl auf der Produktseite ausgeblendet.
+
+## Größentabelle
+
+Mit dem Metadatum `groessentabelle` bekommt ein Produkt neben der Größenauswahl den Link
+**„Größentabelle“**. Er öffnet ein Fenster (auf dem Handy von unten) mit einer Skizze, in der
+Breite (A), Länge (B) und Ärmellänge (C) eingezeichnet sind, und einer Tabelle mit den Maßen.
+
+- Die Tabellen stehen in `src/groessentabellen.json`. Vorhanden: `hoodie`, `sweater`, `tshirt`.
+- Gezeigt werden nur die Größen, die das Produkt laut `groessen` hat. `XXXL` und `3XL`
+  (bzw. `2XL` und `XXL`) gelten dabei als gleich. Ausverkaufte Größen sind durchgestrichen.
+- Die aktuell gewählte Größe ist farbig markiert; tippt man in der Tabelle auf eine Größe,
+  wird sie direkt ausgewählt.
+- Neue Tabelle: in `groessentabellen.json` einen Eintrag kopieren, Schlüssel (z. B. `longsleeve`)
+  vergeben und die Werte anpassen. `form` bestimmt die Skizze (`hoodie`, `sweater` oder `tshirt`),
+  `werte` gehören der Reihe nach zu `groessen`. Unter `hinweis` kann ein Passform-Tipp stehen,
+  z. B. „Fällt oversized aus – für einen normalen Look eine Nummer kleiner wählen“. Er erscheint
+  oben in der Tabelle; leer lassen = kein Hinweis.
+- Ohne `groessentabelle` (oder ohne `groessen`) bleibt der Link ausgeblendet.
 
 ## Optionen mit Aufpreis
 

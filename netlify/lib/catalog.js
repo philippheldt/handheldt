@@ -154,6 +154,8 @@ function toShopProduct(product) {
     preorderClosed: preorder.closed,
     // Herstellungs-Hinweis auf der Produktseite: leer = Siebdruck-Standardtext, "nein" = ausblenden
     production: (meta.herstellung || "").trim(),
+    // Größentabelle aus src/groessentabellen.json, z. B. "hoodie" (leer = keine Tabelle)
+    sizeChart: (meta.groessentabelle || "").trim().toLowerCase(),
     stock: parseStock(meta.bestand),
     categories: parseCategories(meta.kategorie),
     // Für die Sortierung "Neu": Metadatum "neu_seit" (Datum), sonst Anlegezeitpunkt in Stripe (Sekunden)
