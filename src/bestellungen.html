@@ -530,7 +530,7 @@ select.field { appearance: auto; }
       const items = o.positionen.map((p) => `
         <tr>
           <td class="qty num">${p.menge}×</td>
-          <td>${esc(p.name)}${optionsOf(p).length ? `<div class="opts">${optionsOf(p).map((x) => `<span class="opt">${esc(x)}</span>`).join("")}</div>` : ""}</td>
+          <td>${esc(p.name)}${p.hinweis ? `<div class="small muted">${esc(p.hinweis)}</div>` : ""}${optionsOf(p).length ? `<div class="opts">${optionsOf(p).map((x) => `<span class="opt">${esc(x)}</span>`).join("")}</div>` : ""}</td>
           <td class="price num">${euro(p.betrag)}</td>
         </tr>`).join("");
       const extras = [
