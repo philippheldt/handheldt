@@ -337,10 +337,9 @@
         ${preorderDate ? `<p class="cart-preorder-note">Deine Bestellung enthält Vorbestellungen und wird gesammelt ab dem <b>${formatDate(preorderDate)}</b> verschickt.</p>` : ""}
         ${
           isDrawer
-            ? '<p class="cart-note">Kostenlose Abholung in Teningen an der Kasse wählbar.</p>'
-            : `<p class="cart-note">Abholung in Teningen kannst du an der Kasse kostenlos wählen. Gemäß § 19 UStG wird
-          keine Umsatzsteuer berechnet. Es gelten unsere <a href="agb.html">AGB</a> und die
-          <a href="widerruf.html">Widerrufsbelehrung</a>.</p>`
+            ? ""
+            : `<p class="cart-note">Gemäß § 19 UStG wird keine Umsatzsteuer berechnet. Es gelten unsere
+          <a href="agb.html">AGB</a> und die <a href="widerruf.html">Widerrufsbelehrung</a>.</p>`
         }
         ${
           subtotal < MIN_ORDER
