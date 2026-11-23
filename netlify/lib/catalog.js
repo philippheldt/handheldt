@@ -79,8 +79,8 @@ function parsePreorder(value) {
   return { date: null, until: null, exact: false, closed: false };
 }
 
-// Bestand: "20" = insgesamt, "S:5, M:10, L:0" = je Größe, "Blau:3, Rot:0" = je Farbe/Variante.
-// Kein Eintrag = unbegrenzt; Optionen, die nicht genannt sind, ebenfalls unbegrenzt.
+// Bestand: "20" = insgesamt, "S:5, M:10, L:0" = je Größe, "Blau:3, Rot:0" = je Farbe/Variante,
+// "Gelb/M:2, Blau/L:0" = je Kombination. Kein Eintrag = unbegrenzt; nicht genannte Optionen ebenfalls.
 export function parseStock(value) {
   const text = (value || "").trim();
   if (!text) return null;
@@ -104,10 +104,32 @@ export function formatStock(stock) {
     .join(", ");
 }
 
-// Welche gewählte Option (Größe, Farbe oder Variante) hat einen eigenen Bestand? (null = keine)
+// Gleiche Regeln wie src/js/stock.js (Browser) – Änderungen bitte in beiden Dateien.
+// "Gelb / M" und "gelb/m" gelten als gleich
+const normalizeStockKey = (key) => String(key).replace(/\s*\/\s*/g, "/").trim().toLowerCase();
+
+// Alle Reihenfolgen aller Teilmengen der gewählten Werte, die längsten zuerst
+function stockKeyCandidates(values) {
+  const result = [];
+  const permute = (rest, picked) => {
+    if (picked.length > 0) result.push(picked);
+    rest.forEach((value, index) => permute([...rest.slice(0, index), ...rest.slice(index + 1)], [...picked, value]));
+  };
+  permute(values, []);
+  return result.sort((a, b) => b.length - a.length).map((parts) => parts.join("/"));
+}
+
+// Welcher Eintrag aus "bestand" gilt für die Auswahl { size, color, variant }? (null = keiner)
+// Kombinationen wie "Gelb/M" (Reihenfolge egal) gehen vor einzelnen Optionen wie "M".
 export function stockOptionFor(stock, choice) {
   if (!stock || stock.total !== null) return null;
-  return [choice.size, choice.color, choice.variant].find((value) => value && value in stock.byOption) || null;
+  const byNormalized = new Map(Object.keys(stock.byOption).map((key) => [normalizeStockKey(key), key]));
+  const values = [choice.size, choice.color, choice.variant].filter(Boolean);
+  for (const candidate of stockKeyCandidates(values)) {
+    const key = byNormalized.get(normalizeStockKey(candidate));
+    if (key !== undefined) return key;
+  }
+  return null;
 }
 
 // Verfügbare Stückzahl für eine Auswahl { size, color, variant } (Infinity = unbegrenzt)
@@ -117,6 +139,14 @@ export function availableFor(product, choice = {}) {
   if (stock.total !== null) return stock.total;
   const option = stockOptionFor(stock, choice);
   return option ? stock.byOption[option] : Infinity;
+}
+
+// Alle möglichen Auswahlen des Produkts (Größe × Farbe × Variante)
+function combinations(product) {
+  const sizes = product.sizes.length > 0 ? product.sizes : [null];
+  const colors = product.colors.length > 0 ? product.colors.map((color) => color.name) : [null];
+  const variants = product.variants.length > 0 ? product.variants : [null];
+  return sizes.flatMap((size) => colors.flatMap((color) => variants.map((variant) => ({ size, color, variant }))));
 }
 
 function toShopProduct(product) {
@@ -164,15 +194,10 @@ function toShopProduct(product) {
   };
 }
 
-// Ausverkauft: Gesamtbestand 0 oder alle Größen (bzw. Farben, Varianten) mit Bestand 0
+// Ausverkauft: keine einzige Auswahl (Größe/Farbe/Variante bzw. Kombination) ist mehr lieferbar
 function isSoldOut(product) {
-  const stock = product.stock;
-  if (!stock) return false;
-  if (stock.total !== null) return stock.total <= 0;
-  const optionLists = [product.sizes, product.colors.map((color) => color.name), product.variants];
-  return optionLists.some(
-    (names) => names.length > 0 && names.every((name) => name in stock.byOption && stock.byOption[name] <= 0),
-  );
+  if (!product.stock) return false;
+  return combinations(product).every((choice) => availableFor(product, choice) <= 0);
 }
 
 // Kategorien: "Postkarten" oder mehrere "Postkarten, Weihnachten"
