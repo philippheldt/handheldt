@@ -458,7 +458,9 @@ select.field { appearance: auto; }
 
   function renderStats() {
     const open = orders.filter((o) => !o.versendet);
-    const paid = orders.filter((o) => o.bezahlt);
+    // Alle Bestellungen zählen zum Bestelldatum, auch noch offene (z. B. Barzahlung bei Abholung).
+    // Stornierte stehen gar nicht in der Liste. Der EÜR-Export rechnet dagegen nach Zahlungsdatum.
+    const paid = orders;
     // Umsatz ohne Spenden und Erstattungen, jeweils mit Vergleich zum Zeitraum davor
     const now = Date.now() / 1000;
     const DAY = 86400;
@@ -578,7 +580,8 @@ select.field { appearance: auto; }
 
   // Liefert Beschriftungen und zwei Reihen: aktueller Zeitraum und Vergleichszeitraum
   function chartData(mode) {
-    const paid = orders.filter((o) => o.bezahlt);
+    // Wie bei den Kacheln: alle Bestellungen zum Bestelldatum, auch noch nicht bezahlte
+    const paid = orders;
     if (mode === "woche") {
       const today = dayStart(new Date());
       const labels = [], now = [], before = [], tipLabels = [];
