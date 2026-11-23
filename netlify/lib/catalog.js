@@ -229,3 +229,30 @@ export async function loadCatalog(stripe) {
     .map((product) => ({ ...product, soldOut: isSoldOut(product) }))
     .sort((a, b) => a.sort - b.sort || a.title.localeCompare(b.title, "de"));
 }
+
+// Bestand in Stripe ändern: entries = [{ productId, choice: { size, color, variant }, quantity }].
+// direction -1 = abziehen (Verkauf), +1 = zurückbuchen (Stornierung). Produkte ohne Bestand = unbegrenzt.
+export async function changeStock(stripe, entries, direction = -1) {
+  const byProduct = new Map();
+  for (const entry of entries) {
+    if (!entry.productId) continue;
+    byProduct.set(entry.productId, [...(byProduct.get(entry.productId) || []), entry]);
+  }
+
+  for (const [productId, list] of byProduct) {
+    const product = await stripe.products.retrieve(productId);
+    const stock = parseStock(product.metadata.bestand);
+    if (!stock) continue;
+
+    for (const { choice, quantity } of list) {
+      if (stock.total !== null) {
+        stock.total = Math.max(0, stock.total + direction * quantity);
+        continue;
+      }
+      // Bestand je Größe, Farbe, Variante oder Kombination; nicht genannte Optionen sind unbegrenzt
+      const option = stockOptionFor(stock, choice);
+      if (option) stock.byOption[option] = Math.max(0, stock.byOption[option] + direction * quantity);
+    }
+    await stripe.products.update(productId, { metadata: { bestand: formatStock(stock) } });
+  }
+}

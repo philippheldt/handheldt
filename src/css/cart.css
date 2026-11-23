@@ -602,3 +602,73 @@ body.cart-open {
     font-size: 0.8rem;
   }
 }
+
+/* ---------- Abholen und bar bezahlen ---------- */
+
+.cart-cash-link {
+  display: block;
+  margin: 0.75rem auto 0;
+}
+
+.cart-cash {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  padding: 1rem;
+  border-radius: var(--standard-radius);
+  background: var(--secondary-color);
+}
+
+.cart-cash-intro,
+.cart-cash-legal {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.cart-cash-legal {
+  color: #6b6b6b;
+  font-size: 0.78rem;
+}
+
+.cart-cash label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cart-cash label small {
+  font-size: inherit;
+  font-weight: 400;
+  color: #6b6b6b;
+}
+
+.cart-cash input {
+  margin: 0;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #c9c7c1;
+  border-radius: var(--standard-radius);
+  background: #fff;
+  font: inherit;
+  font-weight: 400;
+}
+
+.cart-cash-submit {
+  width: 100%;
+  margin: 0.25rem 0 0;
+  padding: 0.8rem;
+  font-weight: 600;
+}
+
+/* Mit aufgeklapptem Barzahlungs-Formular darf der Kassenbereich in der Seitenleiste scrollen,
+   damit „Zahlungspflichtig bestellen“ auch auf kleinen Bildschirmen erreichbar bleibt */
+.cart-panel--drawer .cart-footer:has(.cart-cash) {
+  flex-shrink: 1;
+  min-height: 0;
+  max-height: 75%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}

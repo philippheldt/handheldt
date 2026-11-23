@@ -518,11 +518,11 @@ select.field { appearance: auto; }
     $("orders").innerHTML = list.map((o) => {
       const pills = [
         duePill(o),
-        o.abholung && `<span class="pill pickup">Abholung</span>`,
+        o.abholung && `<span class="pill pickup">Abholung${o.barzahlung ? " · Barzahlung" : ""}</span>`,
         o.versendet && `<span class="pill ok">${o.abholung ? "Abgeholt" : "Verschickt"} am ${esc(isoDatum(o.versendet))}</span>`,
         o.vorbestellung && `<span class="pill">Vorbestellung, Versand ab ${esc(isoDatum(o.vorbestellung))}</span>`,
         o.art === "rechnung" && `<span class="pill plain">Rechnung ${esc(o.nummer)}</span>`,
-        !o.bezahlt && `<span class="pill alert">${o.art === "rechnung" ? "Noch nicht bezahlt" : "Zahlung läuft noch"}</span>`,
+        !o.bezahlt && `<span class="pill alert">${o.barzahlung ? `Bar zu zahlen: ${euro(o.summe)}` : o.art === "rechnung" ? "Noch nicht bezahlt" : "Zahlung läuft noch"}</span>`,
         o.erstattet > 0 && `<span class="pill alert">${euro(o.erstattet)} erstattet</span>`,
         o.rabatt > 0 && `<span class="pill plain">Gutschein −${euro(o.rabatt)}</span>`,
         o.spende > 0 && `<span class="pill plain">Spende ${euro(o.spende)}</span>`,
@@ -534,7 +534,7 @@ select.field { appearance: auto; }
           <td class="price num">${euro(p.betrag)}</td>
         </tr>`).join("");
       const extras = [
-        o.art === "shop" && (o.abholung ? esc(o.versandart) : o.versandkosten ? `Versand ${euro(o.versandkosten)}` : "Versand kostenlos"),
+        (o.art === "shop" || o.barzahlung) && (o.abholung ? esc(o.versandart) : o.versandkosten ? `Versand ${euro(o.versandkosten)}` : "Versand kostenlos"),
         o.spende > 0 && `Spende ${euro(o.spende)}`,
         o.rabatt > 0 && `Gutschein −${euro(o.rabatt)}`,
       ].filter(Boolean).join(" · ");
@@ -559,7 +559,10 @@ select.field { appearance: auto; }
           <div class="totals small"><span class="muted">${extras}</span><strong class="num">${euro(o.summe)}</strong></div>
         </div>
         <div class="o-actions">
-          <button class="btn${o.versendet ? " secondary" : ""}" type="button" data-ship>${shipLabel}</button>
+          ${o.barzahlung && !o.bezahlt
+            ? `<button class="btn" type="button" data-cash="bar_bezahlt">Abgeholt &amp; bar bezahlt</button>
+          <button class="btn secondary" type="button" data-cash="stornieren">Stornieren</button>`
+            : `<button class="btn${o.versendet ? " secondary" : ""}" type="button" data-ship>${shipLabel}</button>`}
           <textarea class="field" rows="1" data-note placeholder="Notiz, z. B. Sendungsnr." aria-label="Interne Notiz">${esc(o.notiz)}</textarea>
           <a class="stripe-link" href="${esc(o.stripeUrl)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>In Stripe öffnen</a>
         </div>
@@ -794,6 +797,27 @@ select.field { appearance: auto; }
     }
   }
 
+  // Barzahlung bei Abholung: „Abgeholt & bar bezahlt“ oder „Stornieren“ (Bestand wird zurückgebucht)
+  async function cashAction(order, aktion, button) {
+    if (aktion === "stornieren" && !confirm(`Bestellung von ${order.kunde || "ohne Namen"} stornieren? Die Rechnung wird ungültig und der Bestand zurückgebucht.`)) return;
+    if (aktion === "bar_bezahlt" && !confirm(`${euro(order.summe)} bar erhalten und Ware übergeben?`)) return;
+    button.disabled = true;
+    try {
+      const result = await api("POST", { art: order.art, id: order.id, aktion });
+      if (result.storniert) {
+        orders = orders.filter((o) => o !== order);
+        toast("Storniert, Bestand zurückgebucht");
+      } else {
+        Object.assign(order, result);
+        toast("Als bar bezahlt und abgeholt gespeichert");
+      }
+      render();
+    } catch (err) {
+      toast("Nicht gespeichert: " + err.message);
+      button.disabled = false;
+    }
+  }
+
   async function save(order, patch, button) {
     if (button) button.disabled = true;
     try {
@@ -813,6 +837,8 @@ select.field { appearance: auto; }
     const order = orders.find((o) => o.id === card.dataset.id);
     const ship = event.target.closest("[data-ship]");
     if (ship) save(order, { versendet: !order.versendet }, ship);
+    const cash = event.target.closest("[data-cash]");
+    if (cash) cashAction(order, cash.dataset.cash, cash);
     if (event.target.closest("[data-copy]")) {
       try {
         await navigator.clipboard.writeText(addressText(order));
