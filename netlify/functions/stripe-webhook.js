@@ -4,7 +4,7 @@
 // Ereignisse checkout.session.completed und checkout.session.async_payment_succeeded.
 // Das Signing Secret (whsec_…) gehört in Netlify als STRIPE_WEBHOOK_SECRET.
 import Stripe from "stripe";
-import { formatStock, parseStock, stockOptionFor } from "../lib/catalog.js";
+import { changeStock } from "../lib/catalog.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -17,35 +17,16 @@ async function reduceStock(session) {
     .listLineItems(session.id, { limit: 100, expand: ["data.price.product"] })
     .autoPagingToArray({ limit: 100 });
 
-  // Gekaufte Stück je Shop-Produkt mit der gewählten Größe/Farbe/Variante sammeln
-  const sold = new Map();
-  for (const lineItem of lineItems) {
-    const meta = lineItem.price.product.metadata || {};
-    if (!meta.product_id) continue;
-    const entries = sold.get(meta.product_id) || [];
-    entries.push({
+  // Gekaufte Stück je Shop-Produkt mit der gewählten Größe/Farbe/Variante
+  const entries = lineItems
+    .map((lineItem) => ({ meta: lineItem.price.product.metadata || {}, quantity: lineItem.quantity }))
+    .filter(({ meta }) => meta.product_id)
+    .map(({ meta, quantity }) => ({
+      productId: meta.product_id,
       choice: { size: meta.groesse, color: meta.farbe, variant: meta.variante },
-      quantity: lineItem.quantity,
-    });
-    sold.set(meta.product_id, entries);
-  }
-
-  for (const [productId, entries] of sold) {
-    const product = await stripe.products.retrieve(productId);
-    const stock = parseStock(product.metadata.bestand);
-    if (!stock) continue; // kein Bestand eingetragen = unbegrenzt
-
-    for (const { choice, quantity } of entries) {
-      if (stock.total !== null) {
-        stock.total = Math.max(0, stock.total - quantity);
-        continue;
-      }
-      // Bestand je Größe, Farbe oder Variante; nicht genannte Optionen sind unbegrenzt
-      const option = stockOptionFor(stock, choice);
-      if (option) stock.byOption[option] = Math.max(0, stock.byOption[option] - quantity);
-    }
-    await stripe.products.update(productId, { metadata: { bestand: formatStock(stock) } });
-  }
+      quantity,
+    }));
+  await changeStock(stripe, entries, -1);
 
   await stripe.paymentIntents.update(paymentIntent.id, { metadata: { bestand_abgezogen: "ja" } });
 }

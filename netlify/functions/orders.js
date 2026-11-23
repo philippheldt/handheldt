@@ -7,6 +7,7 @@
 // bei Rechnungen an der Rechnung, jeweils in den Metadaten "versendet" und "notiz".
 import { createHash, timingSafeEqual } from "node:crypto";
 import Stripe from "stripe";
+import { changeStock } from "../lib/catalog.js";
 import { loadEur } from "../lib/eur.js";
 import { buildEurWorkbook } from "../lib/eur-xlsx.js";
 
@@ -205,11 +206,13 @@ async function loadInvoiceOrders() {
         telefon: inv.customer_phone || "",
         ansprechpartner: shipping?.name && shipping.name !== inv.customer_name ? shipping.name : "",
         adresse: addressOf(shipping) || addressOf({ name: inv.customer_name, address: inv.customer_address }),
-        vorbestellung: "",
+        vorbestellung: inv.metadata?.vorbestellung || "",
         versandkosten: 0,
-        versandart: "",
+        // Aus dem Shop mit „Abholen und bar bezahlen“ bestellt (netlify/functions/cash-order.js)
+        barzahlung: inv.metadata?.barzahlung === "ja",
+        versandart: inv.metadata?.barzahlung === "ja" ? "Abholung in Teningen – Barzahlung" : "",
         rabatt: inv.total_discount_amounts?.reduce((sum, d) => sum + d.amount, 0) || 0,
-        abholung: false,
+        abholung: inv.metadata?.abholung === "ja",
         frist: "",
         spende: 0,
         summe: inv.total,
@@ -221,10 +224,10 @@ async function loadInvoiceOrders() {
           produktId: shop?.id || null,
           name: shop?.name || text,
           // Eigener Text der Rechnungsposition, falls er vom Produktnamen abweicht
-          hinweis: shop && shop.name !== text ? text : "",
-          groesse: "",
-          farbe: "",
-          variante: "",
+          hinweis: shop && shop.name !== text && !line.metadata?.product_id ? text : "",
+          groesse: line.metadata?.groesse || "",
+          farbe: line.metadata?.farbe || "",
+          variante: line.metadata?.variante || "",
           menge: line.quantity || 1,
           betrag: line.amount,
           };
@@ -236,7 +239,42 @@ async function loadInvoiceOrders() {
     });
 }
 
-async function updateOrder({ art, id, versendet, notiz }) {
+// Barzahlung bei Abholung: als bar bezahlt markieren oder stornieren (Bestand wird zurückgebucht)
+async function cashAction(id, aktion) {
+  if (!/^in_[A-Za-z0-9]+$/.test(id)) throw new Error("Ungültige Rechnung.");
+  const inv = await stripe.invoices.retrieve(id);
+  if (inv.metadata?.barzahlung !== "ja") throw new Error("Das ist keine Barzahlungs-Bestellung.");
+  if (inv.status !== "open") throw new Error("Die Rechnung ist nicht mehr offen.");
+
+  if (aktion === "bar_bezahlt") {
+    // Bar bezahlt heißt hier: bei der Abholung bezahlt, also auch gleich als abgeholt markieren
+    const paid = await stripe.invoices.pay(id, { paid_out_of_band: true });
+    const versendet = new Date().toISOString().slice(0, 10);
+    await stripe.invoices.update(id, { metadata: { versendet } });
+    return { bezahlt: paid.status === "paid", versendet };
+  }
+
+  // Stornieren: Rechnung ungültig machen, reservierten Bestand zurückbuchen
+  await stripe.invoices.voidInvoice(id);
+  if (inv.metadata?.bestand_abgezogen === "ja") {
+    const lines = await stripe.invoices.listLineItems(id, { limit: 100 }).autoPagingToArray({ limit: 100 });
+    await changeStock(
+      stripe,
+      lines.map((line) => ({
+        productId: line.metadata?.product_id,
+        choice: { size: line.metadata?.groesse, color: line.metadata?.farbe, variant: line.metadata?.variante },
+        quantity: line.quantity || 1,
+      })),
+      1,
+    );
+    await stripe.invoices.update(id, { metadata: { bestand_abgezogen: "zurueckgebucht" } });
+  }
+  return { storniert: true };
+}
+
+async function updateOrder({ art, id, versendet, notiz, aktion }) {
+  if (aktion === "bar_bezahlt" || aktion === "stornieren") return cashAction(id, aktion);
+
   const metadata = {};
   if (versendet !== undefined) metadata.versendet = versendet ? new Date().toISOString().slice(0, 10) : "";
   if (notiz !== undefined) metadata.notiz = String(notiz).slice(0, 480);

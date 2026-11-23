@@ -1,0 +1,48 @@
+---
+title: "Bestellung zur Abholung | handheldt"
+description: "Vielen Dank für deine Bestellung bei handheldt – Barzahlung bei Abholung."
+noindex: true
+sitemapExclude: true
+---
+    <section class="top-distance"></section>
+
+    <section class="white">
+        <div class="content-wrapper">
+            <header class="screen-hight">
+                <div class="title-text">
+                    <h1 class="white-box page-title">Vielen Dank für deine Bestellung!</h1>
+                    <p id="abholung-text">Wir legen deine Bestellung für dich zurück und melden uns per E-Mail wegen
+                        eines Abholtermins in Teningen. Bezahlt wird bar bei der Abholung.</p>
+                    <p>Deine Bestellbestätigung mit Rechnung bekommst du gleich per E-Mail.</p>
+                    <br>
+                    <a href="shop.html" class="black-button">Zurück zum Shop</a>
+                </div>
+            </header>
+        </div>
+    </section>
+
+    <!-- Nur zur Anmeldung bei Netlify Forms: Benachrichtigung über neue Barzahlungs-Bestellungen
+         (wird von netlify/functions/cash-order.js abgeschickt) -->
+    <form name="barzahlung" netlify netlify-honeypot="bot-field" hidden>
+        <input name="bot-field">
+        <input name="nummer">
+        <input name="name">
+        <input name="email">
+        <input name="telefon">
+        <input name="summe">
+        <textarea name="positionen"></textarea>
+        <input name="vorbestellung">
+    </form>
+
+    <script>
+        try { localStorage.removeItem("handheldt_cart") } catch (e) {}
+        (function () {
+            const params = new URLSearchParams(location.search);
+            const nr = params.get("nr");
+            const cents = Number(params.get("summe"));
+            const parts = [];
+            if (nr) parts.push(`Bestellnummer <b>${nr.replace(/[^\w-]/g, "")}</b>`);
+            if (cents > 0) parts.push(`bar zu zahlen: <b>${(cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" })}</b>`);
+            if (parts.length) document.getElementById("abholung-text").insertAdjacentHTML("afterend", `<p>${parts.join(" · ")}</p>`);
+        })();
+    </script>

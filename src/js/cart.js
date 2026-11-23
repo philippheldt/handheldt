@@ -20,6 +20,9 @@
   // Stripe-Katalog nach dem ersten Abgleich (für Vorschläge)
   let catalog = [];
   let lastFocused = null;
+  // „Abholen und bar bezahlen“: Formular aufgeklappt? Eingaben bleiben beim Neuzeichnen erhalten
+  let cashOpen = false;
+  const cashDraft = { name: "", email: "", telefon: "" };
 
   // ---------- Hilfsfunktionen ----------
 
@@ -334,10 +337,9 @@
         ${preorderDate ? `<p class="cart-preorder-note">Deine Bestellung enthält Vorbestellungen und wird gesammelt ab dem <b>${formatDate(preorderDate)}</b> verschickt.</p>` : ""}
         ${
           isDrawer
-            ? '<p class="cart-note">Kostenlose Abholung in Teningen an der Kasse wählbar.</p>'
-            : `<p class="cart-note">Abholung in Teningen kannst du an der Kasse kostenlos wählen. Gemäß § 19 UStG wird
-          keine Umsatzsteuer berechnet. Es gelten unsere <a href="agb.html">AGB</a> und die
-          <a href="widerruf.html">Widerrufsbelehrung</a>.</p>`
+            ? ""
+            : `<p class="cart-note">Gemäß § 19 UStG wird keine Umsatzsteuer berechnet. Es gelten unsere
+          <a href="agb.html">AGB</a> und die <a href="widerruf.html">Widerrufsbelehrung</a>.</p>`
         }
         ${
           subtotal < MIN_ORDER
@@ -347,8 +349,67 @@
         <p class="cart-error" role="alert" hidden></p>
         <button type="button" class="black checkout-button" data-action="checkout"
           ${subtotal < MIN_ORDER ? "disabled" : ""}>Weiter zur Kasse</button>
+        ${subtotal >= MIN_ORDER ? renderCash(subtotal) : ""}
         ${isDrawer ? `<button type="button" class="link-button cart-continue" data-action="close">Weiter einkaufen</button>` : ""}
       </div>`;
+  }
+
+  // Kleiner Link unter „Weiter zur Kasse“; aufgeklappt ein kurzes Formular (netlify/functions/cash-order.js)
+  function renderCash(subtotal) {
+    if (!cashOpen) {
+      return `<button type="button" class="link-button cart-cash-link" data-action="cash-toggle"
+        aria-expanded="false">oder abholen und bar bezahlen</button>`;
+    }
+    return `
+      <button type="button" class="link-button cart-cash-link" data-action="cash-toggle"
+        aria-expanded="true">Abholen und bar bezahlen ausblenden</button>
+      <form class="cart-cash" data-cash-form novalidate>
+        <p class="cart-cash-intro">Wir legen deine Bestellung zurück und melden uns per E-Mail wegen eines
+          Abholtermins in Teningen. Du zahlst <b>${formatPrice(subtotal)}</b> bar bei Abholung.</p>
+        <label>Name<input name="name" autocomplete="name" required value="${escapeHtml(cashDraft.name)}"></label>
+        <label>E-Mail<input name="email" type="email" autocomplete="email" required value="${escapeHtml(cashDraft.email)}"></label>
+        <label><span>Telefon <small>(optional)</small></span><input name="telefon" type="tel" autocomplete="tel" value="${escapeHtml(cashDraft.telefon)}"></label>
+        <input name="website" class="visually-hidden" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="cart-cash-legal">Es gelten unsere <a href="agb.html">AGB</a> und die
+          <a href="widerruf.html">Widerrufsbelehrung</a>. Die Aufrundung ist bei Barzahlung nicht möglich.</p>
+        <button type="submit" class="black cart-cash-submit">Zahlungspflichtig bestellen</button>
+      </form>`;
+  }
+
+  async function submitCash(form) {
+    const root = form.closest("[data-cart]");
+    const errorBox = root.querySelector(".cart-error");
+    const button = form.querySelector(".cart-cash-submit");
+    const data = Object.fromEntries(new FormData(form));
+    errorBox.hidden = true;
+
+    if (!form.reportValidity()) return;
+    button.disabled = true;
+    button.textContent = "Wird gesendet …";
+    try {
+      const response = await fetch("/.netlify/functions/cash-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, items: readCart() }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        if (Number.isInteger(result.index)) {
+          root.querySelector(`[data-item-index="${result.index}"]`)?.classList.add("cart-item--error");
+        }
+        throw new Error(result.error || "Bestellung fehlgeschlagen.");
+      }
+      const params = new URLSearchParams({ nr: result.nummer || "", summe: String(result.summe || "") });
+      writeCart([]);
+      window.location.href = `/abholung-danke.html?${params}`;
+    } catch (error) {
+      errorBox.textContent =
+        error instanceof TypeError ? "Verbindung zum Server fehlgeschlagen. Bitte versuche es erneut." : error.message;
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      button.disabled = false;
+      button.textContent = "Zahlungspflichtig bestellen";
+    }
   }
 
   function renderAll() {
@@ -428,6 +489,15 @@
         return setRoundUp(target.checked);
       case "checkout":
         return checkout(root, target);
+      case "cash-toggle":
+        cashOpen = !cashOpen;
+        renderAll();
+        if (cashOpen) {
+          const form = (root || document).querySelector("[data-cash-form]");
+          form?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          form?.querySelector("input[name=name]")?.focus({ preventScroll: true });
+        }
+        return;
       case "close":
         return closeDrawer();
     }
@@ -520,6 +590,17 @@
     if (event.target.closest("[data-cart], .cart-drawer")) handleClick(event);
   });
   document.addEventListener("keydown", handleKeydown);
+  document.addEventListener("submit", (event) => {
+    const form = event.target.closest("[data-cash-form]");
+    if (!form) return;
+    event.preventDefault();
+    submitCash(form);
+  });
+  document.addEventListener("input", (event) => {
+    if (event.target.closest("[data-cash-form]") && event.target.name in cashDraft) {
+      cashDraft[event.target.name] = event.target.value;
+    }
+  });
 
   renderAll();
   if (document.querySelector('[data-cart="page"]')) syncCartWithCatalog();
