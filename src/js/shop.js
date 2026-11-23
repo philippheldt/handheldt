@@ -162,23 +162,27 @@ function renderProduct() {
 
   renderGallery();
 
+  // Vorauswahl: erste lieferbare Kombination aus Größe, Farbe und Variante
+  const first = window.handheldtStock.firstAvailable(currentProduct) || {
+    size: currentProduct.sizes[0] || null,
+    color: currentProduct.colors[0]?.name || null,
+    variant: currentProduct.variants[0] || null,
+  };
+  selectedSize = first.size;
+  selectedColor = first.color;
+  selectedVariant = first.variant;
+
+  // Komplett ausverkaufte Optionen sind gesperrt (in keiner Kombination mehr lieferbar)
   if (currentProduct.sizes.length > 0) {
-    // Ausverkaufte Größen sind gesperrt; vorausgewählt wird die erste verfügbare
-    selectedSize = currentProduct.sizes.find((size) => optionStock(size) > 0) || currentProduct.sizes[0];
     renderChips(
       "size",
       currentProduct.sizes.map((size) => ({
         value: size,
         label: size,
         surcharge: currentProduct.surcharges.size[size],
-        disabled: optionStock(size) <= 0,
+        disabled: !optionAvailable("size", size),
       })),
-      (value) => {
-        selectedSize = value;
-        updatePrice();
-        updateAvailability();
-        window.handheldtSizeChart?.update(selectedSize);
-      },
+      (value) => chooseOption("size", value),
       selectedSize,
     );
   } else {
@@ -186,9 +190,6 @@ function renderProduct() {
   }
 
   if (currentProduct.colors.length > 0) {
-    // Ausverkaufte Farben sind gesperrt; vorausgewählt wird die erste verfügbare
-    const colorNames = currentProduct.colors.map((color) => color.name);
-    selectedColor = colorNames.find((name) => optionStock(name) > 0) || colorNames[0];
     renderChips(
       "color",
       currentProduct.colors.map((color) => ({
@@ -196,14 +197,9 @@ function renderProduct() {
         label: color.name,
         hex: color.hex,
         surcharge: currentProduct.surcharges.color[color.name],
-        disabled: optionStock(color.name) <= 0,
+        disabled: !optionAvailable("color", color.name),
       })),
-      (value) => {
-        selectedColor = value;
-        updatePrice();
-        updateAvailability();
-        showImageFor(value);
-      },
+      (value) => chooseOption("color", value),
       selectedColor,
     );
   } else {
@@ -211,11 +207,10 @@ function renderProduct() {
   }
 
   if (currentProduct.variants.length > 0) {
-    selectedVariant = currentProduct.variants.find((variant) => optionStock(variant) > 0) || currentProduct.variants[0];
     const select = document.getElementById("select-variant");
     currentProduct.variants.forEach((variant) => {
       const surcharge = currentProduct.surcharges.variant[variant];
-      const soldOut = optionStock(variant) <= 0;
+      const soldOut = !optionAvailable("variant", variant);
       const label = [variant, surcharge && `(${formatSurcharge(surcharge)})`, soldOut && "– ausverkauft"]
         .filter(Boolean)
         .join(" ");
@@ -223,16 +218,12 @@ function renderProduct() {
       option.disabled = soldOut;
       select.add(option);
     });
-    select.addEventListener("change", (e) => {
-      selectedVariant = e.target.value;
-      updatePrice();
-      updateAvailability();
-      showImageFor(selectedVariant);
-    });
+    select.addEventListener("change", (e) => chooseOption("variant", e.target.value));
   } else {
     document.getElementById("variant-group").hidden = true;
   }
 
+  markUnavailableOptions();
   initBuyRow();
 
   // Größentabelle (js/size_chart.js), wenn in Stripe "groessentabelle" gesetzt ist
@@ -376,21 +367,62 @@ function changeImage(step) {
 }
 
 // 4. Menge und "In den Warenkorb"
-// Verfügbare Stückzahl laut Bestand (Infinity = unbegrenzt).
-// Bestand gibt es insgesamt oder je Größe, Farbe bzw. Variante; nicht genannte Optionen sind unbegrenzt.
+// Verfügbare Stückzahl laut Bestand (Infinity = unbegrenzt), Regeln in js/stock.js.
+// Bestand gibt es insgesamt, je Größe, Farbe bzw. Variante oder je Kombination (z. B. "Gelb/M").
 function availableStock(choice = { size: selectedSize, color: selectedColor, variant: selectedVariant }) {
-  const stock = currentProduct.stock;
-  if (!stock) return Infinity;
-  if (stock.total !== null) return stock.total;
-  const option = [choice.size, choice.color, choice.variant].find((value) => value && value in stock.byOption);
-  return option ? stock.byOption[option] : Infinity;
+  return window.handheldtStock.available(currentProduct, choice);
 }
 
-// Bestand einer einzelnen Option (für ausgegraute Größen/Farben/Varianten)
-function optionStock(value) {
-  const stock = currentProduct.stock;
-  if (!stock || stock.total !== null || !(value in stock.byOption)) return Infinity;
-  return stock.byOption[value];
+// Ist die Option in irgendeiner Kombination noch lieferbar? (sonst gesperrt)
+function optionAvailable(type, value) {
+  return window.handheldtStock.firstAvailable(currentProduct, { [type]: value }) !== null;
+}
+
+// Größe, Farbe oder Variante wählen. Gibt es die Kombination nicht mehr (z. B. Gelb in L),
+// werden die anderen Optionen auf die erste lieferbare Kombination mit der neuen Wahl umgestellt.
+function chooseOption(type, value) {
+  const previousColor = selectedColor;
+  const previousVariant = selectedVariant;
+  const choice = { size: selectedSize, color: selectedColor, variant: selectedVariant, [type]: value };
+  const next =
+    availableStock(choice) > 0 ? choice : window.handheldtStock.firstAvailable(currentProduct, { [type]: value }) || choice;
+
+  selectedSize = next.size;
+  selectedColor = next.color;
+  selectedVariant = next.variant;
+  markSelectedChip("size", selectedSize);
+  markSelectedChip("color", selectedColor);
+  if (selectedVariant) document.getElementById("select-variant").value = selectedVariant;
+
+  updatePrice();
+  updateAvailability();
+  markUnavailableOptions();
+  window.handheldtSizeChart?.update(selectedSize);
+  if (selectedColor !== previousColor) showImageFor(selectedColor);
+  else if (selectedVariant !== previousVariant) showImageFor(selectedVariant);
+}
+
+function markSelectedChip(type, value) {
+  if (!value) return;
+  document.querySelectorAll(`#${type}-container .chip`).forEach((chip) => {
+    const active = chip.dataset.value === value;
+    chip.classList.toggle("active", active);
+    chip.setAttribute("aria-pressed", active);
+  });
+  document.getElementById(`${type}-value`).innerText = value;
+}
+
+// Optionen, die zur übrigen Auswahl nicht mehr lieferbar sind (z. B. L bei Gelb), durchgestrichen
+// zeigen. Sie bleiben anklickbar – dann wird auf eine lieferbare Kombination umgestellt.
+function markUnavailableOptions() {
+  ["size", "color"].forEach((type) => {
+    document.querySelectorAll(`#${type}-container .chip:not(:disabled)`).forEach((chip) => {
+      const choice = { size: selectedSize, color: selectedColor, variant: selectedVariant, [type]: chip.dataset.value };
+      const unavailable = availableStock(choice) <= 0;
+      chip.classList.toggle("unavailable", unavailable);
+      chip.title = unavailable ? "In dieser Kombination ausverkauft" : "";
+    });
+  });
 }
 
 // Button, Mengenauswahl und Hinweis an den Bestand der gewählten Größe anpassen

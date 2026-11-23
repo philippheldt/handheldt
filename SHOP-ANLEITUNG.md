@@ -86,10 +86,17 @@ Mit dem Metadatum `bestand` legt ihr fest, wie viele Stück verkauft werden kön
 | `20` | 20 Stück insgesamt (für Produkte ohne Größen) |
 | `S:5, M:10, L:3, XL:0` | Bestand je Größe; Größen, die nicht genannt sind, bleiben unbegrenzt |
 | `Blau:3, Grün:12, Rot:0` | Bestand je Farbe (oder je Variante) – genauso, nur mit den Namen aus `farben` bzw. `varianten` |
+| `Gelb/M:2, Gelb/L:2, Blau/M:2, Blau/L:2` | Bestand je **Kombination** aus Farbe und Größe (oder Variante), getrennt mit `/` |
 
-- Die Namen müssen genau so geschrieben sein wie in `groessen`, `farben` oder `varianten`
-  (Groß-/Kleinschreibung, Leerzeichen). Pro Produkt bitte nur eine Art verwenden, also
-  entweder Größen **oder** Farben **oder** Varianten.
+- Die Namen müssen genau so geschrieben sein wie in `groessen`, `farben` oder `varianten`.
+  Bei Kombinationen ist die Reihenfolge egal (`Gelb/M` = `M/Gelb`), ebenso Groß-/Kleinschreibung
+  und Leerzeichen um den `/`. Auch drei Teile gehen, z. B. `Gelb/M/Mit Rückenprint:1`.
+- Am übersichtlichsten ist eine Art pro Produkt. Gemischt gilt: Eine passende Kombination geht
+  vor einer einzelnen Option (`Gelb/M:2, L:5` → Gelb in M: 2, jede Farbe in L: 5).
+- Auf der Produktseite sind Optionen, die zur übrigen Auswahl ausverkauft sind (z. B. L, wenn Gelb
+  gewählt ist), gestrichelt und durchgestrichen. Sie bleiben anklickbar; dann springt die andere
+  Auswahl auf eine lieferbare Kombination (z. B. auf Blau). Ganz gesperrt ist eine Option erst,
+  wenn es sie in keiner Kombination mehr gibt.
 - Ab 5 Stück oder weniger steht „Nur noch X Stück verfügbar“ auf der Produktseite.
 - Optionen mit 0 sind durchgestrichen bzw. ausgegraut und nicht wählbar. Ist alles bei 0,
   steht „Ausverkauft“ auf Produktseite und Produktbild.

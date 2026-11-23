@@ -813,3 +813,10 @@ html:has(dialog.size-chart[open]) {
   color: #fff;
   cursor: not-allowed;
 }
+
+/* Option in Kombination mit der übrigen Auswahl ausverkauft (z. B. L bei Gelb) – bleibt wählbar */
+.chip.unavailable:not(.active) {
+  border-style: dashed;
+  color: #9a9891;
+  text-decoration: line-through;
+}

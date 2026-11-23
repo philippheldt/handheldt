@@ -38,13 +38,10 @@
     return `${day}.${month}.${year}`;
   }
 
-  // Bestand für die gewählte Größe/Farbe/Variante (null = unbegrenzt)
+  // Bestand für die gewählte Größe/Farbe/Variante bzw. Kombination (null = unbegrenzt), Regeln in js/stock.js
   function stockFor(product, item) {
-    const stock = product.stock;
-    if (!stock) return null;
-    if (stock.total !== null) return stock.total;
-    const option = [item.size, item.color, item.variant].find((value) => value && value in stock.byOption);
-    return option ? stock.byOption[option] : null;
+    const available = window.handheldtStock.available(product, item);
+    return Number.isFinite(available) ? available : null;
   }
 
   // Gibt es die gewählte Ausführung noch? (Optionen können in Stripe geändert werden)
@@ -175,13 +172,6 @@
 
   // ---------- Vorschlag kurz vor dem kostenlosen Versand ----------
 
-  // Bestand einer einzelnen Option (Infinity = unbegrenzt)
-  function optionStock(product, value) {
-    const stock = product.stock;
-    if (!stock || stock.total !== null || !(value in stock.byOption)) return Infinity;
-    return stock.byOption[value];
-  }
-
   // Passendes Produkt, mit dem die Bestellung knapp über die Grenze für kostenlosen Versand kommt:
   // das günstigste, das die Lücke schließt (also immer etwas mehr als 50 €, nie darunter).
   // Nur Produkte ohne Größenwahl (ein Klick genügt), keine Vorbestellungen (würden alles verzögern).
@@ -189,10 +179,10 @@
     const candidates = catalog
       .filter((product) => !product.soldOut && !product.preorderDate && product.sizes.length === 0)
       .map((product) => {
-        // Erste verfügbare Farbe/Variante vorauswählen
-        const color = product.colors.map((c) => c.name).find((name) => optionStock(product, name) > 0) || null;
-        const variant = product.variants.find((name) => optionStock(product, name) > 0) || null;
-        if ((product.colors.length > 0 && !color) || (product.variants.length > 0 && !variant)) return null;
+        // Erste lieferbare Farbe/Variante vorauswählen
+        const first = window.handheldtStock.firstAvailable(product);
+        if (!first) return null;
+        const { color, variant } = first;
 
         const item = { productId: product.id, size: null, color, variant };
         const inCart = cart
