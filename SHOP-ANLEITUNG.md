@@ -325,3 +325,30 @@ Gut zu wissen:
   Positionen verteilt (bei Prozent- und bei festen Beträgen). In der Bestellübersicht und im EÜR-Export
   steht immer die tatsächlich gezahlte Spende.
 - In der Bestellübersicht steht bei Bestellungen mit Gutschein „Gutschein −X €“.
+
+## Abholen und bar bezahlen
+
+Unter „Weiter zur Kasse“ steht im Warenkorb klein der Link **„oder abholen und bar bezahlen“**.
+Er klappt ein kurzes Formular auf (Name, E-Mail, Telefon optional). Mit „Zahlungspflichtig bestellen“:
+
+1. Der Warenkorb wird wie an der Kasse geprüft (Bestand, Preise, Mindestbestellwert).
+2. In Stripe entsteht eine **offene Rechnung** (Rechnungen → Kunde mit dem Namen), Zahlungsziel 14 Tage.
+3. Der **Bestand wird sofort abgezogen**, die Ware ist also für den Kunden reserviert.
+4. Der Kunde bekommt die Rechnung von Stripe per E-Mail (Bestellbestätigung) und landet auf
+   `abholung-danke.html`.
+5. Ihr bekommt eine Benachrichtigung über das Netlify-Formular **„barzahlung“** (siehe unten).
+
+In der **Bestellübersicht** steht die Bestellung mit „Abholung · Barzahlung“ und „Bar zu zahlen“:
+
+- **Abgeholt & bar bezahlt**: markiert die Rechnung in Stripe als außerhalb von Stripe bezahlt und
+  die Bestellung als abgeholt. Sie zählt dann im EÜR-Export als Einnahme (Tag der Abholung).
+- **Stornieren**: Die Rechnung wird ungültig und der Bestand zurückgebucht, z. B. wenn niemand kommt.
+
+Gutscheincodes und die Aufrundung gibt es bei Barzahlung nicht. Theoretisch könnte der Kunde die
+Rechnung auch über den Link in der Stripe-E-Mail online bezahlen – dann steht sie einfach als bezahlt da.
+
+### Einmalig einrichten: Benachrichtigung bei neuen Barzahlungs-Bestellungen
+
+Netlify → **Forms** → Formular **„barzahlung“** → **Form notifications** → **Email notification**
+mit eurer Adresse anlegen. (Das Formular erscheint dort nach dem ersten Deploy mit dieser Änderung.)
+Ohne Benachrichtigung stehen neue Bestellungen trotzdem in der Bestellübersicht und in Stripe.
